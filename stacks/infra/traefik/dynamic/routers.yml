@@ -1,0 +1,18 @@
+http:
+  routers:
+
+    traefik-dashboard:
+      rule: Host(`traefik.theblaskies.com`)
+      entryPoints:
+        - websecure
+      service: api@internal
+      tls:
+        certResolver: cloudflare
+
+    plex:
+      rule: Host(`plex.theblaskies.com`)
+      entryPoints:
+        - websecure
+      service: plex
+      tls:
+        certResolver: cloudflare

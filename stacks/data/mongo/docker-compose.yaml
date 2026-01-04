@@ -1,0 +1,25 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: mongoDB
+    restart: unless-stopped
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+
+    volumes:
+      - /mnt/user/appdata/mongo:/data/db
+
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - infra_net
+
+networks:
+  infra_net:
+    external: true

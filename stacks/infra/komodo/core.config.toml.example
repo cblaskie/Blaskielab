@@ -1,0 +1,61 @@
+############################
+# 🦎 KOMODO CORE CONFIG
+# Blaskielab – scaffolded
+############################
+
+# Cosmetic
+title = "Blaskielab Komodo"
+
+############################
+# AUTH / LOGIN
+############################
+
+# Disable local auth (we plan to use OIDC)
+local_auth = false
+
+# Prevent open registration
+disable_user_registration = true
+enable_new_users = false
+
+############################
+# OIDC (SCAFFOLD ONLY)
+############################
+
+# DO NOT enable yet
+oidc_enabled = false
+
+# Example (PocketID / Authentik later)
+# oidc_provider = "https://auth.example.com/application/o/komodo"
+# oidc_redirect_host = "https://komodo.example.com"
+
+oidc_client_id = ""
+oidc_client_secret = ""
+oidc_use_full_email = false
+oidc_additional_audiences = []
+
+############################
+# GITHUB – REPO PROVIDER (SCAFFOLD)
+############################
+
+# This allows Komodo to clone private repos
+# Used for GitOps, stacks, syncs, builds
+
+# [[git_provider]]
+# domain = "github.com"
+# accounts = [
+#   { username = "your-github-username", token = "ghp_xxxxxxxxxxxxxxxxx" }
+# ]
+
+############################
+# GITHUB – WEBHOOKS (OPTIONAL, SCAFFOLD)
+############################
+
+# webhook_secret = "change-me"
+# webhook_base_url = "https://komodo.example.com"
+
+############################
+# UI / POLICY (OPTIONAL)
+############################
+
+# Once fully GitOps-only:
+# ui_write_disabled = true

@@ -1,0 +1,54 @@
+services:
+  komodo-core:
+    image: ghcr.io/moghtech/komodo-core@sha256:a1cceb4f971443b1e9f2a767788f663d0afb6244ee2135f7fe3fd1036af37ade
+    container_name: komodo-core
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    ports:
+      # Optional: keep for LAN access during bootstrap
+      - "9120:9120"
+
+    volumes:
+      # Optional: database backups
+      - /mnt/user/appdata/komodo/backups:/backups
+      - /mnt/user/appdata/komodo:/var/lib/komodo
+      - /mnt/user/docker/repos:/repos
+      - ./core.config.toml:/config/core.config.toml
+
+    networks:
+      - infra_net
+      - proxy_net
+
+
+  komodo-periphery:
+    image: ghcr.io/moghtech/komodo-periphery@sha256:bd79cf960ed054fe8e02384322303e462448679b1149dde48bbef151417255b1
+    container_name: komodo-periphery
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      # Docker control
+      - /var/run/docker.sock:/var/run/docker.sock
+
+      # Required for process inspection
+      - /proc:/proc
+
+      # Must be identical inside and outside container
+      - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
+      # Config for Periphery
+      #- ./periphery.config.toml:/etc/komodo/periphery.config.toml
+
+    networks:
+      - infra_net
+
+
+networks:
+  infra_net:
+    external: true
+  proxy_net:
+    external: true

@@ -1,0 +1,7 @@
+http:
+  services:
+
+    plex:
+      loadBalancer:
+        servers:
+          - url: http://plex:32400

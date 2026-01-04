@@ -1,0 +1,26 @@
+services:
+  cloudflare-ddns:
+    image: favonia/cloudflare-ddns@sha256:a4e2089b3531eec8c9328c7a9a586f80e8d67dcd94856e0b596b7896e1de3f62
+    container_name: cloudflare-ddns
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    environment:
+      # DDNS only manages A records
+      DOMAINS: theblaskies.com,*.theblaskies.com
+
+      # Proxy everything EXCEPT Plex (handled via CNAME)
+      PROXIED: "true"
+
+      TTL: "300"
+      IP_VERSION: ipv4
+      UPDATE_INTERVAL: 300
+
+    networks:
+      - infra_net
+networks:
+  infra_net:
+    external: true
+

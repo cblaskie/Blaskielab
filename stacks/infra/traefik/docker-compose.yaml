@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  traefik:
+    image: traefik@sha256:16acb89c6db341182970d6fdafece31303b0a380a8ed7aa51682e225229bf1d2
+    container_name: traefik
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    command:
+      - --configFile=/etc/traefik/traefik.yml
+
+    ports:
+      - "443:443"
+      - "80:80"   # optional but recommended (redirect only)
+
+    volumes:
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./dynamic:/etc/traefik/dynamic:ro
+      - ./acme:/etc/traefik/acme
+
+    networks:
+      - infra_net
+      - proxy_net
+
+    depends_on:
+      - socket-proxy
+
+  socket-proxy:
+    image: ghcr.io/tecnativa/docker-socket-proxy
+    container_name: docker-socket-proxy
+    restart: unless-stopped
+
+    environment:
+      CONTAINERS: 1
+      SERVICES: 1
+      NETWORKS: 1
+      TASKS: 1
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+    networks:
+      - infra_net
+      - proxy_net
+
+networks:
+  infra_net:
+    external: true
+  proxy_net:
+    external: true

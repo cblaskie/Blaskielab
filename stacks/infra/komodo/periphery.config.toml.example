@@ -1,0 +1,28 @@
+############################
+# 🦎 KOMODO PERIPHERY CONFIG
+# Blaskielab – scaffolded
+############################
+
+# Root directory (must match env + volume mount)
+root_directory = "/etc/komodo"
+
+############################
+# AUTH (DEFAULTS OK)
+############################
+
+# Core authenticates using KOMODO_PASSKEY
+# No additional config required yet
+
+############################
+# GIT PROVIDERS (OPTIONAL)
+############################
+
+# Only add this if THIS periphery
+# needs direct repo access for builds
+#
+# [[git_provider]]
+# domain = "github.com"
+# accounts = [
+#   { username = "your-github-username", token = "ghp_xxxxxxxxxxxxxxxxx" }
+# ]
+

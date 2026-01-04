@@ -1,0 +1,24 @@
+ services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_SUPER_PASSWORD}
+
+    volumes:
+      - /mnt/user/appdata/postgres:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - infra_net
+
+networks:
+  infra_net:
+    external: true

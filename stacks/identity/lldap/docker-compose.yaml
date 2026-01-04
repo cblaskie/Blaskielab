@@ -1,0 +1,28 @@
+services:
+  lldap:
+    image: lldap/lldap:latest
+    container_name: lldap
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    environment:
+      LLDAP_LDAP_BASE_DN: dc=theblaskies,dc=com
+      LLDAP_LDAP_PORT: 3890
+      LLDAP_HTTP_PORT: 17170
+      LLDAP_HTTP_URL: http://localhost:17170
+
+    volumes:
+      - ./data:/data
+
+    ports:
+      # TEMPORARY local access only
+      - 17170:17170
+
+    networks:
+      - proxy_net
+
+networks:
+  proxy_net:
+    external: true
