@@ -18,9 +18,6 @@ services:
 
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml:ro
-      - ./dynamic/routers.yml:/etc/traefik/dynamic/routers.yml:ro
-      - ./dynamic/services.yml:/etc/traefik/dynamic/services.yml:ro
-      - ./dynamic/unraid.yml:/etc/traefik/dynamic/unraid.yml:ro
       - ./dynamic:/etc/traefik/dynamic:ro
       - /mnt/user/appdata/traefik/acme:/etc/traefik/acme
 
