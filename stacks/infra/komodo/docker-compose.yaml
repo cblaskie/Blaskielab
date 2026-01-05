@@ -7,9 +7,9 @@ services:
     env_file:
       - .env
 
-    # ports:
+    ports:
       # Optional: keep for LAN access during bootstrap
-      # - "9120:9120"
+      - "9120:9120"
 
     volumes:
       # Optional: database backups

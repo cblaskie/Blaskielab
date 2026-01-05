@@ -18,7 +18,7 @@ services:
 
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml:ro
-      - ./dynamic:/etc/traefik/dynamic:ro
+      - /mnt/user/appdata/komodo/repos/Blaskielab/stacks/infra/traefik/dynamic:/etc/traefik/dynamic:ro
       - /mnt/user/appdata/traefik/acme:/etc/traefik/acme
 
     networks:
