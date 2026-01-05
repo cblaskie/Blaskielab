@@ -27,7 +27,9 @@ services:
       - traefik.http.routers.komodo.entrypoints=websecure
       - traefik.http.routers.komodo.tls=true
       - traefik.http.services.komodo.loadbalancer.server.port=9120
-      # Optional later:
+      - traefik.http.routers.komodo.priority=50
+
+     # Optional later:
       # - traefik.http.routers.komodo.middlewares=auth@file
 
   komodo-periphery:

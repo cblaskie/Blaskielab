@@ -23,15 +23,14 @@ enable_new_users = false
 # OIDC (SCAFFOLD ONLY)
 ############################
 
-# DO NOT enable yet
-oidc_enabled = false
+oidc_enabled = true
 
 # Example (PocketID / Authentik later)
-# oidc_provider = "https://auth.example.com/application/o/komodo"
-# oidc_redirect_host = "https://komodo.example.com"
+oidc_provider = "https://id.theblaskies.com"
+oidc_redirect_host = "https://komodo.theblaskies.com"
 
-oidc_client_id = ""
-oidc_client_secret = ""
+oidc_client_id = "3882d5c1-5602-48ed-bbce-2b7aed50808b"
+oidc_client_secret = "IjTvqRCRMah7D105zuSXXKfahiS6Xh9I"
 oidc_use_full_email = false
 oidc_additional_audiences = []
 
