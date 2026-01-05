@@ -7,9 +7,9 @@ services:
     env_file:
       - .env
 
-    ports:
+    # ports:
       # Optional: keep for LAN access during bootstrap
-      - "9120:9120"
+      # - "9120:9120"
 
     volumes:
       # Optional: database backups
@@ -21,6 +21,14 @@ services:
       - infra_net
       - proxy_net
 
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.komodo.rule=Host(`komodo.theblaskies.com`)
+      - traefik.http.routers.komodo.entrypoints=websecure
+      - traefik.http.routers.komodo.tls=true
+      - traefik.http.services.komodo.loadbalancer.server.port=9120
+      # Optional later:
+      # - traefik.http.routers.komodo.middlewares=auth@file
 
   komodo-periphery:
     image: ghcr.io/moghtech/komodo-periphery@sha256:bd79cf960ed054fe8e02384322303e462448679b1149dde48bbef151417255b1
