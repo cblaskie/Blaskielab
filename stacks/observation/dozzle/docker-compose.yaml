@@ -1,0 +1,34 @@
+services:
+  dozzle:
+    image: amir20/dozzle:v8.8.4
+    container_name: dozzle
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    environment:
+      DOZZLE_HOST: tcp://docker-socket-proxy:2375
+      DOZZLE_LEVEL: ${DOZZLE_LEVEL}
+      DOZZLE_TAILSIZE: ${DOZZLE_TAILSIZE}
+      DOZZLE_FILTER: ${DOZZLE_FILTER}
+      DOZZLE_BASE: ${DOZZLE_BASE}
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dozzle.rule=Host(`dozzle.${BASE_DOMAIN}`)
+      - traefik.http.routers.dozzle.entrypoints=websecure
+      - traefik.http.routers.dozzle.tls=true
+      - traefik.http.services.dozzle.loadbalancer.server.port=8080
+      # Optional: protect with auth middleware later
+      # - traefik.http.routers.dozzle.middlewares=auth@file
+
+    networks:
+      - proxy_net
+      - infra_net
+
+networks:
+  proxy_net:
+    external: true
+  infra_net:
+    external: true
