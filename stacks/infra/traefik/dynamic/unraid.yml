@@ -12,5 +12,5 @@ http:
     unraid:
       loadBalancer:
         servers:
-          - url: https://10.69.1.100:19443
+          - url: https://10-69-1-100.674cc815393e093c04914555634a26ce43160a3a.myunraid.net:19443
         passHostHeader: true
