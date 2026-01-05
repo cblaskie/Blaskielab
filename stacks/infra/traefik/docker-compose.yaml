@@ -17,10 +17,7 @@ services:
       - "80:80"   # optional but recommended (redirect only)
 
     volumes:
-      - ./traefik.yml:/etc/traefik/traefik.yml:ro
-      - ./dynamic:/etc/traefik/dynamic:ro
-      - ./acme:/etc/traefik/acme
-
+      - ./stacks/infra/traefik:/etc/traefik:ro
     networks:
       - infra_net
       - proxy_net

@@ -14,9 +14,8 @@ services:
     volumes:
       # Optional: database backups
       - /mnt/user/appdata/komodo/backups:/backups
-      - /mnt/user/appdata/komodo:/var/lib/komodo
-      - /mnt/user/docker/repos:/repos
       - ./core.config.toml:/config/core.config.toml
+      - /mnt/user/appdata/komodo:/data
 
     networks:
       - infra_net
@@ -42,7 +41,7 @@ services:
       - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
       # Config for Periphery
       #- ./periphery.config.toml:/etc/komodo/periphery.config.toml
-
+      - /mnt/user/appdata/komodo:/etc/komodo
     networks:
       - infra_net
 

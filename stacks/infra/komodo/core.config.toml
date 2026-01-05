@@ -35,29 +35,3 @@ oidc_client_secret = ""
 oidc_use_full_email = false
 oidc_additional_audiences = []
 
-############################
-# GITHUB – REPO PROVIDER (SCAFFOLD)
-############################
-
-# This allows Komodo to clone private repos
-# Used for GitOps, stacks, syncs, builds
-
-# [[git_provider]]
-# domain = "github.com"
-# accounts = [
-#   { username = "your-github-username", token = "ghp_xxxxxxxxxxxxxxxxx" }
-# ]
-
-############################
-# GITHUB – WEBHOOKS (OPTIONAL, SCAFFOLD)
-############################
-
-# webhook_secret = "change-me"
-# webhook_base_url = "https://komodo.example.com"
-
-############################
-# UI / POLICY (OPTIONAL)
-############################
-
-# Once fully GitOps-only:
-# ui_write_disabled = true
