@@ -35,3 +35,5 @@ oidc_client_secret = ""
 oidc_use_full_email = false
 oidc_additional_audiences = []
 
+
+disable_confirm_dialog = true
