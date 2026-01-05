@@ -1,0 +1,16 @@
+http:
+  routers:
+    unraid:
+      rule: Host(`unraid.theblaskies.com`)
+      entryPoints:
+        - websecure
+      service: unraid
+      tls:
+        certResolver: cloudflare
+
+  services:
+    unraid:
+      loadBalancer:
+        servers:
+          - url: https://10.69.1.100:19443
+        passHostHeader: true
