@@ -26,7 +26,8 @@ services:
       - proxy_net
 
     depends_on:
-      - socket-proxy
+      socket-proxy:
+        condition: service_healthy
 
   socket-proxy:
     image: ghcr.io/tecnativa/docker-socket-proxy
@@ -57,3 +58,12 @@ networks:
     external: true
   proxy_net:
     external: true
+
+    healthcheck:
+      test: >
+        wget -qO- http://127.0.0.1:2375/_ping &&
+        wget -qO- http://127.0.0.1:2375/v1.24/info > /dev/null
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
