@@ -11,7 +11,7 @@ services:
       LLDAP_LDAP_BASE_DN: dc=theblaskies,dc=com
       LLDAP_LDAP_PORT: 3890
       LLDAP_HTTP_PORT: 17170
-      LLDAP_HTTP_URL: http://localhost:17170
+      LLDAP_HTTP_URL: https://lldap.theblaskies.com
 
     volumes:
       - ./data:/data
@@ -22,7 +22,15 @@ services:
 
     networks:
       - proxy_net
-
+    labels:
+      - "traefik.enable=true"
+      # Change lldap.theblaskies.com to your actual subdomain
+      - "traefik.http.routers.lldap.rule=Host(`lldap.theblaskies.com`)"
+      - "traefik.http.routers.lldap.entrypoints=websecure"
+      - "traefik.http.routers.lldap.tls.certresolver=cloudflare" # Matches your Traefik config
+      # Tell Traefik which internal port to send traffic to
+      - "traefik.http.services.lldap.loadbalancer.server.port=17170"
+      - "traefik.http.routers.lldap.tls=true"
 networks:
   proxy_net:
     external: true

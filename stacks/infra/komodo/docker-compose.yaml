@@ -22,12 +22,19 @@ services:
       - proxy_net
 
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.komodo.rule=Host(`komodo.theblaskies.com`)
-      - traefik.http.routers.komodo.entrypoints=websecure
-      - traefik.http.routers.komodo.tls=true
-      - traefik.http.services.komodo.loadbalancer.server.port=9120
-      - traefik.http.routers.komodo.priority=50
+      "traefik.enable": "true"
+      "traefik.http.routers.komodo.rule": "Host(`komodo.theblaskies.com`)"
+      "traefik.http.routers.komodo.entrypoints": "websecure"
+      "traefik.http.routers.komodo.tls": "true"
+      "traefik.http.services.komodo.loadbalancer.server.port": "9120"
+      "traefik.http.routers.komodo.priority": "50"
+      # *** ADD THESE LABELS TO FIX THE OIDC ENCODING ISSUE ***
+      # Define a middleware to un-encode the '?' character that Traefik encoded as '%3F'
+      "traefik.http.middlewares.komodo-unencode.replacepathregex.regex": "^/(.*)%"
+      "traefik.http.middlewares.komodo-unencode.replacepathregex.replacement": "^/$1?"
+
+      # Assign this new middleware to the Komodo router
+      "traefik.http.routers.komodo.middlewares": "komodo-unencode"
 
      # Optional later:
       # - traefik.http.routers.komodo.middlewares=auth@file
