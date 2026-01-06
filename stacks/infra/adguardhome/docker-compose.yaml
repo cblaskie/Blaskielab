@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  adguardhome:
+    image: adguard/adguardhome@sha256:92929135ced2554aaf94706f766a98ad348f211df61b0704e2db7e8498cc00b7
+    container_name: adguardhome
+    hostname: adguardhome
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/appdata/adguardhome/work:/opt/adguardhome/work
+      - /mnt/user/appdata/adguardhome/conf:/opt/adguardhome/conf
+
+    networks:
+      lan_macvlan:
+        ipv4_address: 10.69.1.50
+      proxy_net: {}
+
+    # DNS exposed ONLY on LAN macvlan IP
+    ports:
+      - "10.69.1.50:53:53/tcp"
+      - "10.69.1.50:53:53/udp"
+
+    labels:
+      - traefik.enable=true
+
+      # ---- AdGuard UI Router ----
+      - traefik.http.routers.adguard.rule=Host(`adguard.theblaskies.com`)
+      - traefik.http.routers.adguard.entrypoints=websecure
+      - traefik.http.routers.adguard.tls=true
+      - traefik.http.routers.adguard.tls.certresolver=cloudflare
+
+      # ---- Service ----
+      - traefik.http.services.adguard.loadbalancer.server.port=80
+
+networks:
+  lan_macvlan:
+    driver: macvlan
+    driver_opts:
+      parent: br0
+    ipam:
+      config:
+        - subnet: 10.69.1.0/24
+          gateway: 10.69.1.1
+
+  proxy_net:
+    external: true

@@ -14,7 +14,6 @@ services:
     volumes:
       # Optional: database backups
       - /mnt/user/appdata/komodo/backups:/backups
-      - ./core.config.toml:/config/core.config.toml
       - /mnt/user/appdata/komodo:/data
 
     networks:

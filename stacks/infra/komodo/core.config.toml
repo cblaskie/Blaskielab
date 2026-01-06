@@ -1,6 +1,0 @@
-[auth]
-local_auth = true
-transparent_mode = true
-disable_user_registration = false
-enable_new_users = true
-disable_confirm_dialog = true
