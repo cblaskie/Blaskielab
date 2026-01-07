@@ -1,0 +1,15 @@
+http:
+  routers:
+    oauth2-proxy:
+      rule: Host(`auth.theblaskies.com`)
+      entryPoints:
+        - websecure
+      service: oauth2-proxy
+      tls:
+        certResolver: cloudflare
+
+  services:
+    oauth2-proxy:
+      loadBalancer:
+        servers:
+          - url: http://oauth2-proxy:4180
