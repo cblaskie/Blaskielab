@@ -1,0 +1,17 @@
+http:
+  routers:
+    plex:
+      rule: Host(`plex.theblaskies.com`)
+      entryPoints:
+        - websecure
+      service: plex
+      tls:
+        true
+        certResolver: cloudflare
+
+  services:
+    plex:
+      loadBalancer:
+        servers:
+          - url: http://plex:32400
+        passHostHeader: true

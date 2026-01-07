@@ -1,0 +1,19 @@
+http:
+  routers:
+    traefik-dashboard:
+      rule: Host(`traefik.theblaskies.com`) && (Path(`/`) || PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+      entryPoints:
+        - websecure
+      service: api@internal
+      middlewares:
+        - traefik-root-redirect
+      tls:
+        true
+        certResolver: cloudflare
+
+  middlewares:
+    traefik-root-redirect:
+      redirectRegex:
+        regex: ^https://traefik\.theblaskies\.com/?$
+        replacement: https://traefik.theblaskies.com/dashboard/
+        permanent: true
