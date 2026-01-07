@@ -1,0 +1,29 @@
+services:
+  sonarr:
+    image: ghcr.io/linuxserver/sonarr:4.0.10
+    container_name: sonarr
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/appdata/sonarr:/config
+      - /mnt/user/media:/media
+
+    networks:
+      - media_net
+      - proxy_net
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sonarr.rule=Host(`sonarr.theblaskies.com`)
+      - traefik.http.routers.sonarr.entrypoints=websecure
+      - traefik.http.routers.sonarr.tls.certresolver=cloudflare
+      - traefik.http.services.sonarr.loadbalancer.server.port=8989
+
+networks:
+  media_net:
+    external: true
+  proxy_net:
+    external: true

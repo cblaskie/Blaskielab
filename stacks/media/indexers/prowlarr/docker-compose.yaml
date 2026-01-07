@@ -1,0 +1,28 @@
+services:
+  prowlarr:
+    image: ghcr.io/linuxserver/prowlarr:1.31.2
+    container_name: prowlarr
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/appdata/prowlarr:/config
+
+    networks:
+      - media_net
+      - proxy_net
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.prowlarr.rule=Host(`prowlarr.theblaskies.com`)
+      - traefik.http.routers.prowlarr.entrypoints=websecure
+      - traefik.http.routers.prowlarr.tls.certresolver=cloudflare
+      - traefik.http.services.prowlarr.loadbalancer.server.port=9696
+
+networks:
+  media_net:
+    external: true
+  proxy_net:
+    external: true

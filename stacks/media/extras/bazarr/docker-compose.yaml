@@ -1,0 +1,27 @@
+services:
+  bazarr:
+    image: ghcr.io/linuxserver/bazarr:1.4.4
+    container_name: bazarr
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/appdata/bazarr:/config
+      - /mnt/user/media:/media
+
+    networks:
+      - proxy_net
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.bazarr.rule=Host(`bazarr.theblaskies.com`)
+      - traefik.http.routers.bazarr.entrypoints=websecure
+      - traefik.http.routers.bazarr.tls=true
+      - traefik.http.routers.bazarr.tls.certresolver=cloudflare
+      - traefik.http.services.bazarr.loadbalancer.server.port=6767
+
+networks:
+  proxy_net:
+    external: true

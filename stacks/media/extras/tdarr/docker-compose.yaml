@@ -1,0 +1,30 @@
+services:
+  tdarr:
+    image: ghcr.io/haveagitgat/tdarr:2.28.01
+    container_name: tdarr
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/appdata/tdarr/server:/app/server
+      - /mnt/user/appdata/tdarr/configs:/app/configs
+      - /mnt/user/appdata/tdarr/logs:/app/logs
+      - /mnt/user/media:/media
+      - /tmp:/temp
+
+    networks:
+      - proxy_net
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.tdarr.rule=Host(`tdarr.theblaskies.com`)
+      - traefik.http.routers.tdarr.entrypoints=websecure
+      - traefik.http.routers.tdarr.tls=true
+      - traefik.http.routers.tdarr.tls.certresolver=cloudflare
+      - traefik.http.services.tdarr.loadbalancer.server.port=8265
+
+networks:
+  proxy_net:
+    external: true

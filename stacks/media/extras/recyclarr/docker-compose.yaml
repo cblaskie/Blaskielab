@@ -1,0 +1,18 @@
+services:
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr:6.0.2
+    container_name: recyclarr
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/appdata/recyclarr:/config
+
+    networks:
+      - media_net
+
+networks:
+  media_net:
+    external: true

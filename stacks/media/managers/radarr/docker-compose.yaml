@@ -1,0 +1,29 @@
+services:
+  radarr:
+    image: ghcr.io/linuxserver/radarr:5.2.6
+    container_name: radarr
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/appdata/radarr:/config
+      - /mnt/user/media:/media
+
+    networks:
+      - media_net
+      - proxy_net
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.radarr.rule=Host(`radarr.theblaskies.com`)
+      - traefik.http.routers.radarr.entrypoints=websecure
+      - traefik.http.routers.radarr.tls.certresolver=cloudflare
+      - traefik.http.services.radarr.loadbalancer.server.port=7878
+
+networks:
+  media_net:
+    external: true
+  proxy_net:
+    external: true

@@ -1,0 +1,29 @@
+services:
+  plex:
+    image: ghcr.io/linuxserver/plex:1.41.2
+    container_name: plex
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/appdata/plex:/config
+      - /mnt/user/media:/media
+
+    networks:
+      - media_net
+      - proxy_net
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.plex.rule=Host(`plex.theblaskies.com`)
+      - traefik.http.routers.plex.entrypoints=websecure
+      - traefik.http.routers.plex.tls.certresolver=cloudflare
+      - traefik.http.services.plex.loadbalancer.server.port=32400
+
+networks:
+  media_net:
+    external: true
+  proxy_net:
+    external: true
