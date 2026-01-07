@@ -1,18 +1,49 @@
 http:
   routers:
 
+    # -----------------------------
+    # Traefik Dashboard
+    # -----------------------------
     traefik-dashboard:
       rule: Host(`traefik.theblaskies.com`)
       entryPoints:
         - websecure
       service: api@internal
+      middlewares:
+        - traefik-root-redirect
       tls:
+        true
         certResolver: cloudflare
 
+
+    # -----------------------------
+    # Plex
+    # -----------------------------
     plex:
       rule: Host(`plex.theblaskies.com`)
       entryPoints:
         - websecure
       service: plex
       tls:
+        true
         certResolver: cloudflare
+
+
+  middlewares:
+
+    # Redirect https://traefik.theblaskies.com → /dashboard/
+    traefik-root-redirect:
+      redirectRegex:
+        regex: ^https://traefik\.theblaskies\.com/?$
+        replacement: https://traefik.theblaskies.com/dashboard/
+        permanent: true
+
+
+  services:
+
+    # Plex backend service
+    plex:
+      loadBalancer:
+        servers:
+          - url: http://plex:32400
+        passHostHeader: true
