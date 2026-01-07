@@ -8,7 +8,6 @@ http:
       middlewares:
         - traefik-root-redirect
       tls:
-        true
         certResolver: cloudflare
 
   middlewares:

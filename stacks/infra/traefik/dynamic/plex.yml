@@ -6,7 +6,6 @@ http:
         - websecure
       service: plex
       tls:
-        true
         certResolver: cloudflare
 
   services:
