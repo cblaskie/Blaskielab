@@ -11,9 +11,6 @@ services:
       # Optional UI tweaks
       DOZZLE_LEVEL: info
       DOZZLE_NO_ANALYTICS: "true"
-    depends_on:
-       socket-proxy:
-         condition: service_healthy
 
     networks:
       - proxy_net
