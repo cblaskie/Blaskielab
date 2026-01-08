@@ -1,5 +1,6 @@
 services:
   radarr:
+    user: "1002:281"
     image: ghcr.io/linuxserver/radarr:5.2.6
     container_name: radarr
     restart: unless-stopped
@@ -24,6 +25,8 @@ services:
 
 networks:
   media_net:
+    user: "1002:281"
     external: true
   proxy_net:
+    user: "1002:281"
     external: true

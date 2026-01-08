@@ -1,5 +1,6 @@
 services:
   sonarr:
+    user: "1002:281"
     image: ghcr.io/linuxserver/sonarr:4.0.10
     container_name: sonarr
     restart: unless-stopped
@@ -24,6 +25,8 @@ services:
 
 networks:
   media_net:
+    user: "1002:281"
     external: true
   proxy_net:
+    user: "1002:281"
     external: true

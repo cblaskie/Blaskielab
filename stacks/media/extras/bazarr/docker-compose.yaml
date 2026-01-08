@@ -1,5 +1,6 @@
 services:
   bazarr:
+    user: "1002:281"
     image: ghcr.io/linuxserver/bazarr:1.4.4
     container_name: bazarr
     restart: unless-stopped
@@ -24,4 +25,5 @@ services:
 
 networks:
   proxy_net:
+    user: "1002:281"
     external: true

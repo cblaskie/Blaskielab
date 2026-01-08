@@ -1,5 +1,6 @@
 services:
   tdarr:
+    user: "1002:281"
     image: ghcr.io/haveagitgat/tdarr:2.28.01
     container_name: tdarr
     restart: unless-stopped
@@ -27,4 +28,5 @@ services:
 
 networks:
   proxy_net:
+    user: "1002:281"
     external: true

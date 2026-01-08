@@ -1,5 +1,6 @@
 services:
   whoami:
+    user: "1002:281"
     image: traefik/whoami:latest
     container_name: whoami
     restart: unless-stopped
@@ -21,4 +22,5 @@ services:
 
 networks:
   proxy_net:
+    user: "1002:281"
     external: true

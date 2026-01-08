@@ -1,5 +1,6 @@
 services:
   komodo-core:
+    user: "1002:281"
     image: ghcr.io/moghtech/komodo-core@sha256:a1cceb4f971443b1e9f2a767788f663d0afb6244ee2135f7fe3fd1036af37ade
     container_name: komodo-core
     restart: unless-stopped
@@ -39,6 +40,7 @@ services:
   # 3. APPLY BOTH MIDDLEWARES (Merged into one line)
       - "traefik.http.routers.komodo.middlewares=komodo-headers"
   komodo-periphery:
+    user: "1002:281"
     image: ghcr.io/moghtech/komodo-periphery@sha256:bd79cf960ed054fe8e02384322303e462448679b1149dde48bbef151417255b1
     container_name: komodo-periphery
     restart: unless-stopped
@@ -65,6 +67,8 @@ services:
 
 networks:
   infra_net:
+    user: "1002:281"
     external: true
   proxy_net:
+    user: "1002:281"
     external: true

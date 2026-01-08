@@ -1,5 +1,6 @@
 services:
   adguardhome:
+    user: "1002:281"
     image: adguard/adguardhome@sha256:92929135ced2554aaf94706f766a98ad348f211df61b0704e2db7e8498cc00b7
     container_name: adguardhome
     hostname: adguardhome
@@ -34,6 +35,7 @@ services:
 
 networks:
   lan_macvlan:
+    user: "1002:281"
     driver: macvlan
     driver_opts:
       parent: br0
@@ -43,4 +45,5 @@ networks:
           gateway: 10.69.1.1
 
   proxy_net:
+    user: "1002:281"
     external: true

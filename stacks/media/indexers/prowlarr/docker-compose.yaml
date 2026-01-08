@@ -1,5 +1,6 @@
 services:
   prowlarr:
+    user: "1002:281"
     image: ghcr.io/linuxserver/prowlarr:1.31.2
     container_name: prowlarr
     restart: unless-stopped
@@ -23,6 +24,8 @@ services:
 
 networks:
   media_net:
+    user: "1002:281"
     external: true
   proxy_net:
+    user: "1002:281"
     external: true

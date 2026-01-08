@@ -1,5 +1,6 @@
 services:
   recyclarr:
+    user: "1002:281"
     image: ghcr.io/recyclarr/recyclarr:6.0.2
     container_name: recyclarr
     restart: unless-stopped
@@ -15,4 +16,5 @@ services:
 
 networks:
   media_net:
+    user: "1002:281"
     external: true

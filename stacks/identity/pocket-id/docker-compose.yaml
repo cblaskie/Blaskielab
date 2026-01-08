@@ -1,6 +1,7 @@
 
 services:
   pocket-id:
+    user: "1002:281"
     image: ghcr.io/pocket-id/pocket-id:v2.0.2
     container_name: pocket-id
     restart: unless-stopped
@@ -24,4 +25,5 @@ services:
 
 networks:
   proxy_net:
+    user: "1002:281"
     external: true

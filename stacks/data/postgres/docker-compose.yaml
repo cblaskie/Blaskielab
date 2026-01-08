@@ -1,5 +1,6 @@
  services:
   postgres:
+    user: "1002:281"
     image: postgres:16
     container_name: postgres
     restart: unless-stopped
@@ -21,4 +22,5 @@
 
 networks:
   infra_net:
+    user: "1002:281"
     external: true

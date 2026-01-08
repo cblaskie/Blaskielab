@@ -1,5 +1,6 @@
 services:
   dozzle:
+    user: "1002:281"
     image: amir20/dozzle:latest
     container_name: dozzle
     restart: unless-stopped
@@ -29,4 +30,5 @@ services:
 
 networks:
   proxy_net:
+    user: "1002:281"
     external: true
