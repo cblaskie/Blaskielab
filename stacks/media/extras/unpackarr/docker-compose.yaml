@@ -1,0 +1,21 @@
+services:
+  unpackerr:
+    image: ghcr.io/unpackerr/unpackerr:0.13.1
+    container_name: unpackerr
+    restart: unless-stopped
+    user: "1002:281"
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/data/downloads:/downloads
+      - /mnt/user/data/media:/media
+    networks:
+      - media_net
+
+networks:
+  media_net:
+    external: true
+  proxy_net:
+    external: true
