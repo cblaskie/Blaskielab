@@ -1,0 +1,26 @@
+services:
+  notifiarr:
+    image: golift/notifiarr:stable
+    container_name: notifiarr
+    restart: unless-stopped
+
+    user: "1002:281"
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/appdata/notifiarr:/config
+
+    networks:
+      - media_net
+
+    healthcheck:
+      test: ["CMD", "/usr/bin/notifiarr", "healthcheck"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+
+networks:
+  media_net:
+    external: true
