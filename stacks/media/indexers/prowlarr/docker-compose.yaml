@@ -24,22 +24,22 @@ services:
       - traefik.http.services.prowlarr.loadbalancer.server.port=9696
 
   flaresolverr:
-  image: ghcr.io/flaresolverr/flaresolverr:latest
-  container_name: flaresolverr
-  restart: unless-stopped
-  user: "1002:281"
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    restart: unless-stopped
+    user: "1002:281"
 
-  environment:
-    - LOG_LEVEL=info
-    - LOG_HTML=false
-    - CAPTCHA_SOLVER=none
-    - HOME=/config
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - HOME=/config
 
-  volumes:
-    - /mnt/user/appdata/flaresolverr:/config
+    volumes:
+      - /mnt/user/appdata/flaresolverr:/config
 
-  networks:
-    - media_net
+    networks:
+      - media_net
 
 networks:
   media_net:
