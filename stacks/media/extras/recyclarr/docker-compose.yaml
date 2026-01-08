@@ -9,12 +9,13 @@ services:
       - .env
 
     volumes:
-      - ./recyclarr.yml:/config/recyclarr.yml:ro
+      - /mnt/user/appdata/recyclarr:/config
 
     networks:
       - media_net
 
     command: ["sync"]
+
 networks:
   media_net:
     external: true
