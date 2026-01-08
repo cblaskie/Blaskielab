@@ -28,5 +28,4 @@ services:
 
 networks:
   proxy_net:
-    user: "1002:281"
     external: true

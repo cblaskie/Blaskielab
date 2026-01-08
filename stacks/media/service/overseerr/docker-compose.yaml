@@ -24,8 +24,6 @@ services:
 
 networks:
   media_net:
-    user: "1002:281"
     external: true
   proxy_net:
-    user: "1002:281"
     external: true
