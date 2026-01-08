@@ -25,7 +25,6 @@ services:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
     restart: unless-stopped
-    user: "1002:281"
 
     environment:
       - LOG_LEVEL=info
