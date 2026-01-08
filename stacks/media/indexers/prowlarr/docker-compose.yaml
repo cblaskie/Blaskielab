@@ -23,7 +23,7 @@ services:
       - traefik.http.routers.prowlarr.tls.certresolver=cloudflare
       - traefik.http.services.prowlarr.loadbalancer.server.port=9696
 
-flaresolverr:
+  flaresolverr:
   image: ghcr.io/flaresolverr/flaresolverr:latest
   container_name: flaresolverr
   restart: unless-stopped
