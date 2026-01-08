@@ -1,0 +1,20 @@
+services:
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr:latest
+    container_name: recyclarr
+
+    user: "1002:281"
+
+    env_file:
+      - .env
+
+    volumes:
+      - ./recyclarr.yml:/config/recyclarr.yml:ro
+
+    networks:
+      - media_net
+
+    command: ["sync"]
+networks:
+  media_net:
+    external: true

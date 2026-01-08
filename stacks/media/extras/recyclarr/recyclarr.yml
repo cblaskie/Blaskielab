@@ -1,0 +1,29 @@
+prowlarr:
+  base_url: http://prowlarr:9696
+  api_key: {{ env "PROWLARR_API_KEY" }}
+
+  # Conservative GitOps defaults
+  delete_old_custom_formats: false
+  replace_existing_custom_formats: false
+
+  indexers:
+    definitions:
+      # ========= Usenet (NZB) =========
+      - name: DrunkenSlug
+        type: drunkenslug
+
+      - name: TabulaRasa
+        type: tabularasa
+
+      - name: NinjaCentral
+        type: ninjacentral
+
+      # ========= Public Torrents =========
+      - name: 1337x
+        type: x1337
+
+      - name: The Pirate Bay
+        type: thepiratebay
+
+      - name: TorrentGalaxy
+        type: torrentgalaxy
