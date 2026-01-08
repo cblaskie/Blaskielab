@@ -3,8 +3,6 @@ services:
     image: lscr.io/linuxserver/prowlarr:1.17.2
     container_name: prowlarr
     restart: unless-stopped
-    user: "1002:281"
-
     env_file:
       - .env
 
