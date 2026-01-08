@@ -23,19 +23,23 @@ services:
       - traefik.http.routers.prowlarr.tls.certresolver=cloudflare
       - traefik.http.services.prowlarr.loadbalancer.server.port=9696
 
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:v3.3.21
-    container_name: flaresolverr
-    restart: unless-stopped
-    user: "1002:281"
+flaresolverr:
+  image: ghcr.io/flaresolverr/flaresolverr:latest
+  container_name: flaresolverr
+  restart: unless-stopped
+  user: "1002:281"
 
-    environment:
-      LOG_LEVEL: info
-      LOG_HTML: "false"
-      CAPTCHA_SOLVER: none
+  environment:
+    - LOG_LEVEL=info
+    - LOG_HTML=false
+    - CAPTCHA_SOLVER=none
+    - HOME=/config
 
-    networks:
-      - media_net
+  volumes:
+    - /mnt/user/appdata/flaresolverr:/config
+
+  networks:
+    - media_net
 
 networks:
   media_net:
