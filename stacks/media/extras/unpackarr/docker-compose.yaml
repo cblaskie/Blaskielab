@@ -9,13 +9,10 @@ services:
       - .env
 
     volumes:
-      - /mnt/user/data/downloads:/downloads
-      - /mnt/user/data/media:/media
+      - /mnt/user/data:/data
+
     networks:
       - media_net
-
 networks:
-  media_net:
-    external: true
-  proxy_net:
-    external: true
+   media_net:
+     external: true
