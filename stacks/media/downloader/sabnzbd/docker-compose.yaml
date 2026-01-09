@@ -1,19 +1,12 @@
 services:
   sabnzbd:
-    image: sabnzbd/sabnzbd:4.3.2
+    image: lscr.io/linuxserver/sabnzbd:4.3.2
     container_name: sabnzbd
     restart: unless-stopped
-    env_file:
-      - .env
 
     volumes:
-      # App configuration
       - /mnt/user/appdata/sabnzbd:/config
-
-      # Incomplete downloads
       - /mnt/user/downloads/incomplete:/incomplete-downloads
-
-      # Completed downloads
       - /mnt/user/downloads/complete:/downloads
 
     # Optional: remove if ONLY accessing via Traefik
@@ -31,13 +24,11 @@ services:
       - traefik.enable=true
       - traefik.docker.network=proxy_net
 
-      # Router
       - traefik.http.routers.sabnzbd.rule=Host(`sabnzbd.theblaskies.com`)
       - traefik.http.routers.sabnzbd.entrypoints=websecure
       - traefik.http.routers.sabnzbd.tls=true
       - traefik.http.routers.sabnzbd.tls.certresolver=cloudflare
 
-      # Service
       - traefik.http.services.sabnzbd.loadbalancer.server.port=8080
 
       # -----------------------------------
