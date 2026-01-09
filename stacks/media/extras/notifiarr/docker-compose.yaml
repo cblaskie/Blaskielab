@@ -1,6 +1,6 @@
-services:
+\services:
   notifiarr:
-    image: golift/notifiarr:v0.9.1
+    image: notifiarr/notifiarr:v0.9.1
     container_name: notifiarr
     restart: unless-stopped
 
