@@ -1,6 +1,6 @@
 services:
   notifiarr:
-    image: golift/notifiarr:stable
+    image: golift/notifiarr:stable:v0.9.1
     container_name: notifiarr
     restart: unless-stopped
 
