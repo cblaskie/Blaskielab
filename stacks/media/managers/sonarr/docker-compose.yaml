@@ -1,6 +1,5 @@
 services:
   sonarr:
-    user: "1002:281"
     image: ghcr.io/linuxserver/sonarr:4.0.10
     container_name: sonarr
     restart: unless-stopped

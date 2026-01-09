@@ -1,6 +1,5 @@
 services:
   radarr:
-    user: "1002:281"
     image: ghcr.io/linuxserver/radarr:5.2.6
     container_name: radarr
     restart: unless-stopped
