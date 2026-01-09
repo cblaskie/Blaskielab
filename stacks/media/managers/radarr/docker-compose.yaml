@@ -9,7 +9,7 @@ services:
 
     volumes:
       - /mnt/user/appdata/radarr:/config
-      - /mnt/user/media:/media
+      - /mnt/user/data:/data
 
     networks:
       - media_net
