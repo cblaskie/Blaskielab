@@ -3,7 +3,8 @@ services:
     image: lscr.io/linuxserver/sabnzbd:4.3.2
     container_name: sabnzbd
     restart: unless-stopped
-
+    env_file:
+      - .env
     volumes:
       - /mnt/user/appdata/sabnzbd:/config
       - /mnt/user/data:/data
