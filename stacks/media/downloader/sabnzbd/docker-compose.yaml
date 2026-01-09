@@ -6,9 +6,7 @@ services:
 
     volumes:
       - /mnt/user/appdata/sabnzbd:/config
-      - /mnt/user/downloads/incomplete:/incomplete-downloads
-      - /mnt/user/downloads/complete:/downloads
-
+      - /mnt/user/data:/data
     # Optional: remove if ONLY accessing via Traefik
     ports:
       - "8080:8080"
