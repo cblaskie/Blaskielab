@@ -1,0 +1,59 @@
+services:
+  sabnzbd:
+    image: sabnzbd/sabnzbd:4.3.2
+    container_name: sabnzbd
+    restart: unless-stopped
+
+    user: "1002:281"
+
+    env_file:
+      - .env
+
+    volumes:
+      # App configuration
+      - /mnt/user/appdata/sabnzbd:/config
+
+      # Incomplete downloads
+      - /mnt/user/downloads/incomplete:/incomplete-downloads
+
+      # Completed downloads
+      - /mnt/user/downloads/complete:/downloads
+
+    # Optional: remove if ONLY accessing via Traefik
+    ports:
+      - "8080:8080"
+
+    networks:
+      - media_net
+      - proxy_net
+
+    labels:
+      # -----------------------------------
+      # Traefik
+      # -----------------------------------
+      - traefik.enable=true
+      - traefik.docker.network=proxy_net
+
+      # Router
+      - traefik.http.routers.sabnzbd.rule=Host(`sabnzbd.theblaskies.com`)
+      - traefik.http.routers.sabnzbd.entrypoints=websecure
+      - traefik.http.routers.sabnzbd.tls=true
+      - traefik.http.routers.sabnzbd.tls.certresolver=cloudflare
+
+      # Service
+      - traefik.http.services.sabnzbd.loadbalancer.server.port=8080
+
+      # -----------------------------------
+      # OAuth / Forward Auth (disabled for now)
+      # -----------------------------------
+      # - traefik.http.routers.sabnzbd.middlewares=oauth@file
+      # - traefik.http.middlewares.oauth.forwardauth.address=https://auth.theblaskies.com/outpost.goauthentik.io/auth/traefik
+      # - traefik.http.middlewares.oauth.forwardauth.trustForwardHeader=true
+      # - traefik.http.middlewares.oauth.forwardauth.authResponseHeaders=X-authentik-username,X-authentik-groups
+
+networks:
+  media_net:
+    external: true
+
+  proxy_net:
+    external: true
