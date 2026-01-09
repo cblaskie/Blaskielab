@@ -1,4 +1,4 @@
-\services:
+services:
   notifiarr:
     image: notifiarr/notifiarr:v0.9.1
     container_name: notifiarr
