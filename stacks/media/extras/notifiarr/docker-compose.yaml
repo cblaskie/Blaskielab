@@ -30,6 +30,7 @@ services:
       - traefik.http.routers.notifiarr.entrypoints=websecure
       - traefik.http.routers.notifiarr.tls=true
       - traefik.http.routers.notifiarr.tls.certresolver=cloudflare
+      - traefik.docker.network=proxy_net
 
       # -----------------------------
       # Service
