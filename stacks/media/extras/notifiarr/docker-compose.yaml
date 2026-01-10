@@ -25,7 +25,7 @@ services:
       # -----------------------------
       # Router
       # -----------------------------
-      - traefik.http.routers.notifiarr.rule=Host(`notifiarr.theblaskies.com`)
+      - traefik.http.routers.notifiarr.rule=Host(`notifiarr.theblaskies.com`) && PathPrefix(`/ui`)
       - traefik.http.routers.notifiarr.entrypoints=websecure
       - traefik.http.routers.notifiarr.tls=true
       - traefik.http.routers.notifiarr.tls.certresolver=cloudflare
