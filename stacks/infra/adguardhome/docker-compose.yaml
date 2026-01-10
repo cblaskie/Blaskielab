@@ -35,7 +35,6 @@ services:
 
 networks:
   lan_macvlan:
-    user: "1002:281"
     driver: macvlan
     driver_opts:
       parent: br0
@@ -45,5 +44,4 @@ networks:
           gateway: 10.69.1.1
 
   proxy_net:
-    user: "1002:281"
     external: true
