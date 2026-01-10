@@ -14,6 +14,32 @@ services:
 
     networks:
       - media_net
+      - proxy_net
+
+    labels:
+      # -----------------------------
+      # Traefik Enable
+      # -----------------------------
+      - traefik.enable=true
+
+      # -----------------------------
+      # Router
+      # -----------------------------
+      - traefik.http.routers.notifiarr.rule=Host(`notifiarr.theblaskies.com`)
+      - traefik.http.routers.notifiarr.entrypoints=websecure
+      - traefik.http.routers.notifiarr.tls=true
+      - traefik.http.routers.notifiarr.tls.certresolver=cloudflare
+
+      # -----------------------------
+      # Service
+      # -----------------------------
+      - traefik.http.services.notifiarr.loadbalancer.server.port=5454
+
+      # -----------------------------
+      # OAuth2 (DISABLED for now)
+      # Uncomment when ready
+      # -----------------------------
+      # - traefik.http.routers.notifiarr.middlewares=oauth2@file
 
     healthcheck:
       test: ["CMD", "/usr/bin/notifiarr", "healthcheck"]
@@ -23,4 +49,7 @@ services:
 
 networks:
   media_net:
+    external: true
+
+  proxy_net:
     external: true
