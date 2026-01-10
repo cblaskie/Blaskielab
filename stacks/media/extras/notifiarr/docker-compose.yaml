@@ -14,7 +14,6 @@ services:
       - /mnt/user/appdata/notifiarr:/config
 
     networks:
-      - media_net
       - proxy_net
 
     labels:
@@ -50,8 +49,5 @@ services:
       retries: 3
 
 networks:
-  media_net:
-    external: true
-
   proxy_net:
     external: true
