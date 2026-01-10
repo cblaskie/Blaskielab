@@ -1,6 +1,5 @@
 services:
   docker-socket-proxy:
-    user: "1002:281"
     image: ghcr.io/tecnativa/docker-socket-proxy
     container_name: docker-socket-proxy
     restart: unless-stopped
@@ -21,7 +20,6 @@ services:
 
 
   traefik:
-    user: "1002:281"
     image: traefik@sha256:16acb89c6db341182970d6fdafece31303b0a380a8ed7aa51682e225229bf1d2
     container_name: traefik
     restart: unless-stopped
