@@ -8,7 +8,8 @@ services:
 
     env_file:
       - .env
-
+    ports:
+      - "5454:5454"
     volumes:
       - /mnt/user/appdata/notifiarr:/config
 
@@ -25,7 +26,7 @@ services:
       # -----------------------------
       # Router
       # -----------------------------
-      - traefik.http.routers.notifiarr.rule=Host(`notifiarr.theblaskies.com`) && PathPrefix(`/ui`)
+      - traefik.http.routers.notifiarr.rule=Host(`notifiarr.theblaskies.com`)
       - traefik.http.routers.notifiarr.entrypoints=websecure
       - traefik.http.routers.notifiarr.tls=true
       - traefik.http.routers.notifiarr.tls.certresolver=cloudflare
