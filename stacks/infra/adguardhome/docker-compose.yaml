@@ -12,13 +12,13 @@ services:
 
     networks:
       lan_macvlan:
-        ipv4_address: 10.69.1.50
+        ipv4_address: 10.69.1.51
       proxy_net:
 
     # DNS exposed only on LAN IP
     ports:
-      - "10.69.1.50:53:53/tcp"
-      - "10.69.1.50:53:53/udp"
+      - "10.69.1.51:53:53/tcp"
+      - "10.69.1.51:53:53/udp"
 
     labels:
       - traefik.enable=true
