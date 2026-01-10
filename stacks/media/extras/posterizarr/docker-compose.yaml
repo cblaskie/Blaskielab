@@ -1,0 +1,31 @@
+services:
+  posterizarr:
+    image: ghcr.io/fscorrupt/posterizarr:latest
+    container_name: posterizarr
+    restart: unless-stopped
+    user: "${PUID}:${PGID}"
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/appdata/posterizarr:/config
+      - /mnt/user/data/media/assets:/assets
+
+    networks:
+      - media_net
+      - proxy_net
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.posterizarr.rule=Host(`posterizarr.theblaskies.com`)
+      - traefik.http.routers.posterizarr.entrypoints=websecure
+      - traefik.http.routers.posterizarr.tls=true
+      - traefik.http.services.posterizarr.loadbalancer.server.port=3000
+
+networks:
+  media_net:
+    external: true
+
+  proxy_net:
+    external: true

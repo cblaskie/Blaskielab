@@ -1,0 +1,31 @@
+services:
+  kometa:
+    image: kometateam/kometa:latest
+    container_name: kometa
+    restart: unless-stopped
+    user: "${PUID}:${PGID}"
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/appdata/kometa:/config
+      - /mnt/user/data/media/assets:/assets
+
+    networks:
+      - media_net
+      - proxy_net
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.kometa.rule=Host(`kometa.theblaskies.com`)
+      - traefik.http.routers.kometa.entrypoints=websecure
+      - traefik.http.routers.kometa.tls=true
+      - traefik.http.services.kometa.loadbalancer.server.port=6789
+
+networks:
+  media_net:
+    external: true
+
+  proxy_net:
+    external: true

@@ -3,9 +3,6 @@ services:
     image: golift/notifiarr:0.9.1
     container_name: notifiarr
     restart: unless-stopped
-
-    user: "1002:281"
-
     env_file:
       - .env
     ports:
@@ -20,7 +17,7 @@ services:
       # -----------------------------
       # Traefik Enable
       # -----------------------------
-      - traefik.enable=true
+      - "traefik.enable=true"
 
       # -----------------------------
       # Router
@@ -41,12 +38,6 @@ services:
       # Uncomment when ready
       # -----------------------------
       # - traefik.http.routers.notifiarr.middlewares=oauth2@file
-
-    healthcheck:
-      test: ["CMD", "/usr/bin/notifiarr", "healthcheck"]
-      interval: 1m
-      timeout: 10s
-      retries: 3
 
 networks:
   proxy_net:
