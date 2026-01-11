@@ -9,7 +9,7 @@ services:
 
     volumes:
       - /mnt/user/appdata/plex:/config
-      - /mnt/user/media:/media
+      - /mnt/user/data/media:/media
 
     networks:
       - media_net
