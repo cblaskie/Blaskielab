@@ -1,6 +1,5 @@
 services:
   plex:
-    user: "1002:281"
     image: ghcr.io/linuxserver/plex:1.41.2
     container_name: plex
     restart: unless-stopped
