@@ -1,6 +1,6 @@
 services:
   plex:
-    image: ghcr.io/linuxserver/plex:1.41.2
+    image: ghcr.io/linuxserver/plex:latest
     container_name: plex
     restart: unless-stopped
 
