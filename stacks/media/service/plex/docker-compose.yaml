@@ -10,8 +10,7 @@ services:
 
     volumes:
       - /mnt/user/appdata/plex:/config
-      - /mnt/user/media:/media
-
+      - /mnt/user/data/media:/media
     tmpfs:
       - /transcode:size=16G
 
