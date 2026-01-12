@@ -1,6 +1,5 @@
 services:
   overseerr:
-    user: "1002:281"
     image: ghcr.io/linuxserver/overseerr:1.33.2
     container_name: overseerr
     restart: unless-stopped
