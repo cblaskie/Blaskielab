@@ -1,15 +1,19 @@
 services:
   plex:
-    image: ghcr.io/linuxserver/plex:latest
+    image: ghcr.io/linuxserver/plex:1.41.2
     container_name: plex
     restart: unless-stopped
+    runtime: nvidia
 
     env_file:
       - .env
 
     volumes:
       - /mnt/user/appdata/plex:/config
-      - /mnt/user/data/media:/media
+      - /mnt/user/media:/media
+
+    tmpfs:
+      - /transcode:size=16G
 
     networks:
       - media_net
