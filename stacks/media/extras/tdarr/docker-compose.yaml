@@ -3,7 +3,6 @@ services:
     image: ghcr.io/haveagitgat/tdarr:latest
     container_name: tdarr
     restart: unless-stopped
-    user: "99:100"
 
     env_file:
       - .env
@@ -33,7 +32,6 @@ services:
     image: ghcr.io/haveagitgat/tdarr_node:latest
     container_name: tdarr-node
     restart: unless-stopped
-    user: "99:100"
 
     env_file:
       - .env
