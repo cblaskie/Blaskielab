@@ -10,7 +10,7 @@ services:
     volumes:
       - /mnt/user/appdata/radarr:/config
       - /mnt/user/data:/data
-
+      - /mnt/user/data/recycle-bin:/data/recycle-bin
     networks:
       - media_net
       - proxy_net
