@@ -14,6 +14,7 @@ services:
       - --set-xauthrequest=true
       - --pass-authorization-header=true
       - --set-authorization-header=true
+      - --whitelist-domain=.theblaskies.com
 
     networks:
       - proxy_net
