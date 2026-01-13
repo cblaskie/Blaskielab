@@ -9,9 +9,7 @@ services:
     networks:
       - proxy_net
     labels:
-      - traefik.enable=true
-      - traefik.docker.network=proxy_net
-
+      - traefik.enable=false
 networks:
   proxy_net:
     external: true
