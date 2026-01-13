@@ -12,12 +12,20 @@ services:
       AUTH: none
       BIND_ADDR: 127.0.0.1:8080
 
+    entrypoint: ["/bin/sh", "-c"]
+
+    command: |
+      while read ext; do
+        code-server --install-extension "$ext";
+      done < /home/coder/extensions.json
+      exec code-server --disable-telemetry
+
     volumes:
-      # code-server state + config (runtime source of truth)
+      # code-server state + config
       - ${APPDATA_DIR}/config:/home/coder/.config/code-server
       - ${APPDATA_DIR}/extensions:/home/coder/.local/share/code-server/extensions
 
-      # VS Code user config (from appdata)
+      # VS Code user config
       - ${APPDATA_DIR}/config/settings.json:/home/coder/.local/share/code-server/User/settings.json:ro
       - ${APPDATA_DIR}/extensions/extensions.json:/home/coder/extensions.json:ro
 
@@ -26,14 +34,6 @@ services:
 
       # FULL appdata access (intentional)
       - /mnt/user/appdata:/appdata
-
-    command: >
-      sh -c "
-      while read ext; do
-        code-server --install-extension \"$ext\";
-      done < /home/coder/extensions.json &&
-      exec code-server --disable-telemetry
-      "
 
     networks:
       - proxy_net
