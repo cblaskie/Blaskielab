@@ -1,0 +1,51 @@
+services:
+  code-server:
+    image: ghcr.io/coder/code-server:latest
+    container_name: code-server
+    restart: unless-stopped
+
+    user: "${PUID}:${PGID}"
+    working_dir: /workspace
+
+    environment:
+      TZ: ${TZ}
+      AUTH: none
+      BIND_ADDR: 127.0.0.1:8080
+
+    volumes:
+      # code-server state + config (runtime source of truth)
+      - ${APPDATA_DIR}/config:/home/coder/.config/code-server
+      - ${APPDATA_DIR}/extensions:/home/coder/.local/share/code-server/extensions
+
+      # VS Code user config (from appdata)
+      - ${APPDATA_DIR}/config/settings.json:/home/coder/.local/share/code-server/User/settings.json:ro
+      - ${APPDATA_DIR}/extensions/extensions.json:/home/coder/extensions.json:ro
+
+      # Git working directory
+      - ${REPOS_DIR}:/workspace
+
+      # FULL appdata access (intentional)
+      - /mnt/user/appdata:/appdata
+
+    command: >
+      sh -c "
+      while read ext; do
+        code-server --install-extension \"$ext\";
+      done < /home/coder/extensions.json &&
+      exec code-server --disable-telemetry
+      "
+
+    networks:
+      - proxy_net
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.code.rule=Host(`code.theblaskies.com`)
+      - traefik.http.routers.code.entrypoints=websecure
+      - traefik.http.routers.code.tls=true
+      - traefik.http.routers.code.middlewares=authentik@file,secure-headers@file
+      - traefik.http.services.code.loadbalancer.server.port=8080
+
+networks:
+  proxy_net:
+    external: true

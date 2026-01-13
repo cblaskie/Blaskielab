@@ -15,7 +15,7 @@ services:
     volumes:
       - /mnt/user/appdata/tdarr/server:/app/server
       - /mnt/user/data/media:/media
-      - /tmp:/temp
+      - /mnt/cache/temp/tdarr-temp:/temp
 
     networks:
       - media_net
@@ -44,7 +44,7 @@ services:
     volumes:
       - /mnt/user/appdata/tdarr/node:/app/configs
       - /mnt/user/data/media:/media
-      - /tmp:/temp
+      - /mnt/cache/temp/tdarr-temp:/temp
 
     runtime: nvidia
 
