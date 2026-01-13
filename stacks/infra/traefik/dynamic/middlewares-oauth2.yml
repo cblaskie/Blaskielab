@@ -1,21 +1,20 @@
+# middleware.yml
 http:
   middlewares:
     oauth2-auth:
       forwardAuth:
-        address: http://oauth2-proxy:4180/oauth2/auth
+        # Internal: Traefik asks the proxy if the user has a cookie
+        address: "http://oauth2-proxy:4180/oauth2/auth"
         trustForwardHeader: true
 
-        # Explicit allowlist of headers passed to backend
-        authResponseHeaders:
-          - X-Auth-Request-User
-          - X-Auth-Request-Email
-          - X-Auth-Request-Preferred-Username
-          - X-Auth-Request-Groups
-          - Authorization
+        # External: If the check above fails (401), Traefik tells the BROWSER 
+        # to go here. It uses the central auth domain.
+        authSignIn: "https://auth.theblaskies.com/oauth2/start?rd=$escaped_uri"
 
-        # Optional: pass original request info to oauth2-proxy
-        # (useful for debugging and some IdPs)
-        authRequestHeaders:
-          - X-Forwarded-Proto
-          - X-Forwarded-Host
-          - X-Forwarded-Uri
+        # Pass the user info from PocketID through to your apps
+        authResponseHeaders:
+          - "X-Auth-Request-User"
+          - "X-Auth-Request-Email"
+          - "X-Auth-Request-Preferred-Username"
+          - "X-Auth-Request-Groups"
+          - "Authorization"

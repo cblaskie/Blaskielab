@@ -1,7 +1,9 @@
+# oauth2-proxy.yml
 http:
   routers:
     oauth2-proxy:
-      rule: HostRegexp(`{host:.+}`) && PathPrefix(`/oauth2`)
+      # Specific host for the central auth domain
+      rule: Host(`auth.theblaskies.com`) && PathPrefix(`/oauth2`)
       entryPoints:
         - websecure
       priority: 1000
@@ -13,4 +15,5 @@ http:
     oauth2-proxy:
       loadBalancer:
         servers:
+          # Assumes the container name in docker-compose is 'oauth2-proxy'
           - url: http://oauth2-proxy:4180
