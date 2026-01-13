@@ -4,6 +4,7 @@ http:
       rule: HostRegexp(`{host:.+}`) && PathPrefix(`/oauth2`)
       entryPoints:
         - websecure
+      priority: 1000
       tls:
         certResolver: cloudflare
       service: oauth2-proxy
