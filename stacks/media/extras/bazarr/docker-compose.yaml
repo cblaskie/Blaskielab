@@ -9,7 +9,7 @@ services:
 
     volumes:
       - /mnt/user/appdata/bazarr:/config
-      - /mnt/user/media:/media
+      - /mnt/user/data/media:/media
 
     networks:
       - proxy_net
