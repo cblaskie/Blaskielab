@@ -6,16 +6,6 @@ services:
 
     env_file:
       - .env
-
-    command:
-      - --provider=oidc
-      - --http-address=0.0.0.0:4180
-      - --reverse-proxy=true
-      - --set-xauthrequest=true
-      - --pass-authorization-header=true
-      - --set-authorization-header=true
-      - --whitelist-domain=.theblaskies.com
-
     networks:
       - proxy_net
     labels:
