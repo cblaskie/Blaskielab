@@ -10,6 +10,8 @@ services:
 
     labels:
       - traefik.enable=true
+      - traefik.docker.network=proxy_net
+
 
       # Router (protected by oauth2-proxy middleware)
       - traefik.http.routers.whoami.rule=Host(`whoami.theblaskies.com`)
