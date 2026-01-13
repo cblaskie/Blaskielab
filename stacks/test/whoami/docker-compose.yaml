@@ -17,7 +17,6 @@ services:
       - traefik.http.routers.whoami.tls=true
       - traefik.http.routers.whoami.tls.certresolver=cloudflare
 
-  # 🔐 opt-in to auth
       - traefik.http.routers.whoami.middlewares=oauth2-auth@file
 
       - traefik.http.services.whoami.loadbalancer.server.port=80
