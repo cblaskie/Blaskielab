@@ -1,12 +1,12 @@
 http:
   routers:
     oauth2-proxy:
-      rule: Host(`auth.theblaskies.com`)
+      rule: HostRegexp(`{host:.+}`) && PathPrefix(`/oauth2`)
       entryPoints:
         - websecure
-      service: oauth2-proxy
       tls:
         certResolver: cloudflare
+      service: oauth2-proxy
 
   services:
     oauth2-proxy:

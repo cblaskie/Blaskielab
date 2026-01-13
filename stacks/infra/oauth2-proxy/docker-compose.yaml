@@ -21,10 +21,6 @@ services:
       - traefik.enable=true
       - traefik.docker.network=proxy_net
 
-      - traefik.http.middlewares.oauth2-proxy.forwardauth.address=http://oauth2-proxy:4180/oauth2/auth
-      - traefik.http.middlewares.oauth2-proxy.forwardauth.trustForwardHeader=true
-      - traefik.http.middlewares.oauth2-proxy.forwardauth.authResponseHeaders=X-Auth-Request-User,X-Auth-Request-Email,Authorization
-
 networks:
   proxy_net:
     external: true
