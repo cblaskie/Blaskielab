@@ -35,15 +35,6 @@ http:
           - oauth-signin
           - oauth-verify
 
-    oauth-verify:
-      forwardAuth:
-        address: "http://oauth2-proxy:4180/oauth2/auth"
-        trustForwardHeader: true
-        authResponseHeaders:
-          - "X-Auth-Request-User"
-          - "X-Auth-Request-Email"
-          - "X-Auth-Request-Groups"
-        addAuthBerforeForwarding: false
     oauth-signin:
       errors:
         status:
@@ -52,7 +43,21 @@ http:
         # 2. We use {url} to ensure the destination is preserved.
         query: "/oauth2/start?rd={url}"
         service: oauth2-proxy-service
-
+    oauth-verify:
+      forwardAuth:
+        address: "http://oauth2-proxy:4180/oauth2/auth"
+        trustForwardHeader: true
+        authRequestHeaders:
+          - "X-Forwarded-Host"
+          - "X-Forwarded-Proto"
+          - "X-Forwarded-Method"
+          - "X-Forwarded-Uri"
+          - "X-Forwarded-For"
+        authResponseHeaders:
+          - "X-Auth-Request-User"
+          - "X-Auth-Request-Email"
+          - "X-Auth-Request-Groups"
+          - "Set-Cookie"
     oauth2-logout:
       redirectRegex:
         regex: "^https://auth.theblaskies.com/logout$"

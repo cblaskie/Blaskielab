@@ -8,8 +8,13 @@ services:
     env_file:
       - .env
 
+    environment:
+      TZ: "${TZ}"
+
     volumes:
       - /mnt/user/appdata/posterizarr:/config
+      - /mnt/user/appdata/posterizarr/manualassets:/manualassets
+      - /mnt/user/appdata/posterizarr/assetsbackup:/assetsbackup
       - /mnt/user/data/media/assets:/assets
 
     networks:
