@@ -25,7 +25,7 @@ services:
       - traefik.http.routers.posterizarr.rule=Host(`posterizarr.theblaskies.com`)
       - traefik.http.routers.posterizarr.entrypoints=websecure
       - traefik.http.routers.posterizarr.tls=true
-      - traefik.http.services.posterizarr.loadbalancer.server.port=3000
+      - traefik.http.services.posterizarr.loadbalancer.server.port=8000
 
 networks:
   media_net:
