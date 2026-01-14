@@ -10,6 +10,7 @@ services:
       - proxy_net
     labels:
       - traefik.enable=true
+      - traefik.http.services.oauth2-proxy.loadbalancer.server.port=4180
 networks:
   proxy_net:
     external: true
