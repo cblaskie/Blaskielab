@@ -1,20 +1,29 @@
-# middleware.yml
 http:
   middlewares:
-    oauth2-auth:
+    # 1. THE CHECKER: Asks the proxy "Is this user logged in?"
+    oauth-verify:
       forwardAuth:
-        # Internal: Traefik asks the proxy if the user has a cookie
         address: "http://oauth2-proxy:4180/oauth2/auth"
         trustForwardHeader: true
-
-        # External: If the check above fails (401), Traefik tells the BROWSER 
-        # to go here. It uses the central auth domain.
-        authSignIn: "https://auth.theblaskies.com/oauth2/start?rd=$escaped_uri"
-
-        # Pass the user info from PocketID through to your apps
         authResponseHeaders:
           - "X-Auth-Request-User"
           - "X-Auth-Request-Email"
           - "X-Auth-Request-Preferred-Username"
           - "X-Auth-Request-Groups"
           - "Authorization"
+
+    # 2. THE REDIRECTOR: If the checker returns 401, this triggers a redirect.
+    oauth-signin:
+      errors:
+        status:
+          - "401"
+        # The query uses v3 variables to send you to the right login path
+        query: "/oauth2/start?rd=https://{host}{uri}"
+        service: oauth2-proxy@file
+
+    # 3. THE CHAIN: This combines both into one "tool" for your apps.
+    oauth2-auth:
+      chain:
+        middlewares:
+          - oauth-signin
+          - oauth-verify
