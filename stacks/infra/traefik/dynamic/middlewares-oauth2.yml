@@ -48,8 +48,8 @@ http:
       errors:
         status:
           - "401"
-        # This tells Traefik where to bounce 401 errors
-        query: "/oauth2/start?rd=https://{host}{uri}"
+        # Using $escaped_uri ensures Traefik encodes the full URL correctly
+        query: "/oauth2/start?rd=$escaped_uri"
         service: oauth2-proxy-service
 
     oauth2-logout:
