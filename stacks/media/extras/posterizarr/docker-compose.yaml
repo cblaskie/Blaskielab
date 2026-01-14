@@ -3,7 +3,6 @@ services:
     image: ghcr.io/fscorrupt/posterizarr:latest
     container_name: posterizarr
     restart: unless-stopped
-    user: "${PUID}:${PGID}"
 
     env_file:
       - .env
