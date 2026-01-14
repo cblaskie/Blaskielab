@@ -1,24 +1,24 @@
-services:
   whoami:
     image: traefik/whoami:latest
     container_name: whoami
-    user: "1002:281"
     restart: unless-stopped
-
     networks:
       - proxy_net
     labels:
-      - traefik.enable=true
-      - traefik.docker.network=proxy_net
+      - "traefik.enable=true"
+      # Network must match where Traefik is looking
+      - "traefik.docker.network=proxy_net"
 
-      - traefik.http.routers.whoami.rule=Host(`whoami.theblaskies.com`)
-      - traefik.http.routers.whoami.priority=10
-      - traefik.http.routers.whoami.entrypoints=websecure
-      - traefik.http.routers.whoami.tls=true
-      - traefik.http.routers.whoami.tls.certresolver=cloudflare
+      # Routing Rules
+      - "traefik.http.routers.whoami.rule=Host(`whoami.theblaskies.com`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls.certresolver=cloudflare"
 
-      - traefik.http.routers.whoami.middlewares=oauth2-auth@file
-      - traefik.http.services.whoami.loadbalancer.server.port=80
+      # THE FIX: Point to the Chain defined in middlewares-oauth2.yml
+      - "traefik.http.routers.whoami.middlewares=oauth2-auth@file"
+
+      # Port for the internal whoami container
+      - "traefik.http.services.whoami.loadbalancer.server.port=80"
 networks:
   proxy_net:
     external: true
