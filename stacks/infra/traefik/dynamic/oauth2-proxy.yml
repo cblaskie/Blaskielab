@@ -1,9 +1,0 @@
-http:
-  routers:
-    oauth2-proxy:
-      rule: Host(`auth.theblaskies.com`) && PathPrefix(`/oauth2`)
-      service: oauth2-proxy
-      entryPoints:
-        - websecure
-      tls:
-        certResolver: cloudflare

@@ -9,7 +9,7 @@ services:
     networks:
       - proxy_net
     labels:
-      - traefik.enable=false
+      - traefik.enable=true
 networks:
   proxy_net:
     external: true

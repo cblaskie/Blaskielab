@@ -1,6 +1,40 @@
 http:
+  routers:
+    # Router for auth.theblaskies.com
+    oauth2-proxy-router:
+      rule: "Host(`auth.theblaskies.com`) && PathPrefix(`/oauth2`)"
+      service: oauth2-proxy-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: cloudflare
+
+    # Router for logout
+    logout-router:
+      rule: "Host(`auth.theblaskies.com`) && Path(`/logout`)"
+      service: oauth2-proxy-service
+      middlewares:
+        - oauth2-logout
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: cloudflare
+
+  services:
+    # THIS SECTION FIXES THE "SERVICE DOES NOT EXIST" ERROR
+    oauth2-proxy-service:
+      loadBalancer:
+        servers:
+          - url: "http://oauth2-proxy:4180"
+
   middlewares:
-    # 1. THE CHECKER: Asks the proxy "Is this user logged in?"
+    # v3 Logic: Chain Verify + Signin
+    oauth2-auth:
+      chain:
+        middlewares:
+          - oauth-signin
+          - oauth-verify
+
     oauth-verify:
       forwardAuth:
         address: "http://oauth2-proxy:4180/oauth2/auth"
@@ -8,22 +42,17 @@ http:
         authResponseHeaders:
           - "X-Auth-Request-User"
           - "X-Auth-Request-Email"
-          - "X-Auth-Request-Preferred-Username"
           - "X-Auth-Request-Groups"
-          - "Authorization"
 
-    # 2. THE REDIRECTOR: If the checker returns 401, this triggers a redirect.
     oauth-signin:
       errors:
         status:
           - "401"
-        # The query uses v3 variables to send you to the right login path
+        # This tells Traefik where to bounce 401 errors
         query: "/oauth2/start?rd=https://{host}{uri}"
-        service: oauth2-proxy@file
+        service: oauth2-proxy-service
 
-    # 3. THE CHAIN: This combines both into one "tool" for your apps.
-    oauth2-auth:
-      chain:
-        middlewares:
-          - oauth-signin
-          - oauth-verify
+    oauth2-logout:
+      redirectRegex:
+        regex: "^https://auth.theblaskies.com/logout$"
+        replacement: "https://auth.theblaskies.com/oauth2/sign_out?rd=https://home.theblaskies.com"
