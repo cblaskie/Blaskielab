@@ -1,6 +1,5 @@
 services:
   komodo-core:
-    user: "1002:281"
     image: ghcr.io/moghtech/komodo-core@sha256:a1cceb4f971443b1e9f2a767788f663d0afb6244ee2135f7fe3fd1036af37ade
     container_name: komodo-core
     restart: unless-stopped
@@ -40,7 +39,6 @@ services:
   # 3. APPLY BOTH MIDDLEWARES (Merged into one line)
       - "traefik.http.routers.komodo.middlewares=komodo-headers"
   komodo-periphery:
-    user: "1002:281"
     image: ghcr.io/moghtech/komodo-periphery@sha256:bd79cf960ed054fe8e02384322303e462448679b1149dde48bbef151417255b1
     container_name: komodo-periphery
     restart: unless-stopped
@@ -49,26 +47,18 @@ services:
       - .env
 
     volumes:
-      # Docker control
       - /var/run/docker.sock:/var/run/docker.sock
-
-      # Required for process inspection
       - /proc:/proc
-
-      # Must be identical inside and outside container
-      - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
-      # Config for Periphery
-      #- ./periphery.config.toml:/etc/komodo/periphery.config.toml
-      - /mnt/user/appdata/traefik:/mnt/user/appdata/traefik
+      # FIX: Mount your appdata to the expected root and the repo-cache specifically
       - /mnt/user/appdata/komodo:/etc/komodo
+      - /mnt/user/appdata/komodo/repo-cache:/repo-cache
+      - /mnt/user/appdata/traefik:/mnt/user/appdata/traefik
     networks:
       - infra_net
 
 
 networks:
   infra_net:
-    user: "1002:281"
     external: true
   proxy_net:
-    user: "1002:281"
     external: true
