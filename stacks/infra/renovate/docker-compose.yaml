@@ -1,0 +1,28 @@
+services:
+  renovate:
+    image: renovate/renovate:latest
+    container_name: renovate
+    restart: unless-stopped
+
+    environment:
+      RENOVATE_PLATFORM: github
+      RENOVATE_TOKEN: ${RENOVATE_TOKEN}
+
+      RENOVATE_GIT_AUTHOR: "Obie Bot <renovate@theblaskies.com>"
+      RENOVATE_AUTODISCOVER: "false"
+
+      # Point Renovate at your homelab repo
+      RENOVATE_REPOSITORIES: "cblaskie/Blaskielab"
+
+      # Logging
+      LOG_LEVEL: info
+
+    volumes:
+      - /mnt/user/appdata/renovate:/tmp/renovate
+
+    networks:
+      - proxy_net
+
+networks:
+  proxy_net:
+    external: true
