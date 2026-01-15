@@ -1,6 +1,5 @@
 services:
   lldap:
-    user: "1002:281"
     image: lldap/lldap:latest
     container_name: lldap
     restart: unless-stopped
