@@ -4,36 +4,36 @@ services:
     container_name: code-server
     restart: unless-stopped
 
-    user: "${PUID}:${PGID}"
-    working_dir: /workspace
+    # Root is intentional since you're editing appdata
+    user: "0:0"
+
+    # So you see both repos + appdata easily
+    working_dir: /mnt
 
     environment:
       TZ: ${TZ}
       AUTH: none
-      BIND_ADDR: 127.0.0.1:8080
 
     entrypoint: ["/bin/sh", "-c"]
 
     command: |
-      while read ext; do
-        code-server --install-extension "$ext";
-      done < /home/coder/extensions.json
-      exec code-server --disable-telemetry
+      if [ -f /home/coder/extensions.json ]; then
+        xargs -n 1 code-server --install-extension < /home/coder/extensions.json
+      fi
+      exec code-server --bind-addr 0.0.0.0:8080 --disable-telemetry
 
     volumes:
-      # code-server state + config
-      - ${APPDATA_DIR}/config:/home/coder/.config/code-server
-      - ${APPDATA_DIR}/extensions:/home/coder/.local/share/code-server/extensions
+      # 1. code-server config/state
+      - /mnt/user/appdata/code-server/config:/home/coder/.config
 
-      # VS Code user config
-      - ${APPDATA_DIR}/config/settings.json:/home/coder/.local/share/code-server/User/settings.json:ro
-      - ${APPDATA_DIR}/extensions/extensions.json:/home/coder/extensions.json:ro
+      # 2. extensions list (SOURCE OF TRUTH)
+      - /mnt/user/appdata/code-server/extensions/extensions.json:/home/coder/extensions.json:ro
 
-      # Git working directory
-      - ${REPOS_DIR}:/workspace
+      # 3. Git working directory
+      - /mnt/user/repos:/mnt/repos
 
-      # FULL appdata access (intentional)
-      - /mnt/user/appdata:/appdata
+      # 4. FULL appdata access (intentional, blunt method)
+      - /mnt/user/appdata:/mnt/appdata-config
 
     networks:
       - proxy_net
