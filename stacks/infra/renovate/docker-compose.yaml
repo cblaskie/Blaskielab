@@ -9,7 +9,7 @@ services:
       RENOVATE_TOKEN: ${RENOVATE_TOKEN}
 
       RENOVATE_GIT_AUTHOR: "Obie Bot <renovate@theblaskies.com>"
-      RENOVATE_AUTODISCOVER: "false"
+      RENOVATE_AUTODISCOVER: "true"
       RENOVATE_BASE_DIR: /tmp/renovate
       RENOVATE_CONCURRENT_LIMIT: "1"
       RENOVATE_PR_CONCURRENT_LIMIT: "2"
