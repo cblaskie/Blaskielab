@@ -10,6 +10,7 @@ services:
     environment:
       TZ: ${TZ}
       AUTH: none
+      DOCKER_HOST: tcp://docker-socket-proxy:2375
 
     entrypoint: /entrypoint.sh
 
@@ -28,8 +29,6 @@ services:
 
       # FULL appdata access (intentional)
       - /mnt/user/appdata:/mnt/appdata-config
-
-      - /var/run/docker.sock:/var/run/docker.sock
 
     networks:
       - proxy_net
