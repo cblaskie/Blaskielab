@@ -4,10 +4,7 @@ services:
     container_name: code-server
     restart: unless-stopped
 
-    # Root is intentional since you're editing appdata
     user: "0:0"
-
-    # So you see both repos + appdata easily
     working_dir: /mnt
 
     environment:
@@ -16,22 +13,15 @@ services:
 
     entrypoint: ["/bin/sh", "-c"]
 
-    command: |
-      [ -f /home/coder/extensions.json ] && \
-       xargs -n 1 code-server --install-extension < /home/coder/extensions.json
-       exec code-server --bind-addr 0.0.0.0:8080 --disable-telemetry
+    command: >
+      cat /home/coder/extensions.json 2>/dev/null |
+      xargs -r -n 1 code-server --install-extension ;
+      exec code-server --bind-addr 0.0.0.0:8080 --disable-telemetry
 
     volumes:
-      # 1. code-server config/state
       - /mnt/user/appdata/code-server/config:/home/coder/.config
-
-      # 2. extensions list (SOURCE OF TRUTH)
       - /mnt/user/appdata/code-server/extensions/extensions.json:/home/coder/extensions.json:ro
-
-      # 3. Git working directory
       - /mnt/user/repos:/mnt/repos
-
-      # 4. FULL appdata access (intentional, blunt method)
       - /mnt/user/appdata:/mnt/appdata-config
 
     networks:
