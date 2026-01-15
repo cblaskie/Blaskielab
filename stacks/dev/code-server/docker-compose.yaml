@@ -17,10 +17,9 @@ services:
     entrypoint: ["/bin/sh", "-c"]
 
     command: |
-      if [ -f /home/coder/extensions.json ]; then
-        xargs -n 1 code-server --install-extension < /home/coder/extensions.json
-      fi
-      exec code-server --bind-addr 0.0.0.0:8080 --disable-telemetry
+      [ -f /home/coder/extensions.json ] && \
+       xargs -n 1 code-server --install-extension < /home/coder/extensions.json
+       exec code-server --bind-addr 0.0.0.0:8080 --disable-telemetry
 
     volumes:
       # 1. code-server config/state
