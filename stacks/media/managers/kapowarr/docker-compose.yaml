@@ -4,9 +4,6 @@ services:
     container_name: kapowarr
     restart: unless-stopped
 
-    # Match Unraid permissions
-    user: "99:100"
-
     environment:
       TZ: America/New_York
 
