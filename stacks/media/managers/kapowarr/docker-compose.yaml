@@ -1,0 +1,37 @@
+services:
+  kapowarr:
+    image: ghcr.io/kapowarr/kapowarr:latest
+    container_name: kapowarr
+    restart: unless-stopped
+
+    # Match Unraid permissions
+    user: "99:100"
+
+    environment:
+      TZ: America/New_York
+
+    volumes:
+      # App configuration
+      - /mnt/user/appdata/kapowarr:/config
+
+      # Comics library root
+      - /mnt/user/data/media/comics:/comics
+
+    networks:
+      - proxy_net
+
+    labels:
+      - traefik.enable=true
+
+      # Router
+      - traefik.http.routers.kapowarr.rule=Host(`kapowarr.theblaskies.com`)
+      - traefik.http.routers.kapowarr.entrypoints=websecure
+      - traefik.http.routers.kapowarr.tls=true
+      - traefik.http.routers.kapowarr.tls.certresolver=cloudflare
+
+      # Service
+      - traefik.http.services.kapowarr.loadbalancer.server.port=5656
+
+networks:
+  proxy_net:
+    external: true
