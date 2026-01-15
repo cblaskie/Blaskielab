@@ -43,7 +43,6 @@ services:
       - traefik.http.routers.code.rule=Host(`code.theblaskies.com`)
       - traefik.http.routers.code.entrypoints=websecure
       - traefik.http.routers.code.tls=true
-      - traefik.http.routers.code.middlewares=authentik@file,secure-headers@file
       - traefik.http.services.code.loadbalancer.server.port=8080
 
 networks:
