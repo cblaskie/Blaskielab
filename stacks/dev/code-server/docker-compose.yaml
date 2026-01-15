@@ -11,17 +11,22 @@ services:
       TZ: ${TZ}
       AUTH: none
 
-    entrypoint: ["/bin/sh", "-c"]
-
-    command: >
-      cat /home/coder/extensions.json 2>/dev/null |
-      xargs -r -n 1 code-server --install-extension ;
-      exec code-server --bind-addr 0.0.0.0:8080 --disable-telemetry
+    entrypoint: /entrypoint.sh
 
     volumes:
+      # Entrypoint script
+      - ./entrypoint.sh:/entrypoint.sh:ro
+
+      # code-server config/state
       - /mnt/user/appdata/code-server/config:/home/coder/.config
+
+      # extensions list (plain text)
       - /mnt/user/appdata/code-server/extensions/extensions.json:/home/coder/extensions.json:ro
+
+      # Git working directory
       - /mnt/user/repos:/mnt/repos
+
+      # FULL appdata access (intentional)
       - /mnt/user/appdata:/mnt/appdata-config
 
     networks:
