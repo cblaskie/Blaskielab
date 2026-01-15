@@ -29,6 +29,8 @@ services:
       # FULL appdata access (intentional)
       - /mnt/user/appdata:/mnt/appdata-config
 
+      - /var/run/docker.sock:/var/run/docker.sock
+
     networks:
       - proxy_net
 
