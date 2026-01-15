@@ -15,7 +15,7 @@ services:
 
     volumes:
       # Entrypoint script
-      - ./entrypoint.sh:/entrypoint.sh:ro
+      - /mnt/user/appdata/code-server/entrypoint.sh:/entrypoint.sh:ro
 
       # code-server config/state
       - /mnt/user/appdata/code-server/config:/home/coder/.config
