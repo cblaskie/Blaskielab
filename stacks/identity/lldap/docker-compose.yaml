@@ -15,7 +15,7 @@ services:
       LLDAP_HTTP_URL: https://lldap.theblaskies.com
 
     volumes:
-      - ./data:/data
+      - /mnt/user/appdata/lldap/data:/data
 
     ports:
       # TEMPORARY local access only
