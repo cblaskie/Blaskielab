@@ -1,6 +1,6 @@
 services:
   kapowarr:
-    image: ghcr.io/kapowarr/kapowarr:latest
+    image: mrcas/kapowarr:latest
     container_name: kapowarr
     restart: unless-stopped
 
@@ -15,7 +15,7 @@ services:
       - /mnt/user/appdata/kapowarr:/config
 
       # Comics library root
-      - /mnt/user/data/media/comics:/comics
+      - /mnt/user/data:/data
 
     networks:
       - proxy_net
