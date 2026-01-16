@@ -13,17 +13,11 @@ services:
     volumes:
       - /mnt/user/appdata/apprise/config:/config
 
-    command:
-      - apprise
-      - --config=/config/apprise.yml
-      - --attach=server
-      - --listen=0.0.0.0:8000
-
     networks:
       - infra_net
 
-    # Intentionally NOT exposed via Traefik
-    # ntfy will post internally
+    # Internal-only service
+    # Exposed only to ntfy and other containers
 
 networks:
   infra_net:
