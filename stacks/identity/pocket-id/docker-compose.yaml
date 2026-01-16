@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /mnt/user/appdata/pocket-id:/data
+      - /mnt/user/appdata/pocket-id/data:/app/backend/data
 
     networks:
       - proxy_net
