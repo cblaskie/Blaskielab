@@ -1,0 +1,42 @@
+services:
+  ntfy:
+    image: binwiederhier/ntfy:latest
+    container_name: ntfy
+    restart: unless-stopped
+
+    # Unraid-native permissions
+    user: "99:100"
+
+    command:
+      - serve
+
+    env_file:
+      - .env
+
+    volumes:
+      # Message cache, attachments
+      - /mnt/user/appdata/ntfy/cache:/var/cache/ntfy
+      # Auth DB + config
+      - /mnt/user/appdata/ntfy/config:/etc/ntfy
+
+    networks:
+      - proxy_net
+      - infra_net
+
+    labels:
+      - traefik.enable=true
+
+      # Router
+      - traefik.http.routers.ntfy.rule=Host(`ntfy.theblaskies.com`)
+      - traefik.http.routers.ntfy.entrypoints=websecure
+      - traefik.http.routers.ntfy.tls=true
+      - traefik.http.routers.ntfy.tls.certresolver=cloudflare
+
+      # Service
+      - traefik.http.services.ntfy.loadbalancer.server.port=80
+
+networks:
+  proxy_net:
+    external: true
+  infra_net:
+    external: true

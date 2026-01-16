@@ -1,0 +1,30 @@
+services:
+  apprise:
+    image: caronc/apprise:latest
+    container_name: apprise
+    restart: unless-stopped
+
+    # Unraid-native permissions
+    user: "99:100"
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/appdata/apprise/config:/config
+
+    command:
+      - apprise
+      - --config=/config/apprise.yml
+      - --attach=server
+      - --listen=0.0.0.0:8000
+
+    networks:
+      - infra_net
+
+    # Intentionally NOT exposed via Traefik
+    # ntfy will post internally
+
+networks:
+  infra_net:
+    external: true
