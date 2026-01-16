@@ -1,6 +1,6 @@
 services:
   apprise:
-    image: caronc/apprise-api
+    image: caronc/apprise-api:latest
     container_name: apprise
     restart: unless-stopped
 
