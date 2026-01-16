@@ -2,7 +2,7 @@
 services:
   pocket-id:
     user: "1002:281"
-    image: ghcr.io/pocket-id/pocket-id:v2.0.2
+    image: ghcr.io/pocket-id/pocket-id:v2.2.0@sha256:84d20a801692b9635f481522df2672a7aae522726c30953dae52e17fc2696b27
     container_name: pocket-id
     restart: unless-stopped
 
