@@ -1,33 +1,37 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
-
   "timezone": "America/New_York",
-
   "dependencyDashboard": true,
-
-  "docker": {
-    "pinDigests": true
-  },
-
   "prConcurrentLimit": 5,
   "prHourlyLimit": 2,
-
   "schedule": [
-    "after 10pm and before 5am"
+    "after 10pm",
+    "before 5am"
   ],
-
   "packageRules": [
     {
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["patch", "minor"],
+      "matchCategories": [
+        "docker"
+      ],
+      "pinDigests": true
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
       "automerge": true
     },
     {
-      "matchUpdateTypes": ["major"],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "automerge": false
     }
   ]
