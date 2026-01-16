@@ -1,6 +1,6 @@
 services:
   tdarr:
-    image: ghcr.io/haveagitgat/tdarr:latest
+    image: ghcr.io/haveagitgat/tdarr:latest@sha256:20a5656c4af4854e1877046294f77113f949d27e35940a9a65f231423d063207
     container_name: tdarr
     restart: unless-stopped
 
@@ -29,7 +29,7 @@ services:
       - traefik.http.services.tdarr.loadbalancer.server.port=8265
 
   tdarr-node:
-    image: ghcr.io/haveagitgat/tdarr_node:latest
+    image: ghcr.io/haveagitgat/tdarr_node:latest@sha256:62e14509bc19dea9b6f5dc85d0942163b6fa240d780a53eb590d894d46c9e1f2
     container_name: tdarr-node
     restart: unless-stopped
 

@@ -1,6 +1,6 @@
 services:
   kapowarr:
-    image: mrcas/kapowarr:latest
+    image: mrcas/kapowarr:latest@sha256:484f7decc7cc7af77542aba5516f48a62b17f72116ac7309d1709b72bb7d0ba2
     container_name: kapowarr
     restart: unless-stopped
 
