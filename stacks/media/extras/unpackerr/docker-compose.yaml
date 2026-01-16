@@ -1,6 +1,6 @@
 services:
   unpackerr:
-    image: ghcr.io/unpackerr/unpackerr:0.13.1
+    image: ghcr.io/unpackerr/unpackerr:0.13.1@sha256:04fcb43fa70e6db88331962760607842cdf19889e6d35d9d2fde0cf6a1550eaf
     container_name: unpackerr
     restart: unless-stopped
     user: "1002:281"

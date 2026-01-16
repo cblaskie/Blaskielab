@@ -1,6 +1,6 @@
 services:
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:1.17.2
+    image: lscr.io/linuxserver/prowlarr:1.17.2@sha256:682517acf453df5dad8a2d41e34a4fa52643de69af0af03c67f8c07abcf0345a
     container_name: prowlarr
     restart: unless-stopped
     env_file:
@@ -22,7 +22,7 @@ services:
       - traefik.http.services.prowlarr.loadbalancer.server.port=9696
 
   flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr:latest@sha256:7962759d99d7e125e108e0f5e7f3cdbcd36161776d058d1d9b7153b92ef1af9e
     container_name: flaresolverr
     restart: unless-stopped
 

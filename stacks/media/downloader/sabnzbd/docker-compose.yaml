@@ -1,6 +1,6 @@
 services:
   sabnzbd:
-    image: lscr.io/linuxserver/sabnzbd:4.3.2
+    image: lscr.io/linuxserver/sabnzbd:4.3.2@sha256:95179d6de1c660d7dcd4bd3991b33871c88df1120ab84bc553c4a67e8cc412d2
     container_name: sabnzbd
     restart: unless-stopped
     env_file:
