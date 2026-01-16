@@ -1,6 +1,5 @@
 services:
   cloudflare-ddns:
-    user: "1002:281"
     image: favonia/cloudflare-ddns@sha256:a4e2089b3531eec8c9328c7a9a586f80e8d67dcd94856e0b596b7896e1de3f62
     container_name: cloudflare-ddns
     restart: unless-stopped
@@ -23,6 +22,5 @@ services:
       - infra_net
 networks:
   infra_net:
-    user: "1002:281"
     external: true
 
