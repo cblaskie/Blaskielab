@@ -1,0 +1,37 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+
+    # Unraid-native permissions
+    user: "99:100"
+
+    env_file:
+      - .env
+
+    volumes:
+      # Homepage config
+      - /mnt/user/appdata/homepage/config:/app/config
+
+    networks:
+      - proxy_net
+      - infra_net   # MUST be the same network as docker-socket-proxy
+
+    labels:
+      - traefik.enable=true
+
+      # Router
+      - traefik.http.routers.homepage.rule=Host(`home.theblaskies.com`)
+      - traefik.http.routers.homepage.entrypoints=websecure
+      - traefik.http.routers.homepage.tls=true
+      - traefik.http.routers.homepage.tls.certresolver=cloudflare
+
+      # Service
+      - traefik.http.services.homepage.loadbalancer.server.port=3000
+
+networks:
+  proxy_net:
+    external: true
+  infra_net:
+    external: true
