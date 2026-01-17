@@ -10,7 +10,7 @@ services:
 
     volumes:
       - /mnt/user/appdata/kometa:/config
-      - /mnt/user/data/media/assets:/assets
+      - /mnt/user/data/media/assets:/config/assets:rw
 
     networks:
       - media_net
