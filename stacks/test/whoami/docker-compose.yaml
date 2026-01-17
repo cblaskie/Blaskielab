@@ -19,6 +19,6 @@
 
       # Port for the internal whoami container
       - "traefik.http.services.whoami.loadbalancer.server.port=80"
-networks:
-  proxy_net:
-    external: true
+  networks:
+    proxy_net:
+      external: true
