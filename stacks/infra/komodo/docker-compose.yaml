@@ -26,17 +26,16 @@ services:
       - "traefik.http.routers.komodo.entrypoints=websecure"
       - "traefik.http.routers.komodo.tls=true"
       - "traefik.http.routers.komodo.priority=50"
-      - "traefik.http.services.komodo.loadbalancer.server.port=9120"
 
-  # 1. THE HEADERS MIDDLEWARE: Fixes HTTPS/Proto sensing
+  # Service (CRITICAL)
+      - "traefik.http.services.komodo.loadbalancer.server.port=9120"
+      - "traefik.http.services.komodo.loadbalancer.server.scheme=http"
+
+  # Headers middleware (OK)
       - "traefik.http.middlewares.komodo-headers.headers.customrequestheaders.X-Forwarded-Host=komodo.theblaskies.com"
       - "traefik.http.middlewares.komodo-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
 
-  # 2. THE UNENCODE MIDDLEWARE: Use $$ to escape the dollar sign for docker-compose
-#      - "traefik.http.middlewares.komodo-unencode.replacepathregex.regex=^/(.*)%"
- #     - "traefik.http.middlewares.komodo-unencode.replacepathregex.replacement=^/$$1?"
-
-  # 3. APPLY BOTH MIDDLEWARES (Merged into one line)
+  # Apply middleware
       - "traefik.http.routers.komodo.middlewares=komodo-headers"
   komodo-periphery:
     image: ghcr.io/moghtech/komodo-periphery@sha256:bd79cf960ed054fe8e02384322303e462448679b1149dde48bbef151417255b1
