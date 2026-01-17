@@ -1,6 +1,6 @@
 services:
   oauth2-proxy:
-    image: quay.io/oauth2-proxy/oauth2-proxy:v7.7.1@sha256:f6a4aa83a27e316114bf79664302b1ffb2cc8ce697fb479273af4feb3fb16fe3
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.14.1@sha256:530f239b73a6b79bd7774971c844aec544d9c1bcd4e95ce6614a33649d8f3f0c
     container_name: oauth2-proxy
     restart: unless-stopped
 
