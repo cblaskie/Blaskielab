@@ -1,0 +1,25 @@
+services:
+  chaptarr:
+    image: robertlordhood/chaptarr:latest
+    container_name: Chaptarr
+    environment:
+      - TZ=US/Eastern
+      # Database settings (uncomment if using external Postgres)
+      # - Chaptarr__Postgres__Host=
+      # - Chaptarr__Postgres__Port=5432
+      # - Chaptarr__Postgres__User=
+      # - Chaptarr__Postgres__Password=
+    volumes:
+      - /mnt/user/appdata/chaptarr/config:/config
+      - /mnt/user/data/media/books:/books
+      - /mnt/user/data/media/audiobooks:/audiobooks
+      - /mnt/user/data/downloads:/downloads
+    networks:
+      proxy_net:
+    ports:
+      - 8789:8789
+    restart: unless-stopped
+
+networks:
+  proxy_net:
+    external: true
