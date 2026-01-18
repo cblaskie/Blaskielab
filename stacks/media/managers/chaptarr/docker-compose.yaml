@@ -12,6 +12,15 @@ services:
     volumes:
       - /mnt/user/appdata/chaptarr/config:/config
       - /mnt/user/data:/data
+    labels:
+      - "traefik.enable=true"
+      # Replace 'chaptarr.yourdomain.com' with your actual domain
+      - "traefik.http.routers.chaptarr.rule=Host(`chaptarr.theblaskies.com`)"
+      - "traefik.http.routers.chaptarr.entrypoints=websecure"
+      - "traefik.http.routers.chaptarr.tls=true"
+      - "traefik.http.routers.chaptarr.tls.certresolver=lfm"
+      - "traefik.http.services.chaptarr.loadbalancer.server.port=8789"
+      - "traefik.docker.network=proxy_net"
     networks:
       proxy_net:
     ports:
