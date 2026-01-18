@@ -11,9 +11,7 @@ services:
       # - Chaptarr__Postgres__Password=
     volumes:
       - /mnt/user/appdata/chaptarr/config:/config
-      - /mnt/user/data/media/books:/books
-      - /mnt/user/data/media/audiobooks:/audiobooks
-      - /mnt/user/data/downloads:/downloads
+      - /mnt/user/data:/data
     networks:
       proxy_net:
     ports:
