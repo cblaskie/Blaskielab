@@ -18,7 +18,7 @@ services:
       
       # Point this to your actual TV media so TCM can scan episodes
       - /mnt/user/data/media/tv:/data/tv:ro
-      
+      - /mnt/user/data/media/kids-tv:/data/kids-tv:ro
     networks:
       - media_net
       - proxy_net
@@ -27,4 +27,4 @@ services:
       - traefik.http.routers.tcm.rule=Host(`tcm.theblaskies.com`)
       - traefik.http.routers.tcm.entrypoints=websecure
       - traefik.http.routers.tcm.tls=true
-      - traefik.http.services.tcm.loadbalancer.server.port=8080
+      - traefik.http.services.tcm.loadbalancer.server.port=4242
