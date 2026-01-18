@@ -1,0 +1,30 @@
+services:
+  titlecardmaker:
+    image: ghcr.io/titlecardmaker/titlecardmaker-webui:latest
+    container_name: titlecardmaker
+    restart: unless-stopped
+    ports:
+      - 8080:8080  # Web Interface
+    environment:
+      - PUID=99    # Matches your Unraid user
+      - PGID=100   # Matches your Unraid group
+      - TZ=${TZ}   # Uses your global timezone variable
+    volumes:
+      # Config folder for TCM settings/database
+      - /mnt/user/appdata/titlecardmaker:/config:rw
+      
+      # The "Bridge": Share this with Posterizarr and Kometa
+      - /mnt/user/data/media/assets:/assets:rw
+      
+      # Point this to your actual TV media so TCM can scan episodes
+      - /mnt/user/data/media/tv:/data/tv:ro
+      
+    networks:
+      - media_net
+      - proxy_net
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.tcm.rule=Host(`tcm.theblaskies.com`)
+      - traefik.http.routers.tcm.entrypoints=websecure
+      - traefik.http.routers.tcm.tls=true
+      - traefik.http.services.tcm.loadbalancer.server.port=8080
