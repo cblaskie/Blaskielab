@@ -1,6 +1,6 @@
 services:
   apprise:
-    image: caronc/apprise-api:latest@sha256:5057fef2a2f4011c3c955a773cc4c008c647ec3619d009b3b3db8e5c864df9d7
+    image: caronc/apprise-api:latest@sha256:1df7597f3f862034211be7a70b7fb683331967e00556f7ea9cbaba051c736bf3
     container_name: apprise
     restart: unless-stopped
 
