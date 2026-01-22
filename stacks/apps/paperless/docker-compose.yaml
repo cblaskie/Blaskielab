@@ -1,0 +1,91 @@
+services:
+  paperless:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    restart: unless-stopped
+
+    depends_on:
+      paperless-postgres:
+        condition: service_healthy
+      paperless-redis:
+        condition: service_healthy
+
+    env_file:
+      - .env
+
+    environment:
+      PAPERLESS_DBENGINE: postgres
+      PAPERLESS_DBHOST: paperless-postgres
+      PAPERLESS_DBPORT: 5432
+      PAPERLESS_DBNAME: ${POSTGRES_DB}
+      PAPERLESS_DBUSER: ${POSTGRES_USER}
+      PAPERLESS_DBPASS: ${POSTGRES_PASSWORD}
+
+      PAPERLESS_REDIS: ${REDIS_URL}
+
+    volumes:
+      # App state
+      - /mnt/user/appdata/paperless:/usr/src/paperless/data
+
+      # Intake (human-facing)
+      - /mnt/user/world/paperless-consume:/usr/src/paperless/consume
+
+      # Managed storage (machine-owned)
+      - /mnt/user/data/paperless/media:/usr/src/paperless/media
+      - /mnt/user/data/paperless/export:/usr/src/paperless/export
+      - /mnt/user/data/paperless/trash:/usr/src/paperless/trash
+
+    networks:
+      - proxy_net
+      - infra_net
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.paperless.rule=Host(`paperless.theblaskies.com`)
+      - traefik.http.routers.paperless.entrypoints=websecure
+      - traefik.http.routers.paperless.tls=true
+      - traefik.http.services.paperless.loadbalancer.server.port=8000
+
+  paperless-postgres:
+    image: postgres:16
+    container_name: paperless-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes:
+      - /mnt/user/appdata/postgres/paperless:/var/lib/postgresql/data
+
+    networks:
+      - infra_net
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  paperless-redis:
+    image: redis:7
+    container_name: paperless-redis
+    restart: unless-stopped
+
+    command: redis-server --save "" --appendonly no
+
+    networks:
+      - infra_net
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  proxy_net:
+    external: true
+  infra_net:
+    external: true
