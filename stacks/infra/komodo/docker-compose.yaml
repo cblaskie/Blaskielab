@@ -13,8 +13,8 @@ services:
 
     volumes:
       # Optional: database backups
+      - /mnt/user/appdata/komodo:/etc/komodo
       - /mnt/user/appdata/komodo/backups:/backups
-      - /mnt/user/appdata/komodo:/data
 
     networks:
       - infra_net
