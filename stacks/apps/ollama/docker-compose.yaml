@@ -11,9 +11,6 @@ services:
     volumes:
       - /mnt/user/appdata/ollama:/root/.ollama
 
-    ports:
-      - "11434:11434" # optional once Traefik-only
-
     deploy:
       resources:
         reservations:
@@ -31,8 +28,36 @@ services:
       - traefik.http.routers.ollama.rule=Host(`ollama.theblaskies.com`)
       - traefik.http.routers.ollama.entrypoints=websecure
       - traefik.http.routers.ollama.tls=true
-      - traefik.http.routers.ollama.tls.certresolver=cloudflare
       - traefik.http.services.ollama.loadbalancer.server.port=11434
+
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:latest
+    container_name: open-webui
+    restart: unless-stopped
+
+    depends_on:
+      - ollama
+
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      WEBUI_NAME: Blaskielab AI
+      ENABLE_SIGNUP: "false"
+
+    volumes:
+      - /mnt/user/appdata/open-webui:/app/backend/data
+
+    networks:
+      - infra_net
+      - proxy_net
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.openwebui.rule=Host(`ai.theblaskies.com`)
+      - traefik.http.routers.openwebui.entrypoints=websecure
+      - traefik.http.routers.openwebui.tls=true
+      - traefik.http.services.openwebui.loadbalancer.server.port=8080
+
 
 networks:
   infra_net:
