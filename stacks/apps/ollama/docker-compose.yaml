@@ -43,7 +43,7 @@ services:
     environment:
       OLLAMA_BASE_URL: http://ollama:11434
       WEBUI_NAME: Blaskielab AI
-      ENABLE_SIGNUP: "false"
+      ENABLE_SIGNUP: "true"
 
     volumes:
       - /mnt/user/appdata/open-webui:/app/backend/data
