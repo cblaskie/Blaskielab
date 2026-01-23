@@ -33,28 +33,29 @@ services:
       - traefik.http.routers.paperless.tls=true
       - traefik.http.routers.paperless.tls.certresolver=cloudflare
       - traefik.http.services.paperless.loadbalancer.server.port=8000
+
   paperless-ai:
-  image: ghcr.io/paperless-ngx/paperless-ai:latest
-  container_name: paperless-ai
-  restart: unless-stopped
+    image: ghcr.io/paperless-ngx/paperless-ai:latest
+    container_name: paperless-ai
+    restart: unless-stopped
 
-  env_file:
-    - .env
+    env_file:
+      - .env
 
-  environment:
-    LLM_PROVIDER: ollama
-    OLLAMA_BASE_URL: http://ollama:11434
-    LLM_MODEL: ${PAPERLESS_AI_MODEL}
+    environment:
+      LLM_PROVIDER: ollama
+      OLLAMA_BASE_URL: http://ollama:11434
+      LLM_MODEL: ${PAPERLESS_AI_MODEL}
 
-  volumes:
-    - /mnt/user/appdata/paperless-ai:/app/data
+    volumes:
+      - /mnt/user/appdata/paperless-ai:/app/data
 
-  networks:
-    - infra_net
+    networks:
+      - infra_net
 
-  depends_on:
-    - paperless
-    - ollama
+    depends_on:
+      - paperless
+      - ollama
 
 networks:
   proxy_net:
