@@ -1,1 +1,41 @@
-Ollama
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    runtime: nvidia
+
+    env_file:
+      - .env
+
+    volumes:
+      - /mnt/user/appdata/ollama:/root/.ollama
+
+    ports:
+      - "11434:11434" # optional once Traefik-only
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+    networks:
+      - infra_net
+      - proxy_net
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ollama.rule=Host(`ollama.theblaskies.com`)
+      - traefik.http.routers.ollama.entrypoints=websecure
+      - traefik.http.routers.ollama.tls=true
+      - traefik.http.services.ollama.loadbalancer.server.port=11434
+
+networks:
+  infra_net:
+    external: true
+
+  proxy_net:
+    external: true
