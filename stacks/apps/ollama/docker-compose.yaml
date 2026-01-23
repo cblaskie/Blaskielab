@@ -28,6 +28,7 @@ services:
       - traefik.http.routers.ollama.rule=Host(`ollama.theblaskies.com`)
       - traefik.http.routers.ollama.entrypoints=websecure
       - traefik.http.routers.ollama.tls=true
+      - traefik.http.routers.ollama.tls.certresolver=cloudflare
       - traefik.http.services.ollama.loadbalancer.server.port=11434
 
 
@@ -56,6 +57,7 @@ services:
       - traefik.http.routers.openwebui.rule=Host(`ai.theblaskies.com`)
       - traefik.http.routers.openwebui.entrypoints=websecure
       - traefik.http.routers.openwebui.tls=true
+      - traefik.http.routers.openwebui.tls.certresolver=cloudflare
       - traefik.http.services.openwebui.loadbalancer.server.port=8080
 
 
