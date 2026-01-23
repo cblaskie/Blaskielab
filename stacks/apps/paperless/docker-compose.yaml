@@ -13,7 +13,6 @@ services:
     container_name: paperless
     restart: unless-stopped
 
-    user: "1002:281"
     env_file:
       - .env
 
