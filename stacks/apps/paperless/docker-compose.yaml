@@ -55,7 +55,6 @@ services:
 
     depends_on:
       - paperless
-      - ollama
 
 networks:
   proxy_net:
