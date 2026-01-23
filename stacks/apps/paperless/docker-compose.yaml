@@ -36,7 +36,7 @@ services:
       - traefik.http.services.paperless.loadbalancer.server.port=8000
 
   paperless-ai:
-    image: ghcr.io/paperless-ngx/paperless-ai:latest
+    image: clusterzx/paperless-ai:latest
     container_name: paperless-ai
     restart: unless-stopped
 
