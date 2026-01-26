@@ -55,7 +55,7 @@ services:
 
     environment:
       # --- Paperless ---
-      PAPERLESS_URL: https://paperless.theblaskies.com
+      PAPERLESS_URL: http://paperless:8000/api
       PAPERLESS_API_TOKEN: ${PAPERLESS_API_TOKEN}
 
       # --- Ollama ---
