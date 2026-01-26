@@ -9,6 +9,24 @@ services:
     networks:
       - infra_net
 
+  paperless-gotenberg:
+    image: gotenberg/gotenberg:8
+    container_name: paperless-gotenberg
+    restart: unless-stopped
+    command:
+      - gotenberg
+      - --chromium-disable-javascript=true
+      - --chromium-allow-list=file:///tmp/.*
+    networks:
+      - infra_net
+
+  paperless-tika:
+    image: apache/tika:2.9.1
+    container_name: paperless-tika
+    restart: unless-stopped
+    networks:
+      - infra_net
+
   paperless:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless
@@ -23,7 +41,7 @@ services:
       PAPERLESS_TIKA_ENABLED: "1"
       PAPERLESS_TIKA_ENDPOINT: http://paperless-tika:9998
       PAPERLESS_GOTENBERG_ENDPOINT: http://paperless-gotenberg:3000
-      
+
     volumes:
       - /mnt/user/data/paperless/data:/usr/src/paperless/data
       - /mnt/user/data/paperless/media:/usr/src/paperless/media
@@ -46,24 +64,6 @@ services:
       - traefik.http.middlewares.paperless-headers.headers.customrequestheaders.X-Forwarded-Proto=https
       - traefik.http.middlewares.paperless-headers.headers.customrequestheaders.X-Forwarded-Host=paperless.theblaskies.com
       - traefik.http.routers.paperless.middlewares=paperless-headers
-      
-    paperless-gotenberg:
-    image: gotenberg/gotenberg:8
-    container_name: paperless-gotenberg
-    restart: unless-stopped
-    command:
-      - gotenberg
-      - --chromium-disable-javascript=true
-      - --chromium-allow-list=file:///tmp/.*
-    networks:
-      - infra_net
-
-  paperless-tika:
-    image: apache/tika:2.9.1
-    container_name: paperless-tika
-    restart: unless-stopped
-    networks:
-      - infra_net
 
   paperless-gpt:
     image: ghcr.io/icereed/paperless-gpt:latest
@@ -75,7 +75,8 @@ services:
 
     environment:
       # IMPORTANT: GPT should talk to Paperless *through Traefik*
-      PAPERLESS_URL: http://paperless:8000
+      PAPERLESS_URL: https://paperless.theblaskies.com
+
       # LLM
       LLM_PROVIDER: ollama
       LLM_MODEL: ${LLM_MODEL}
