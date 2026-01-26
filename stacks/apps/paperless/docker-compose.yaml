@@ -1,4 +1,7 @@
 services:
+  # ============================
+  # Redis (Paperless broker)
+  # ============================
   paperless-redis:
     image: redis:7
     container_name: paperless-redis
@@ -8,6 +11,10 @@ services:
     networks:
       - infra_net
 
+
+  # ============================
+  # Paperless-NGX
+  # ============================
   paperless:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless
@@ -34,27 +41,47 @@ services:
       - traefik.http.routers.paperless.tls.certresolver=cloudflare
       - traefik.http.services.paperless.loadbalancer.server.port=8000
 
-  paperless-ai:
-    image: ghcr.io/paperless-ngx/paperless-ai:latest
-    container_name: paperless-ai
+
+  # ============================
+  # Paperless-GPT (AI worker)
+  # ============================
+  paperless-gpt:
+    image: ghcr.io/icereed/paperless-gpt:latest
+    container_name: paperless-gpt
     restart: unless-stopped
 
     env_file:
       - .env
 
     environment:
+      # --- Paperless ---
+      PAPERLESS_URL: https://paperless.theblaskies.com
+      PAPERLESS_API_TOKEN: ${PAPERLESS_API_TOKEN}
+
+      # --- Ollama ---
       LLM_PROVIDER: ollama
       OLLAMA_BASE_URL: http://ollama:11434
-      LLM_MODEL: ${PAPERLESS_AI_MODEL}
+      OLLAMA_MODEL: ${PAPERLESS_GPT_MODEL}
+
+      # --- Features ---
+      ENABLE_TAGGING: "true"
+      ENABLE_TITLE_SUGGESTION: "true"
+      ENABLE_SUMMARY: "true"
+
+      # --- Safety / sanity ---
+      RESTRICT_TO_EXISTING_TAGS: "true"
+      RESTRICT_TO_EXISTING_CORRESPONDENTS: "true"
+      RESTRICT_TO_EXISTING_DOCUMENT_TYPES: "true"
 
     volumes:
-      - /mnt/user/appdata/paperless-ai:/app/data
+      - /mnt/user/appdata/paperless-gpt:/data
 
     networks:
       - infra_net
 
     depends_on:
       - paperless
+
 
 networks:
   proxy_net:
