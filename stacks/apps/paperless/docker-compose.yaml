@@ -76,7 +76,7 @@ services:
     environment:
       # IMPORTANT: GPT should talk to Paperless *through Traefik*
       PAPERLESS_URL: https://paperless.theblaskies.com
-
+      PAPERLESS_API_TOKEN: ${PAPERLESS_API_TOKEN}
       # LLM
       LLM_PROVIDER: ollama
       LLM_MODEL: ${LLM_MODEL}
