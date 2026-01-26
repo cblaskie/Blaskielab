@@ -52,7 +52,7 @@ services:
     environment:
       # MUST stay here (different meaning than Paperless-NGX)
       PAPERLESS_URL: http://paperless:8000
-      PAPERLESS_BASE_URL: ${PAPERLESS_URL}
+      PAPERLESS_BASE_URL: https://paperless.theblaskies.com/api
       LLM_PROVIDER: ollama
       LLM_MODEL: ${LLM_MODEL}
       OLLAMA_BASE_URL: http://ollama:11434
