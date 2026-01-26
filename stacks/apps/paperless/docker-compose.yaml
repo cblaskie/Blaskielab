@@ -52,7 +52,7 @@ services:
     environment:
       # MUST stay here (different meaning than Paperless-NGX)
       PAPERLESS_URL: http://paperless:8000/api
-      PAPERLESS_BASE_URL: ${PAPERLESS_PUBLIC_URL}
+      PAPERLESS_BASE_URL: ${PAPERLESS_URL}
 
     volumes:
       - /mnt/user/appdata/paperless-gpt:/data
