@@ -28,7 +28,7 @@ services:
       - infra_net
 
   # 🧠 GPU-accelerated router / converter
-  paperless-router:
+    paperless-router:
     image: nvidia/cuda:12.3.2-runtime-ubuntu22.04
     container_name: paperless-router
     restart: unless-stopped
@@ -48,29 +48,29 @@ services:
       apt-get install -y imagemagick inotify-tools libheif1 && \
       echo "Paperless router started" && \
       inotifywait -m -e close_write --format '%f' /drop | while read FILE; do
-        SRC="/drop/$FILE"
-        EXT="${FILE##*.}"
-        BASENAME="${FILE%.*}"
+        SRC="/drop/$$FILE"
+        EXT="$${FILE##*.}"
+        BASENAME="$${FILE%.*}"
 
-        case "${EXT,,}" in
+        case "$${EXT,,}" in
           heic)
-            echo "HEIC → PDF: $FILE"
-            magick "$SRC" -density 300 -quality 95 "/consume/$BASENAME.pdf" \
-              && rm "$SRC" \
-              || mv "$SRC" /failed/
+            echo "HEIC → PDF: $$FILE"
+            magick "$$SRC" -density 300 -quality 95 "/consume/$$BASENAME.pdf" \
+              && rm "$$SRC" \
+              || mv "$$SRC" /failed/
             ;;
           jpg|jpeg|png|tiff)
-            echo "Image → PDF: $FILE"
-            magick "$SRC" -density 300 -colorspace RGB "/consume/$BASENAME.pdf" \
-              && rm "$SRC"
+            echo "Image → PDF: $$FILE"
+            magick "$$SRC" -density 300 "/consume/$$BASENAME.pdf" \
+              && rm "$$SRC"
             ;;
           pdf)
-            echo "PDF passthrough: $FILE"
-            mv "$SRC" /consume/
+            echo "PDF passthrough: $$FILE"
+            mv "$$SRC" /consume/
             ;;
           *)
-            echo "Unsupported file: $FILE"
-            mv "$SRC" /failed/
+            echo "Unsupported file: $$FILE"
+            mv "$$SRC" /failed/
             ;;
         esac
       done
