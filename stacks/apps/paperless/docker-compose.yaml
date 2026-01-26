@@ -27,6 +27,63 @@ services:
     networks:
       - infra_net
 
+  # 🧠 GPU-accelerated router / converter
+  paperless-router:
+    image: nvidia/cuda:12.3.2-runtime-ubuntu22.04
+    container_name: paperless-router
+    restart: unless-stopped
+
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+
+    volumes:
+      - /mnt/user/data/paperless/drop:/drop
+      - /mnt/user/data/paperless/consume:/consume
+      - /mnt/user/data/paperless/failed:/failed
+
+    entrypoint: ["/bin/bash", "-c"]
+    command: |
+      apt-get update && \
+      apt-get install -y imagemagick inotify-tools libheif1 && \
+      echo "Paperless router started" && \
+      inotifywait -m -e close_write --format '%f' /drop | while read FILE; do
+        SRC="/drop/$FILE"
+        EXT="${FILE##*.}"
+        BASENAME="${FILE%.*}"
+
+        case "${EXT,,}" in
+          heic)
+            echo "HEIC → PDF: $FILE"
+            magick "$SRC" -density 300 -quality 95 "/consume/$BASENAME.pdf" \
+              && rm "$SRC" \
+              || mv "$SRC" /failed/
+            ;;
+          jpg|jpeg|png|tiff)
+            echo "Image → PDF: $FILE"
+            magick "$SRC" -density 300 -colorspace RGB "/consume/$BASENAME.pdf" \
+              && rm "$SRC"
+            ;;
+          pdf)
+            echo "PDF passthrough: $FILE"
+            mv "$SRC" /consume/
+            ;;
+          *)
+            echo "Unsupported file: $FILE"
+            mv "$SRC" /failed/
+            ;;
+        esac
+      done
+
+    networks:
+      - infra_net
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+
   paperless:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless
@@ -36,7 +93,6 @@ services:
       - .env
 
     environment:
-      # MUST stay here (Paperless-NGX uses this for absolute URLs)
       PAPERLESS_URL: ${PAPERLESS_URL}
       PAPERLESS_TIKA_ENABLED: "1"
       PAPERLESS_TIKA_ENDPOINT: http://paperless-tika:9998
@@ -59,12 +115,10 @@ services:
       - traefik.http.routers.paperless.tls=true
       - traefik.http.routers.paperless.tls.certresolver=cloudflare
       - traefik.http.services.paperless.loadbalancer.server.port=8000
-
-      # REQUIRED for Paperless API + CSRF + GPT
       - traefik.http.middlewares.paperless-headers.headers.customrequestheaders.X-Forwarded-Proto=https
       - traefik.http.middlewares.paperless-headers.headers.customrequestheaders.X-Forwarded-Host=paperless.theblaskies.com
       - traefik.http.routers.paperless.middlewares=paperless-headers
-      - traefik.http.middlewares.paperless-headers.headers.customrequestheaders.X-Forwarded-For=%[remote_addr]
+
   paperless-gpt:
     image: ghcr.io/icereed/paperless-gpt:latest
     container_name: paperless-gpt
@@ -74,10 +128,8 @@ services:
       - .env
 
     environment:
-      # IMPORTANT: GPT should talk to Paperless *through Traefik*
       PAPERLESS_URL: https://paperless.theblaskies.com
       PAPERLESS_API_TOKEN: ${PAPERLESS_API_TOKEN}
-      # LLM
       LLM_PROVIDER: ollama
       LLM_MODEL: ${LLM_MODEL}
       OLLAMA_BASE_URL: http://ollama:11434
