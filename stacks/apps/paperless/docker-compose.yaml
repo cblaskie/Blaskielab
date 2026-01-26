@@ -19,7 +19,7 @@ services:
 
     environment:
       # MUST stay here (Paperless-NGX uses this for absolute URLs)
-      PAPERLESS_URL: ${PAPERLESS_PUBLIC_URL}
+      PAPERLESS_URL: ${PAPERLESS_URL}
 
     volumes:
       - /mnt/user/data/paperless/data:/usr/src/paperless/data
@@ -54,8 +54,7 @@ services:
 
     environment:
       # IMPORTANT: GPT should talk to Paperless *through Traefik*
-      PAPERLESS_BASE_URL: https://paperless.theblaskies.com/api
-
+      PAPERLESS_URL: http://paperless:8000
       # LLM
       LLM_PROVIDER: ollama
       LLM_MODEL: ${LLM_MODEL}
