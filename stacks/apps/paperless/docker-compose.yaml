@@ -21,7 +21,7 @@ services:
       - infra_net
 
   paperless-tika:
-    image: apache/tika:3
+    image: apache/tika:3.2.3.0-full
     container_name: paperless-tika
     restart: unless-stopped
     networks:
