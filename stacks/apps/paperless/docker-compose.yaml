@@ -1,20 +1,15 @@
+name: paperless
+
 services:
-  # ============================
-  # Redis (Paperless broker)
-  # ============================
   paperless-redis:
     image: redis:7
     container_name: paperless-redis
     restart: unless-stopped
     command: redis-server --save "" --appendonly no
-
     networks:
       - infra_net
 
 
-  # ============================
-  # Paperless-NGX
-  # ============================
   paperless:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless
@@ -23,6 +18,10 @@ services:
     env_file:
       - .env
 
+    environment:
+      # MUST stay here (Paperless-NGX specific)
+      PAPERLESS_URL: ${PAPERLESS_PUBLIC_URL}
+
     volumes:
       - /mnt/user/data/paperless/data:/usr/src/paperless/data
       - /mnt/user/data/paperless/media:/usr/src/paperless/media
@@ -30,8 +29,8 @@ services:
       - /mnt/user/data/paperless/consume:/usr/src/paperless/consume
 
     networks:
-      - proxy_net
       - infra_net
+      - proxy_net
 
     labels:
       - traefik.enable=true
@@ -42,9 +41,6 @@ services:
       - traefik.http.services.paperless.loadbalancer.server.port=8000
 
 
-  # ============================
-  # Paperless-GPT (AI worker)
-  # ============================
   paperless-gpt:
     image: ghcr.io/icereed/paperless-gpt:latest
     container_name: paperless-gpt
@@ -54,24 +50,9 @@ services:
       - .env
 
     environment:
-      # --- Paperless ---
+      # MUST stay here (different meaning than Paperless-NGX)
       PAPERLESS_URL: http://paperless:8000/api
-      PAPERLESS_API_TOKEN: ${PAPERLESS_API_TOKEN}
-
-      # --- Ollama ---
-      LLM_PROVIDER: ollama
-      OLLAMA_BASE_URL: http://ollama:11434
-      OLLAMA_MODEL: ${PAPERLESS_GPT_MODEL}
-
-      # --- Features ---
-      ENABLE_TAGGING: "true"
-      ENABLE_TITLE_SUGGESTION: "true"
-      ENABLE_SUMMARY: "true"
-
-      # --- Safety / sanity ---
-      RESTRICT_TO_EXISTING_TAGS: "true"
-      RESTRICT_TO_EXISTING_CORRESPONDENTS: "true"
-      RESTRICT_TO_EXISTING_DOCUMENT_TYPES: "true"
+      PAPERLESS_BASE_URL: ${PAPERLESS_PUBLIC_URL}
 
     volumes:
       - /mnt/user/appdata/paperless-gpt:/data
@@ -84,8 +65,7 @@ services:
 
 
 networks:
-  proxy_net:
-    external: true
-
   infra_net:
+    external: true
+  proxy_net:
     external: true
