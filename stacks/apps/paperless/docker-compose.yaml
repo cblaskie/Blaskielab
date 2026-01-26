@@ -40,6 +40,10 @@ services:
       - traefik.http.routers.paperless.tls.certresolver=cloudflare
       - traefik.http.services.paperless.loadbalancer.server.port=8000
 
+  # 🔑 REQUIRED
+      - traefik.http.middlewares.paperless-headers.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.middlewares.paperless-headers.headers.customrequestheaders.X-Forwarded-Host=paperless.theblaskies.com
+      - traefik.http.routers.paperless.middlewares=paperless-headers
 
   paperless-gpt:
     image: ghcr.io/icereed/paperless-gpt:latest
