@@ -53,6 +53,9 @@ services:
       # MUST stay here (different meaning than Paperless-NGX)
       PAPERLESS_URL: http://paperless:8000/api
       PAPERLESS_BASE_URL: ${PAPERLESS_URL}
+      LLM_PROVIDER: ollama
+      LLM_MODEL: ${LLM_MODEL}
+      OLLAMA_BASE_URL: http://ollama:11434
 
     volumes:
       - /mnt/user/appdata/paperless-gpt:/data
