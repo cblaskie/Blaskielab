@@ -64,7 +64,7 @@ services:
       - traefik.http.middlewares.paperless-headers.headers.customrequestheaders.X-Forwarded-Proto=https
       - traefik.http.middlewares.paperless-headers.headers.customrequestheaders.X-Forwarded-Host=paperless.theblaskies.com
       - traefik.http.routers.paperless.middlewares=paperless-headers
-
+      - traefik.http.middlewares.paperless-headers.headers.customrequestheaders.X-Forwarded-For=%[remote_addr]
   paperless-gpt:
     image: ghcr.io/icereed/paperless-gpt:latest
     container_name: paperless-gpt
