@@ -5,8 +5,7 @@ services:
     restart: unless-stopped
 
     env_file:
-      - .env
-
+      - /mnt/user/appdata/komodo/.env
     ports:
       # Optional: keep for LAN access during bootstrap
       - "9120:9120"
@@ -43,7 +42,7 @@ services:
     restart: unless-stopped
 
     env_file:
-      - .env
+      - /mnt/user/appdata/komodo/.env
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
