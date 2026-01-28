@@ -10,7 +10,7 @@ services:
       - .env
     volumes:
       - /mnt/user/appdata/pocket-id/data:/app/backend/data
-
+      - /mnt/user/appdata/pocket-id/images:/app/oidc-client-images
     networks:
       - proxy_net
 
