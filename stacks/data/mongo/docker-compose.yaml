@@ -9,7 +9,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
 
     volumes:
-      - /mnt/user/appdata/mongo:/data/db
+      - /mnt/user/appdata/mongo/data:/data/db
 
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })"]
