@@ -74,7 +74,7 @@ services:
       - traefik.http.routers.paperless-ai.entrypoints=websecure
       - traefik.http.routers.paperless-ai.tls=true
       - traefik.http.routers.paperless-ai.tls.certresolver=cloudflare
-      - traefik.http.services.paperless-ai.loadbalancer.server.port=3000
+      - traefik.http.services.paperless-ai.loadbalancer.server.port=8000
 
       # Required headers for API + auth consistency
       - traefik.http.middlewares.paperless-ai-headers.headers.customrequestheaders.X-Forwarded-Proto=https
