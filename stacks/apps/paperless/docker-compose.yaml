@@ -6,19 +6,22 @@ services:
     container_name: paperless-redis
     restart: unless-stopped
     command: redis-server --save "" --appendonly no
-    networks: [infra_net]
+    networks:
+      - infra_net
 
   paperless-gotenberg:
     image: gotenberg/gotenberg:8
     container_name: paperless-gotenberg
     restart: unless-stopped
-    networks: [infra_net]
+    networks:
+      - infra_net
 
   paperless-tika:
     image: apache/tika:3.2.3.0-full
     container_name: paperless-tika
     restart: unless-stopped
-    networks: [infra_net]
+    networks:
+      - infra_net
 
   paperless-router:
     build: ./router
@@ -28,13 +31,15 @@ services:
       - /mnt/user/data/paperless/drop:/drop
       - /mnt/user/data/paperless/consume:/consume
       - /mnt/user/data/paperless/failed:/failed
-    networks: [infra_net]
+    networks:
+      - infra_net
 
   paperless:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless
     restart: unless-stopped
-    env_file: [.env]
+    env_file:
+      - .env
     environment:
       PAPERLESS_URL: ${PAPERLESS_URL}
       PAPERLESS_TIKA_ENABLED: "1"
@@ -45,7 +50,9 @@ services:
       - /mnt/user/data/paperless/media:/usr/src/paperless/media
       - /mnt/user/data/paperless/export:/usr/src/paperless/export
       - /mnt/user/data/paperless/consume:/usr/src/paperless/consume
-    networks: [infra_net, proxy_net]
+    networks:
+      - infra_net
+      - proxy_net
     labels:
       - traefik.enable=true
       - traefik.http.routers.paperless.rule=Host(`paperless.theblaskies.com`)
@@ -60,14 +67,18 @@ services:
     image: clusterzx/paperless-ai:latest
     container_name: paperless-ai
     restart: unless-stopped
-    env_file: [.env]
+    env_file:
+      - .env
     environment:
       PAPERLESS_BASE_URL: https://paperless.theblaskies.com
       PAPERLESS_API_TOKEN: ${PAPERLESS_API_TOKEN}
       OLLAMA_BASE_URL: http://ollama:11434
       LLM_MODEL: ${LLM_MODEL}
-    networks: [infra_net]
-    depends_on: [paperless]
+    networks:
+      - infra_net
+      - proxy_net
+    depends_on:
+      - paperless
     labels:
       - traefik.enable=true
       - traefik.http.routers.paperless-ai.rule=Host(`paperless-ai.theblaskies.com`)
@@ -75,17 +86,16 @@ services:
       - traefik.http.routers.paperless-ai.tls=true
       - traefik.http.routers.paperless-ai.tls.certresolver=cloudflare
       - traefik.http.services.paperless-ai.loadbalancer.server.port=8000
-
-      # Required headers for API + auth consistency
       - traefik.http.middlewares.paperless-ai-headers.headers.customrequestheaders.X-Forwarded-Proto=https
       - traefik.http.middlewares.paperless-ai-headers.headers.customrequestheaders.X-Forwarded-Host=paperless-ai.theblaskies.com
       - traefik.http.routers.paperless-ai.middlewares=paperless-ai-headers
-      
+
   paperless-gpt:
     image: ghcr.io/icereed/paperless-gpt:latest
     container_name: paperless-gpt
     restart: unless-stopped
-    env_file: [.env]
+    env_file:
+      - .env
     environment:
       PAPERLESS_URL: https://paperless.theblaskies.com
       PAPERLESS_API_TOKEN: ${PAPERLESS_API_TOKEN}
@@ -94,8 +104,11 @@ services:
       OLLAMA_BASE_URL: http://ollama:11434
     volumes:
       - /mnt/user/appdata/paperless-gpt:/data
-    networks: [infra_net]
-    depends_on: [paperless]
+    networks:
+      - infra_net
+      - proxy_net
+    depends_on:
+      - paperless
 
 networks:
   infra_net:
