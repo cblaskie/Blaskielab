@@ -68,7 +68,19 @@ services:
       LLM_MODEL: ${LLM_MODEL}
     networks: [infra_net]
     depends_on: [paperless]
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.paperless-ai.rule=Host(`paperless-ai.theblaskies.com`)
+      - traefik.http.routers.paperless-ai.entrypoints=websecure
+      - traefik.http.routers.paperless-ai.tls=true
+      - traefik.http.routers.paperless-ai.tls.certresolver=cloudflare
+      - traefik.http.services.paperless-ai.loadbalancer.server.port=3000
 
+      # Required headers for API + auth consistency
+      - traefik.http.middlewares.paperless-ai-headers.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.middlewares.paperless-ai-headers.headers.customrequestheaders.X-Forwarded-Host=paperless-ai.theblaskies.com
+      - traefik.http.routers.paperless-ai.middlewares=paperless-ai-headers
+      
   paperless-gpt:
     image: ghcr.io/icereed/paperless-gpt:latest
     container_name: paperless-gpt
