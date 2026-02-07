@@ -29,7 +29,7 @@ services:
     restart: unless-stopped
     volumes:
       - /mnt/user/data/paperless/drop:/drop
-      - /mnt/user/data/paperless/consume:/consume
+      - /mnt/user/world/consume:/consume
       - /mnt/user/data/paperless/failed:/failed
     networks:
       - infra_net
@@ -49,7 +49,7 @@ services:
       - /mnt/user/data/paperless/data:/usr/src/paperless/data
       - /mnt/user/data/paperless/media:/usr/src/paperless/media
       - /mnt/user/data/paperless/export:/usr/src/paperless/export
-      - /mnt/user/data/paperless/consume:/usr/src/paperless/consume
+      - /mnt/user/world/consume:/usr/src/paperless/consume
     networks:
       - infra_net
       - proxy_net
