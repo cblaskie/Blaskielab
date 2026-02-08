@@ -7,9 +7,10 @@ services:
       - infra_net
       - proxy_net
     environment:
-      PUID: 99                     # Optional: your user ID
-      PGID: 100
-      
+      - PUID=99
+      - PGID=100
+      - TZ=${TIMEZONE}
+      - PUBLIC_URL=${PUBLIC_URL}
     ports:
       - "3030:3030"
     volumes:
