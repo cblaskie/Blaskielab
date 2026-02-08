@@ -1,0 +1,31 @@
+services:
+  readmeabook:
+    image: ghcr.io/kikootwo/readmeabook:latest
+    container_name: readmeabook
+    restart: unless-stopped
+    networks:
+      - infra_net
+      - proxy_net
+    ports:
+      - "3030:3030"
+    volumes:
+      # App Data
+      - /mnt/user/appdata/readmeabook/config:/app/config
+      - /mnt/user/appdata/readmeabook/cache:/app/cache
+      - /mnt/user/appdata/readmeabook/pgdata:/var/lib/postgresql/data
+      - /mnt/user/appdata/readmeabook/redis:/var/lib/redis
+      # Media & Downloads (Mapping exactly to your share structure)
+      - /mnt/user/usenet:/downloads
+      - /mnt/user/media/audiobooks:/media
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.readmeabook.rule=Host(`audiobooks.example.com`)"
+      - "traefik.http.routers.readmeabook.entrypoints=https"
+      - "traefik.http.routers.readmeabook.tls.certresolver=letsencrypt" # Change to your resolver name
+      - "traefik.http.services.readmeabook.loadbalancer.server.port=3030"
+
+networks:
+  infra_net:
+    external: true
+  proxy_net:
+    external: true
