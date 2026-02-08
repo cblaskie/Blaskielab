@@ -21,7 +21,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.readmeabook.rule=Host(`audiobooks.example.com`)"
       - "traefik.http.routers.readmeabook.entrypoints=https"
-      - "traefik.http.routers.readmeabook.tls.certresolver=letsencrypt" # Change to your resolver name
+      - "traefik.http.routers.readmeabook.tls.certresolver=cloudflare" # Change to your resolver name
       - "traefik.http.services.readmeabook.loadbalancer.server.port=3030"
 
 networks:
