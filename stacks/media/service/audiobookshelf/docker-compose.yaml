@@ -11,8 +11,7 @@ services:
     volumes:
       - /mnt/user/appdata/audiobookshelf/config:/config
       - /mnt/user/appdata/audiobookshelf/metadata:/metadata
-      - /mnt/user/media/audiobooks:/audiobooks
-      - /mnt/user/media/podcasts:/podcasts
+      - /mnt/user/data/media/audiobooks:/audiobooks
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
