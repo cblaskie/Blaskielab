@@ -20,7 +20,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.readmeabook.rule=Host(`audiobooks.theblaskies.com`)"
-      - "traefik.http.routers.readmeabook.entrypoints=https"
+      - "traefik.http.routers.readmeabook.entrypoints=websecure"
       - "traefik.http.routers.readmeabook.tls.certresolver=cloudflare" # Change to your resolver name
       - "traefik.http.services.readmeabook.loadbalancer.server.port=3030"
 
