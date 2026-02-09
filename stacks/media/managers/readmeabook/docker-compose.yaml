@@ -20,8 +20,7 @@ services:
       - /mnt/user/appdata/readmeabook/pgdata:/var/lib/postgresql/data
       - /mnt/user/appdata/readmeabook/redis:/var/lib/redis
       # Media & Downloads (Mapping exactly to your share structure)
-      - /mnt/user/data/usenet:/downloads
-      - /mnt/user/data/media/audiobooks:/media
+      - /mnt/user/data:/data
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.readmeabook.rule=Host(`audiobooks.theblaskies.com`)"
