@@ -1,6 +1,6 @@
 services:
   renovate:
-    image: renovate/renovate:latest@sha256:8f818dc7f121a48a4d49412516588b8c4c900697455174983328e796f24971ab
+    image: renovate/renovate:latest@sha256:876cab840558ae1b2bea8b8ef69402175e88f942063a015adac54a0ad61818ed
     container_name: renovate
     restart: unless-stopped
 
