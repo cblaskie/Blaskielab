@@ -7,7 +7,7 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     ports:
-      - 8080:8080 
+      - 8081:8080 
     environment:
       - PUID=99
       - PGID=100
