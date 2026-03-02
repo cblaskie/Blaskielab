@@ -20,7 +20,7 @@ services:
       - WIREGUARD_ENDPOINT_IP=${WIREGUARD_ENDPOINT_IP}
       - WIREGUARD_ENDPOINT_PORT=${WIREGUARD_ENDPOINT_PORT}
       - NETWORK_INTERNAL=${NETWORK_INTERNAL}
-
+      - VPN_MTU-${VPN_MTU}
     networks:
       - proxy_net
     labels:
