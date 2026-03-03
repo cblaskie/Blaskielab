@@ -9,32 +9,23 @@ services:
     volumes:
       - /mnt/user/appdata/gluetun:/gluetun
     environment:
-      - PUID=99
-      - PGID=100
-      - TZ=America/New_York
-      
-      # Provider Settings (Updated for 2026)
       - VPN_SERVICE_PROVIDER=private internet access
-      - VPN_TYPE=wireguard
-      
-      # Keys from your refreshed .env
-      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
-      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
+      - VPN_TYPE=openvpn
+      - OPENVPN_USER=${VPN_USER}
+      - OPENVPN_PASSWORD=${VPN_PASS}
       
       # Location
-      - SERVER_REGIONS=Canada
-      - SERVER_CITIES=Toronto
+      - SERVER_REGIONS=CA Toronto
       
-      # Port Forwarding (The Dr_Frankenstein way)
+      # Port Forwarding (Works perfectly with OpenVPN)
       - VPN_PORT_FORWARDING=on
       - VPN_PORT_FORWARDING_PROVIDER=private internet access
       
-      # The "Plex Protector" (Subnets)
-      - FIREWALL_OUTBOUND_SUBNETS=172.31.0.0/16,10.69.1.0/24
-      
-      # DNS Stability
-      - DNS_KEEP_NAMESERVER=off
+      # The "Plex Protector" & DNS Stability
+      - FIREWALL_OUTBOUND_SUBNETS=${DOCKER_SUBNET},${NETWORK_INTERNAL}
       - DNS_ADDRESS=1.1.1.1
+      - DOT=off
+
     networks:
       - proxy_net
     labels:
