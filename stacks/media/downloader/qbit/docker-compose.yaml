@@ -11,26 +11,28 @@ services:
     environment:
       - VPN_SERVICE_PROVIDER=custom
       - VPN_TYPE=wireguard
+      
+      # Keys (These are usually fine)
       - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
       - WIREGUARD_PUBLIC_KEY=${WIREGUARD_PUBLIC_KEY}
       - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
-      - WIREGUARD_ENDPOINT_IP=${VPN_ENDPOINT_IP}
+      
+      # THE CRITICAL FIX: Use both names to force Gluetun to see the IP
+      - VPN_ENDPOINT_IP=${WIREGUARD_ENDPOINT_IP}
+      - WIREGUARD_ENDPOINT_IP=${WIREGUARD_ENDPOINT_IP}
       - WIREGUARD_ENDPOINT_PORT=1337
       - WIREGUARD_MTU=1280
 
-      # FIX: Use these names for DNS in the 2026 build
+      # DNS & Connectivity (2026 Standards)
       - DNS_KEEP_NAMESERVER=off
       - DNS_ADDRESS=1.1.1.1
       - DOT=off
-      
-      # Health and Network
       - HEALTH_TARGET_ADDRESSES=1.1.1.1:53
+      
+      # PIA Specifics
       - VPN_PORT_FORWARDING=on
       - VPN_PORT_FORWARDING_PROVIDER=pia
       - NETWORK_INTERNAL=10.69.1.0/24
-
-
-
     networks:
       - proxy_net
     labels:
