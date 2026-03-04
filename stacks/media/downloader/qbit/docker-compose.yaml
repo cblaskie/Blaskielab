@@ -32,7 +32,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.qbittorrent.rule=Host(`qbit.theblaskies.com`)"
       - "traefik.http.routers.qbittorrent.entrypoints=websecure"
-      - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.qbittorrent.tls.certresolver=cloudflare"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
     restart: unless-stopped
 
