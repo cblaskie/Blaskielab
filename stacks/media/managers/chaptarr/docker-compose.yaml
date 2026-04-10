@@ -1,6 +1,6 @@
 services:
   chaptarr:
-    image: robertlordhood/chaptarr:latest@sha256:0445162523d76b8761f48df1ffb4a84304da3002323ae9605b2d83e002f11420
+    image: robertlordhood/chaptarr:latest@sha256:1148ae82565dc4d9542d42829ac7e9f6d51e5e87162b36516023f5a4899c71c6
     container_name: Chaptarr
     environment:
       - TZ=US/Eastern
