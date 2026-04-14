@@ -1,0 +1,27 @@
+http:
+  routers:
+    homeassistant:
+      rule: Host(`ha.theblaskies.com`)
+      entryPoints:
+        - websecure
+      service: homeassistant
+      middlewares:
+        - homeassistant-headers
+      tls:
+        certResolver: cloudflare
+
+  services:
+    homeassistant:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          - url: "http://10.69.1.110:8123"
+
+  middlewares:
+    homeassistant-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Host: "ha.theblaskies.com"
+        customResponseHeaders:
+          X-Frame-Options: "SAMEORIGIN"
