@@ -1,6 +1,6 @@
 services:
   bazarr:
-    image: ghcr.io/linuxserver/bazarr:1.5.4@sha256:7d0a091a63889ce1e4ac4c90595ebd2c50ba5a5df7039a4f4d2be6c2aed6d4ae
+    image: ghcr.io/linuxserver/bazarr:1.5.6@sha256:d736df5df0286373a26d34f47aa413cb8aeada74f6338dac372a6d37ba1b3b0d
     container_name: bazarr
     restart: unless-stopped
 
