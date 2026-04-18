@@ -15,13 +15,12 @@ http:
       loadBalancer:
         passHostHeader: true
         servers:
-          - url: "http://10.69.1.110:8123"
+          - url: "http://10.69.30.3:8123"
 
   middlewares:
     homeassistant-headers:
       headers:
-        customRequestHeaders:
-          X-Forwarded-Proto: "https"
-          X-Forwarded-Host: "ha.theblaskies.com"
+        # Removed X-Forwarded-Host/Proto to prevent 502 header conflicts.
+        # Traefik handles these natively.
         customResponseHeaders:
           X-Frame-Options: "SAMEORIGIN"
