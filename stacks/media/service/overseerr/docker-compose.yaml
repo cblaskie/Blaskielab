@@ -1,14 +1,16 @@
 services:
-  overseerr:
-    image: ghcr.io/linuxserver/overseerr:1.35.0@sha256:6108ed066d4a919c05251d9dab041c1e55e67ff7247e7b31be97b65ffcbaeeb1
-    container_name: overseerr
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    container_name: seerr
     restart: unless-stopped
+    # Use init to handle zombie processes correctly in the new image
+    init: true
 
     env_file:
       - .env
 
     volumes:
-      - /mnt/user/appdata/overseerr:/config
+      - /mnt/user/appdata/seerr:/app/config
 
     networks:
       - media_net
@@ -16,10 +18,10 @@ services:
 
     labels:
       - traefik.enable=true
-      - traefik.http.routers.overseerr.rule=Host(`requests.theblaskies.com`)
-      - traefik.http.routers.overseerr.entrypoints=websecure
-      - traefik.http.routers.overseerr.tls.certresolver=cloudflare
-      - traefik.http.services.overseerr.loadbalancer.server.port=5055
+      - traefik.http.routers.seerr.rule=Host(`requests.theblaskies.com`)
+      - traefik.http.routers.seerr.entrypoints=websecure
+      - traefik.http.routers.seerr.tls.certresolver=cloudflare
+      - traefik.http.services.seerr.loadbalancer.server.port=5055
 
 networks:
   media_net:
