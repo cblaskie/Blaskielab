@@ -7,46 +7,39 @@ services:
     restart: unless-stopped
     networks:
       - infra_net
+      - proxy_net
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/New_York
-      - BUMPER_ANNOUNCE_IP=192.168.1.XX # Set to your Unraid Host IP
+      - BUMPER_ANNOUNCE_IP=10.69.1.100 # <--- Replace with your Unraid Host IP
       - BUMPER_LISTEN=0.0.0.0
       - LOG_TO_STDOUT=true
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /mnt/user/appdata/bumper/config:/bumper/data
       - /mnt/user/appdata/bumper/certs:/bumper/certs
-    # We expose the non-conflicting ports directly to the host
-    ports:
-      - "8883:8883" # MQTT
-      - "5223:5223" # XMPP
-      - "8007:8007" # Bumper API / Portal
-
-  bumper-proxy:
-    image: nginx:alpine
-    container_name: bumper-proxy
-    restart: unless-stopped
-    networks:
-      - infra_net
-      - proxy_net
-    depends_on:
-      - bumper
-    volumes:
-      - /mnt/user/appdata/bumper/nginx.conf:/etc/nginx/nginx.conf:ro
+    # Note: No 'ports' mapping here because Traefik handles the external-to-internal mapping
     labels:
       - traefik.enable=true
-      # This handles the HTTPS handshake the vacuum expects
-      - traefik.http.routers.bumper-auth.rule=Host(`portal-na.ecouser.net`) || Host(`pe-na.ecouser.net`)
-      - traefik.http.routers.bumper-auth.entrypoints=websecure
-      - traefik.http.routers.bumper-auth.tls.certresolver=cloudflare
-      - traefik.http.services.bumper-auth.loadbalancer.server.port=443
-      # Optional: Web UI access via your domain
-      - traefik.http.routers.bumper-ui.rule=Host(`bumper.theblaskies.com`)
-      - traefik.http.routers.bumper-ui.entrypoints=websecure
-      - traefik.http.routers.bumper-ui.tls.certresolver=cloudflare
-      - traefik.http.services.bumper-ui.loadbalancer.server.port=8007
+      
+      # 1. Web UI & API (HTTP)
+      - "traefik.http.routers.bumper-web.rule=Host(`bumper.theblaskies.com`) || Host(`portal-na.ecouser.net`)"
+      - "traefik.http.routers.bumper-web.entrypoints=websecure"
+      - "traefik.http.routers.bumper-web.tls.certresolver=cloudflare"
+      - "traefik.http.services.bumper-web.loadbalancer.server.port=8007"
+
+      # 2. MQTT (TCP 8883)
+      - "traefik.tcp.routers.bumper-mqtt.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.bumper-mqtt.entrypoints=mqtt"
+      - "traefik.tcp.routers.bumper-mqtt.service=bumper-mqtt-svc"
+      - "traefik.tcp.services.bumper-mqtt-svc.loadbalancer.server.port=8883"
+
+      # 3. XMPP (TCP 5223)
+      - "traefik.tcp.routers.bumper-xmpp.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.bumper-xmpp.entrypoints=xmpp"
+      - "traefik.tcp.routers.bumper-xmpp.service=bumper-xmpp-svc"
+      - "traefik.tcp.services.bumper-xmpp-svc.loadbalancer.server.port=5223"
 
 networks:
   infra_net:
