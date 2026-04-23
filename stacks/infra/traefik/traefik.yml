@@ -16,6 +16,15 @@ entryPoints:
 
   websecure:
     address: ":443"
+    
+  mqtt:
+    address: ":8883"
+
+  xmpp:
+    address: ":5223"
+
+  bumper-api:
+    address: ":8007"
 
 providers:
   docker:
