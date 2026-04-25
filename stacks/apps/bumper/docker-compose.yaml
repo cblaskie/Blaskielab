@@ -8,11 +8,14 @@ services:
     networks:
       - infra_net
       - proxy_net
-    # ADD THESE PORTS TO MAP DIRECTLY TO UNRAID HOST
+    
+    # 1. Map ports directly to the Unraid Host IP (10.69.1.100)
+    # This bypasses Traefik's TCP handshake errors.
     ports:
-      - "8007:8007"
-      - "8883:8883"
-      - "5223:5223"
+      - "8007:8007"   # REST API
+      - "8883:8883"   # MQTT
+      - "5223:5223"   # XMPP
+      
     environment:
       - PUID=1000
       - PGID=1000
@@ -24,12 +27,19 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /mnt/user/appdata/bumper/config:/bumper/data
       - /mnt/user/appdata/bumper/certs:/bumper/certs
+
     labels:
       - "traefik.enable=true"
-      
-      # Keep the Web UI & API for your domain
+      # Only keep HTTP labels for the Web UI/Dashboard
       - "traefik.http.routers.bumper-web.rule=Host(`bumper.theblaskies.com`) || Host(`portal-na.ecouser.net`)"
       - "traefik.http.routers.bumper-web.entrypoints=websecure"
       - "traefik.http.routers.bumper-web.tls.certresolver=cloudflare"
       - "traefik.http.services.bumper-web.loadbalancer.server.port=8007"
+      # TCP labels are removed to let the 'ports' section above handle the robots.
 
+# 2. Tell Docker these networks already exist
+networks:
+  infra_net:
+    external: true
+  proxy_net:
+    external: true
