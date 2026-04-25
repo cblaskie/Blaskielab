@@ -8,47 +8,28 @@ services:
     networks:
       - infra_net
       - proxy_net
+    # ADD THESE PORTS TO MAP DIRECTLY TO UNRAID HOST
     ports:
-      - "8007:8007"   # REST API (Handshake)
-      - "8883:8883"   # MQTT (Control for N8+/T8+)
-      - "5223:5223"   # XMPP (Needed for some T8+ firmware)
+      - "8007:8007"
+      - "8883:8883"
+      - "5223:5223"
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/New_York
-      - BUMPER_ANNOUNCE_IP=10.69.1.100 # <--- Replace with your Unraid Host IP
+      - BUMPER_ANNOUNCE_IP=10.69.1.100
       - BUMPER_LISTEN=0.0.0.0
       - LOG_TO_STDOUT=true
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /mnt/user/appdata/bumper/config:/bumper/data
       - /mnt/user/appdata/bumper/certs:/bumper/certs
-    # Note: No 'ports' mapping here because Traefik handles the external-to-internal mapping
     labels:
       - "traefik.enable=true"
       
-      # 1. Web UI & API (HTTP)
+      # Keep the Web UI & API for your domain
       - "traefik.http.routers.bumper-web.rule=Host(`bumper.theblaskies.com`) || Host(`portal-na.ecouser.net`)"
       - "traefik.http.routers.bumper-web.entrypoints=websecure"
       - "traefik.http.routers.bumper-web.tls.certresolver=cloudflare"
       - "traefik.http.services.bumper-web.loadbalancer.server.port=8007"
 
-      # 2. MQTT (TCP 8883)
-      - "traefik.tcp.routers.bumper-mqtt.rule=HostSNI(`*`)"
-      - "traefik.tcp.routers.bumper-mqtt.entrypoints=mqtt"
-      - "traefik.tcp.routers.bumper-mqtt.service=bumper-mqtt-svc"
-      - "traefik.tcp.routers.bumper-mqtt.tls.passthrough=true"
-      - "traefik.tcp.services.bumper-mqtt-svc.loadbalancer.server.port=8883"
-
-      # 3. XMPP (TCP 5223)
-      - "traefik.tcp.routers.bumper-xmpp.rule=HostSNI(`*`)"
-      - "traefik.tcp.routers.bumper-xmpp.entrypoints=xmpp"
-      - "traefik.tcp.routers.bumper-xmpp.service=bumper-xmpp-svc"
-      - "traefik.tcp.routers.bumper-xmpp.tls.passthrough=true"
-      - "traefik.tcp.services.bumper-xmpp-svc.loadbalancer.server.port=5223"
-
-networks:
-  infra_net:
-    external: true
-  proxy_net:
-    external: true
