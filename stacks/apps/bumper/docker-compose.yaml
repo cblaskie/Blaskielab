@@ -25,7 +25,7 @@ services:
       - /mnt/user/appdata/bumper/certs:/bumper/certs
     # Note: No 'ports' mapping here because Traefik handles the external-to-internal mapping
     labels:
-      - traefik.enable=true
+      - "traefik.enable=true"
       
       # 1. Web UI & API (HTTP)
       - "traefik.http.routers.bumper-web.rule=Host(`bumper.theblaskies.com`) || Host(`portal-na.ecouser.net`)"
@@ -37,12 +37,14 @@ services:
       - "traefik.tcp.routers.bumper-mqtt.rule=HostSNI(`*`)"
       - "traefik.tcp.routers.bumper-mqtt.entrypoints=mqtt"
       - "traefik.tcp.routers.bumper-mqtt.service=bumper-mqtt-svc"
+      - "traefik.tcp.routers.bumper-mqtt.tls.passthrough=true"
       - "traefik.tcp.services.bumper-mqtt-svc.loadbalancer.server.port=8883"
 
       # 3. XMPP (TCP 5223)
       - "traefik.tcp.routers.bumper-xmpp.rule=HostSNI(`*`)"
       - "traefik.tcp.routers.bumper-xmpp.entrypoints=xmpp"
       - "traefik.tcp.routers.bumper-xmpp.service=bumper-xmpp-svc"
+      - "traefik.tcp.routers.bumper-xmpp.tls.passthrough=true"
       - "traefik.tcp.services.bumper-xmpp-svc.loadbalancer.server.port=5223"
 
 networks:
