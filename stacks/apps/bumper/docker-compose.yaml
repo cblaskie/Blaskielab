@@ -8,6 +8,10 @@ services:
     networks:
       - infra_net
       - proxy_net
+    ports:
+      - "8007:8007"   # REST API (Handshake)
+      - "8883:8883"   # MQTT (Control for N8+/T8+)
+      - "5223:5223"   # XMPP (Needed for some T8+ firmware)
     environment:
       - PUID=1000
       - PGID=1000
