@@ -1,19 +1,14 @@
-version: "3.6"
-
 services:
   bumper:
     image: bmartin5692/bumper:latest
     container_name: bumper
     restart: unless-stopped
-    # 1. Assign the static IP on the IoT VLAN
     networks:
-      iot_vlan:
+      # Use the exact name of the network as it appears in Unraid 'Docker' tab
+      br0.30: 
         ipv4_address: 10.69.30.4
-      infra_net: # Keeping this so HA can talk to it if needed
+      infra_net:
     
-    # 2. Port section is removed. 
-    # Macvlan allows Bumper to listen on all ports (including 443) on its own IP.
-      
     environment:
       - PUID=1000
       - PGID=1000
@@ -30,22 +25,14 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /mnt/user/appdata/bumper/config:/bumper/data
-      # Ensure certs are inside the config folder or mapped correctly
       - /mnt/user/appdata/bumper/certs:/bumper/data/certs
 
     labels:
-      - "traefik.enable=false" # Disabled because Bumper has its own IP now
+      - "traefik.enable=false"
 
 networks:
-  # 3. Define the Macvlan network for VLAN 30
-  iot_vlan:
-    driver: macvlan
-    driver_opts:
-      parent: br0.30  # Double check this matches your Unraid Settings > Network
-    ipam:
-      config:
-        - subnet: 10.69.30.0/24
-          gateway: 10.69.30.1 # Your VLAN 30 Gateway (Router)
-          
+  # This tells Docker the VLAN 30 bridge is managed by the OS
+  br0.30:
+    external: true
   infra_net:
     external: true
