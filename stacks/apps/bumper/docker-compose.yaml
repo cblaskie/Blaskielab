@@ -23,6 +23,11 @@ services:
       - BUMPER_ANNOUNCE_IP=10.69.1.100
       - BUMPER_LISTEN=0.0.0.0
       - LOG_TO_STDOUT=true
+      - BUMPER_CERT=/bumper/data/certs/bumper.crt
+      - BUMPER_KEY=/bumper/data/certs/bumper.key
+      - BUMPER_CA=/bumper/data/certs/ca.crt
+ 
+
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /mnt/user/appdata/bumper/config:/bumper/data
