@@ -5,46 +5,47 @@ services:
     image: bmartin5692/bumper:latest
     container_name: bumper
     restart: unless-stopped
+    # 1. Assign the static IP on the IoT VLAN
     networks:
-      - infra_net
-      - proxy_net
+      iot_vlan:
+        ipv4_address: 10.69.30.4
+      infra_net: # Keeping this so HA can talk to it if needed
     
-    # 1. Map ports directly to the Unraid Host IP (10.69.1.100)
-    # This bypasses Traefik's TCP handshake errors.
-    ports:
-      - "8007:8007"   # REST API
-      - "8883:8883"   # MQTT
-      - "5223:5223"   # XMPP
+    # 2. Port section is removed. 
+    # Macvlan allows Bumper to listen on all ports (including 443) on its own IP.
       
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/New_York
-      - BUMPER_ANNOUNCE_IP=10.69.1.100
+      - BUMPER_ANNOUNCE_IP=10.69.30.4
       - BUMPER_LISTEN=0.0.0.0
       - LOG_TO_STDOUT=true
+      - BUMPER_DEBUG=true
+      - BUMPER_DATA=/bumper/data
       - BUMPER_CERT=/bumper/data/certs/bumper.crt
       - BUMPER_KEY=/bumper/data/certs/bumper.key
       - BUMPER_CA=/bumper/data/certs/ca.crt
- 
 
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /mnt/user/appdata/bumper/config:/bumper/data
+      # Ensure certs are inside the config folder or mapped correctly
       - /mnt/user/appdata/bumper/certs:/bumper/data/certs
 
     labels:
-      - "traefik.enable=true"
-      # Only keep HTTP labels for the Web UI/Dashboard
-      - "traefik.http.routers.bumper-web.rule=Host(`bumper.theblaskies.com`) || Host(`portal-na.ecouser.net`)"
-      - "traefik.http.routers.bumper-web.entrypoints=websecure"
-      - "traefik.http.routers.bumper-web.tls.certresolver=cloudflare"
-      - "traefik.http.services.bumper-web.loadbalancer.server.port=8007"
-      # TCP labels are removed to let the 'ports' section above handle the robots.
+      - "traefik.enable=false" # Disabled because Bumper has its own IP now
 
-# 2. Tell Docker these networks already exist
 networks:
+  # 3. Define the Macvlan network for VLAN 30
+  iot_vlan:
+    driver: macvlan
+    driver_opts:
+      parent: br0.30  # Double check this matches your Unraid Settings > Network
+    ipam:
+      config:
+        - subnet: 10.69.30.0/24
+          gateway: 10.69.30.1 # Your VLAN 30 Gateway (Router)
+          
   infra_net:
-    external: true
-  proxy_net:
     external: true
