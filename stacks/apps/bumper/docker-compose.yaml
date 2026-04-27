@@ -26,7 +26,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /mnt/user/appdata/bumper/config:/bumper/data
-      - /mnt/user/appdata/bumper/certs:/bumper/certs
+      - /mnt/user/appdata/bumper/certs:/bumper/data/certs
 
     labels:
       - "traefik.enable=true"
