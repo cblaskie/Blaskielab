@@ -4,18 +4,23 @@ services:
     container_name: bumper
     restart: unless-stopped
     networks:
-      # Use the exact name of the network as it appears in Unraid 'Docker' tab
-      br0.30: 
+      br0.30:
         ipv4_address: 10.69.30.4
       infra_net:
     
+    # In Macvlan, 'expose' tells Docker which internal ports are active
+    expose:
+      - "8007" # Web UI / REST API
+      - "8883" # MQTT (Secure)
+      - "5223" # XMPP (Legacy)
+      - "443"  # XMPP/MQTT (Modern N8+ often uses this)
+      
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/New_York
       - BUMPER_ANNOUNCE_IP=10.69.30.4
       - BUMPER_LISTEN=0.0.0.0
-      - LOG_TO_STDOUT=true
       - BUMPER_DEBUG=true
       - BUMPER_DATA=/bumper/data
       - BUMPER_CERT=/bumper/data/certs/bumper.crt
@@ -27,11 +32,7 @@ services:
       - /mnt/user/appdata/bumper/config:/bumper/data
       - /mnt/user/appdata/bumper/certs:/bumper/data/certs
 
-    labels:
-      - "traefik.enable=false"
-
 networks:
-  # This tells Docker the VLAN 30 bridge is managed by the OS
   br0.30:
     external: true
   infra_net:
