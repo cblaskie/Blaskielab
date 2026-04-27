@@ -1,4 +1,14 @@
 services:
+  bumper-proxy:
+    image: nginx:stable-alpine
+    container_name: bumper-proxy
+    restart: unless-stopped
+    networks:
+      br0.30:
+        ipv4_address: 10.69.30.5  # Give it an IP right next to Bumper
+    volumes:
+      - /mnt/user/appdata/bumper/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /mnt/user/appdata/bumper/certs:/certs:ro
   bumper:
     image: bmartin5692/bumper:latest
     container_name: bumper
