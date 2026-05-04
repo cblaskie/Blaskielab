@@ -29,7 +29,6 @@ services:
       - "traefik.http.routers.bumper.entrypoints=websecure"
       - "traefik.http.routers.bumper.tls.certresolver=letsencrypt"
       - "traefik.http.services.bumper.loadbalancer.server.port=8007"
-      # This label is critical: it tells Traefik to look for Bumper on proxy_net
       - "traefik.docker.network=proxy_net"
     environment:
       - PUID=1000
@@ -44,8 +43,8 @@ services:
       - BUMPER_CA=/bumper/data/certs/ca.crt
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /mnt/user/appdata/bumper/config:/bumper/data
-      - /mnt/user/appdata/bumper/certs:/bumper/data/certs
+      # Consolidated to map the root bumper folder to /bumper/data
+      - /mnt/user/appdata/bumper:/bumper/data
 
 networks:
   br0.30:
