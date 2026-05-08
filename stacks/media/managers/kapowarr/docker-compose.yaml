@@ -1,33 +1,24 @@
 services:
   kapowarr:
-    image: mrcas/kapowarr:latest@sha256:484f7decc7cc7af77542aba5516f48a62b17f72116ac7309d1709b72bb7d0ba2
+    image: mrcas/kapowarr:latest
     container_name: kapowarr
-    restart: unless-stopped
-
-    environment:
-      TZ: America/New_York
-
-    volumes:
-      # App configuration
-      - /mnt/user/appdata/kapowarr:/config
-
-      # Comics library root
-      - /mnt/user/data:/data
-
     networks:
       - proxy_net
-
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - /mnt/user/appdata/kapowarr:/app/db
+      - /mnt/user/data:/data
     labels:
-      - traefik.enable=true
-
-      # Router
-      - traefik.http.routers.kapowarr.rule=Host(`kapowarr.theblaskies.com`)
-      - traefik.http.routers.kapowarr.entrypoints=websecure
-      - traefik.http.routers.kapowarr.tls=true
-      - traefik.http.routers.kapowarr.tls.certresolver=cloudflare
-
-      # Service
-      - traefik.http.services.kapowarr.loadbalancer.server.port=5656
+      - "traefik.enable=true"
+      - "traefik.http.routers.kapowarr.rule=Host(`kapowarr.theblaskies.com`)"
+      - "traefik.http.routers.kapowarr.entrypoints=https"
+      - "traefik.http.routers.kapowarr.tls=true"
+      - "traefik.http.routers.kapowarr.tls.certresolver=cloudflare"
+      - "traefik.http.services.kapowarr.loadbalancer.server.port=5656"
+    restart: unless-stopped
 
 networks:
   proxy_net:
