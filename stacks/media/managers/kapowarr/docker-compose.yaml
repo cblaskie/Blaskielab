@@ -14,7 +14,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kapowarr.rule=Host(`kapowarr.theblaskies.com`)"
-      - "traefik.http.routers.kapowarr.entrypoints=https"
+      - "traefik.http.routers.kapowarr.entrypoints=websecure"
       - "traefik.http.routers.kapowarr.tls=true"
       - "traefik.http.routers.kapowarr.tls.certresolver=cloudflare"
       - "traefik.http.services.kapowarr.loadbalancer.server.port=5656"
