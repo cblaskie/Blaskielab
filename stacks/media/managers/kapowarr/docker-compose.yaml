@@ -7,8 +7,6 @@ services:
       - proxy_net
       - media_net
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
       - TZ=${TIMEZONE}
     volumes:
       - /mnt/user/appdata/kapowarr:/app/db
