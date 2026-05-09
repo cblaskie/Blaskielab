@@ -4,6 +4,7 @@ services:
     container_name: kapowarr
     networks:
       - proxy_net
+      - media_net
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -21,5 +22,7 @@ services:
     restart: unless-stopped
 
 networks:
+  media_net:
+    external: true
   proxy_net:
     external: true
