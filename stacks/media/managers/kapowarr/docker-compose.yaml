@@ -10,6 +10,7 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - /mnt/user/appdata/kapowarr:/app/db
+      - /mnt/user/appdata/kapowarr/logs:/app/logs
       - /mnt/user/data:/data
     labels:
       - "traefik.enable=true"
