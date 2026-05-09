@@ -2,6 +2,7 @@ services:
   kapowarr:
     image: mrcas/kapowarr:latest
     container_name: kapowarr
+    user: "99:100"
     networks:
       - proxy_net
       - media_net
