@@ -1,0 +1,45 @@
+  mylar3:
+    image: lscr.io/linuxserver/mylar3:latest
+    container_name: mylar3
+    environment:
+      - PUID=99   # Standard Unraid nobody
+      - PGID=100  # Standard Unraid users
+      - TZ=America/New_York
+    volumes:
+      - /mnt/user/appdata/mylar3:/config
+      - /mnt/user/data/media/comics:/comics
+      - /mnt/user/data/downloads/usenet:/downloads # Point to where SABnzbd drops files
+    networks:
+      - proxy_net
+      - media_net
+    restart: unless-stopped
+services:
+  # Mylar3: The robust solution for Usenet Comics
+  mylar3:
+    image: lscr.io/linuxserver/mylar3:latest
+    container_name: mylar3
+    networks:
+      - proxy_net
+      - media_net
+    environment:
+      - PUID=99   # Unraid 'nobody'
+      - PGID=100  # Unraid 'users'
+      - TZ=America/New_York
+    volumes:
+      - /mnt/user/appdata/mylar3:/config
+      - /mnt/user/data/media/comics:/comics
+      - /mnt/user/data/usenet/complete/comics:/downloads # Point to SABnzbd comic folder
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mylar.rule=Host(`mylar.theblaskies.com`)"
+      - "traefik.http.routers.mylar.entrypoints=websecure"
+      - "traefik.http.routers.mylar.tls=true"
+      - "traefik.http.routers.mylar.tls.certresolver=cloudflare"
+      - "traefik.http.services.mylar.loadbalancer.server.port=8090"
+    restart: unless-stopped
+
+networks:
+  proxy_net:
+    external: true
+  media_net:
+    external: true
