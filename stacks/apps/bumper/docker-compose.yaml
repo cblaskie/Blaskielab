@@ -1,6 +1,6 @@
 services:
   bumper-proxy:
-    image: nginx:stable-alpine
+    image: nginx:stable-alpine@sha256:0272e4604ed93c1792f03695a033a6e8546840f86e0de20a884bb17d2c924883
     container_name: bumper-proxy
     restart: unless-stopped
     networks:
@@ -11,7 +11,7 @@ services:
       - /mnt/user/appdata/bumper/certs:/certs:ro
 
   bumper:
-    image: bmartin5692/bumper:latest
+    image: bmartin5692/bumper:latest@sha256:10cd93c80a86af3f8fcb73296a4c5603805418593d56d869389a05c28196f98d
     container_name: bumper
     restart: unless-stopped
     networks:
