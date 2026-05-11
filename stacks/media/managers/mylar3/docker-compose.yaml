@@ -1,18 +1,3 @@
-  mylar3:
-    image: lscr.io/linuxserver/mylar3:latest
-    container_name: mylar3
-    environment:
-      - PUID=99   # Standard Unraid nobody
-      - PGID=100  # Standard Unraid users
-      - TZ=America/New_York
-    volumes:
-      - /mnt/user/appdata/mylar3:/config
-      - /mnt/user/data/media/comics:/comics
-      - /mnt/user/data/downloads/usenet:/downloads # Point to where SABnzbd drops files
-    networks:
-      - proxy_net
-      - media_net
-    restart: unless-stopped
 services:
   # Mylar3: The robust solution for Usenet Comics
   mylar3:
