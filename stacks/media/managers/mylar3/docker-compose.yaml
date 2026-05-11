@@ -1,7 +1,7 @@
 services:
   # Mylar3: The robust solution for Usenet Comics
   mylar3:
-    image: lscr.io/linuxserver/mylar3:latest@sha256:ecc98bfe47a6a21ff67e92a72bbbee08d638551309b6769b88a2c181b70c8b2a
+    image: https://github.com/mylarcomics/mylar3/
     container_name: mylar3
     networks:
       - proxy_net
