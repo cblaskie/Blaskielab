@@ -1,7 +1,7 @@
 services:
   # Mylar3: The robust solution for Usenet Comics
   mylar3:
-    image: lscr.io/linuxserver/mylar3:development
+    image: lscr.io/linuxserver/mylar3:latest
     container_name: mylar3
     networks:
       - proxy_net
