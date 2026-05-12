@@ -25,7 +25,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.grimmory.rule=Host(`grimmory.theblaskies.com`)"
       - "traefik.http.routers.grimmory.entrypoints=websecure"
-      - "traefik.http.routers.grimmory.tls=true"
       - "traefik.http.routers.grimmory.tls.certresolver=cloudflare"
       - "traefik.http.services.grimmory.loadbalancer.server.port=8000"
 
