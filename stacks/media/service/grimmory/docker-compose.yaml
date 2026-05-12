@@ -22,10 +22,10 @@ services:
       - /mnt/user/appdata/grimmory/data:/app/data
       # PERMANENT LIBRARIES: One mount for all media
       - /mnt/user/data/media:/books
-      # INTAKE (BOOKDROP): Map the SABnzbd landing zones
-      - /mnt/user/data/usenet/complete/manga:/ingest/manga
-      - /mnt/user/data/usenet/complete/comics:/ingest/comics
-      - /mnt/user/data/usenet/complete/books:/ingest/books
+      - /mnt/user/data/usenet/complete/manga:/bookdrop/manga
+      - /mnt/user/data/usenet/complete/comics:/bookdrop/comics
+      - /mnt/user/data/usenet/complete/books:/bookdrop/books
+
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.grimmory.rule=Host(`grimmory.theblaskies.com`)"
