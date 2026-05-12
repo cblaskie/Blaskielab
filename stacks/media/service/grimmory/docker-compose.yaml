@@ -1,0 +1,36 @@
+services:
+  grimmory:
+    image: ghcr.io/grimmory-org/grimmory:latest
+    container_name: grimmory
+    restart: unless-stopped
+    networks:
+      - proxy_net
+      - media_net
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /mnt/user/appdata/grimmory/config:/config
+      - /mnt/user/appdata/grimmory/metadata:/metadata
+      # Your Permanent Library
+      - /mnt/user/data/media/comics:/comics
+      # The "BookDrop" - Pointed exactly to your SABnzbd landing zone
+      - /mnt/user/data/usenet/complete/comics:/bookdrop
+    environment:
+      - TZ=America/New_York
+      - PUID=99
+      - PGID=100
+      - GRIMMORY_DATABASE_URL=sqlite:////config/grimmory.db
+      - GRIMMORY_PORT=8000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grimmory.rule=Host(`grimmory.theblaskies.com`)"
+      - "traefik.http.routers.grimmory.entrypoints=websecure"
+      - "traefik.http.routers.grimmory.tls=true"
+      - "traefik.http.routers.grimmory.tls.certresolver=cloudflare"
+      - "traefik.http.services.grimmory.loadbalancer.server.port=8000"
+
+networks:
+  proxy_net:
+    external: true
+  media_net:
+    external: true
