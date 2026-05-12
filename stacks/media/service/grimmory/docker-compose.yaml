@@ -1,6 +1,6 @@
 services:
   grimmory:
-    image: ghcr.io/grimmory-org/grimmory:latest
+    image: ghcr.io/grimmory-tools/grimmory:latest
     container_name: grimmory
     restart: unless-stopped
     networks:
