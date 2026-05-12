@@ -9,27 +9,28 @@ services:
     security_opt:
       - no-new-privileges:true
     environment:
-      # Permissions
       - USER_ID=${APP_USER_ID:-99}
       - GROUP_ID=${APP_GROUP_ID:-100}
       - TZ=${TZ:-America/New_York}
-      # Database connection (hostname must match your MariaDB container name)
       - DATABASE_URL=jdbc:mariadb://mariadb:3306/${MYSQL_DATABASE:-grimmory}
       - DATABASE_USERNAME=${DB_USER}
       - DATABASE_PASSWORD=${DB_PASSWORD}
-      # Port configuration
       - BOOKLORE_PORT=${BOOKLORE_PORT:-8000}
+      # Required for Unraid to handle "moves" instead of "copies"
+      - DISK_TYPE=LOCAL 
     volumes:
       - /mnt/user/appdata/grimmory/data:/app/data
-      - /mnt/user/data/media/comics:/books
-      - /mnt/user/data/usenet/complete/comics:/bookdrop
+      # PERMANENT LIBRARIES: One mount for all media
+      - /mnt/user/data/media:/books
+      # INTAKE (BOOKDROP): Map the SABnzbd landing zones
+      - /mnt/user/data/usenet/complete/manga:/ingest/manga
+      - /mnt/user/data/usenet/complete/comics:/ingest/comics
+      - /mnt/user/data/usenet/complete/books:/ingest/books
     labels:
       - "traefik.enable=true"
-      ## HTTP Router
       - "traefik.http.routers.grimmory.rule=Host(`grimmory.theblaskies.com`)"
       - "traefik.http.routers.grimmory.entrypoints=websecure"
       - "traefik.http.routers.grimmory.tls.certresolver=cloudflare"
-      ## Service
       - "traefik.http.services.grimmory.loadbalancer.server.port=8000"
 
 networks:
