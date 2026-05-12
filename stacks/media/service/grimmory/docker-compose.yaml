@@ -1,6 +1,6 @@
 services:
   grimmory:
-    image: ghcr.io/grimmory-tools/grimmory:latest
+    image: grimmory/grimmory:latest
     container_name: grimmory
     restart: unless-stopped
     networks:
@@ -8,24 +8,28 @@ services:
       - media_net
     security_opt:
       - no-new-privileges:true
-    volumes:
-      - /mnt/user/appdata/grimmory/config:/config
-      - /mnt/user/appdata/grimmory/metadata:/metadata
-      # Your Permanent Library
-      - /mnt/user/data/media/comics:/comics
-      # The "BookDrop" - Pointed exactly to your SABnzbd landing zone
-      - /mnt/user/data/usenet/complete/comics:/bookdrop
     environment:
-      - TZ=America/New_York
-      - PUID=99
-      - PGID=100
-      - GRIMMORY_DATABASE_URL=sqlite:////config/grimmory.db
-      - GRIMMORY_PORT=8000
+      # Permissions
+      - USER_ID=${APP_USER_ID:-99}
+      - GROUP_ID=${APP_GROUP_ID:-100}
+      - TZ=${TZ:-America/New_York}
+      # Database connection (hostname must match your MariaDB container name)
+      - DATABASE_URL=jdbc:mariadb://mariadb:3306/${MYSQL_DATABASE:-grimmory}
+      - DATABASE_USERNAME=${DB_USER}
+      - DATABASE_PASSWORD=${DB_PASSWORD}
+      # Port configuration
+      - BOOKLORE_PORT=${BOOKLORE_PORT:-8000}
+    volumes:
+      - /mnt/user/appdata/grimmory/data:/app/data
+      - /mnt/user/data/media/comics:/books
+      - /mnt/user/data/usenet/complete/comics:/bookdrop
     labels:
       - "traefik.enable=true"
+      ## HTTP Router
       - "traefik.http.routers.grimmory.rule=Host(`grimmory.theblaskies.com`)"
       - "traefik.http.routers.grimmory.entrypoints=websecure"
       - "traefik.http.routers.grimmory.tls.certresolver=cloudflare"
+      ## Service
       - "traefik.http.services.grimmory.loadbalancer.server.port=8000"
 
 networks:
