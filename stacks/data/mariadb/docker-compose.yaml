@@ -1,0 +1,27 @@
+services:
+  mariadb:
+    image: lscr.io/linuxserver/mariadb:11.4.5
+    container_name: grimmory-db
+    restart: unless-stopped
+    networks:
+      - media_net
+    environment:
+      - PUID=${DB_USER_ID:-99}  # Standard Unraid PUID
+      - PGID=${DB_GROUP_ID:-100} # Standard Unraid PGID
+      - TZ=${TZ:-America/New_York}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-grimmory}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    volumes:
+      # Updated to your requested location
+      - /mnt/user/appdata/mariadb:/config
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  media_net:
+    external: true
