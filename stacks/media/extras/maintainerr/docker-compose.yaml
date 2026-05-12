@@ -1,0 +1,28 @@
+services:
+  maintainerr:
+    image: ghcr.io/jorenn92/maintainerr:latest
+    container_name: maintainerr
+    restart: unless-stopped
+    networks:
+      - proxy_net
+      - media_net
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - TZ=America/New_York
+      - PUID=99
+      - PGID=100
+    volumes:
+      - /mnt/user/appdata/maintainerr:/opt/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.maintainerr.rule=Host(`maintainerr.theblaskies.com`)"
+      - "traefik.http.routers.maintainerr.entrypoints=websecure"
+      - "traefik.http.routers.maintainerr.tls.certresolver=cloudflare"
+      - "traefik.http.services.maintainerr.loadbalancer.server.port=6246"
+
+networks:
+  proxy_net:
+    external: true
+  media_net:
+    external: true
