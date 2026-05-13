@@ -10,7 +10,7 @@ services:
       - infra_net
 
   paperless-gotenberg:
-    image: gotenberg/gotenberg:8@sha256:d71ab8c13b6bd47c7bc81195082005dfb17eaa75e8b1fadd347a64ee66ed98d5
+    image: gotenberg/gotenberg:8@sha256:a40c5a46b79d812ce2f5e139278163142a054050bfd1e5f162da36d3d11c7138
     container_name: paperless-gotenberg
     restart: unless-stopped
     networks:
