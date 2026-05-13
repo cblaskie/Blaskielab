@@ -33,7 +33,7 @@ services:
 
 
   open-webui:
-    image: ghcr.io/open-webui/open-webui:latest@sha256:ea750f19fc2a7ca0cb221bc512b8c2c470a01616b89ed98cb77d9ab0d5f24109
+    image: ghcr.io/open-webui/open-webui:latest@sha256:74093dadc9c6aabc23987a74fd8c2fb8d995b1a5b22e83b0036fb9d6af590e8c
     container_name: open-webui
     restart: unless-stopped
 
