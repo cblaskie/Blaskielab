@@ -2,6 +2,7 @@ services:
   maintainerr:
     image: ghcr.io/jorenn92/maintainerr:latest
     container_name: maintainerr
+    user: "99:100"
     restart: unless-stopped
     networks:
       - proxy_net
