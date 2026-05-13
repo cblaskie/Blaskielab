@@ -1,6 +1,6 @@
 services:
   radarr:
-    image: ghcr.io/linuxserver/radarr:6.1.1@sha256:6f1dda18354ea7f28cead8f6d099fc8222498c3ae165f567d504ed04d70980d7
+    image: ghcr.io/linuxserver/radarr:6.1.1@sha256:15417a594ebda4c660a9fa9748e7199d33e2d17b31bbc5ad7ba2e86f0b414763
     container_name: radarr
     restart: unless-stopped
 
