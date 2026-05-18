@@ -15,9 +15,9 @@ services:
       # Persistent config storage on your array cache/pool
       - /mnt/user/appdata/suwayomi:/home/suwayomi/.local/share/Suwayomi-Server
       # Exact path to your manga share directory
-      - /mnt/user/data/media/manga:/mnt/user/data/media/manga
+      - /mnt/user/data/media/manga:/data/manga
       # Mapped Usenet download folder for manual ingestion/processing
-      - /mnt/user/data/downloads/complete:/mnt/user/data/downloads/complete
+      - /mnt/user/data/downloads/complete:/downloads/complete
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.suwayomi.rule=Host(`manga.theblaskies.com`)"
