@@ -11,17 +11,18 @@ services:
       - PGID=100
       - TZ=America/New_York
       - SUWAYOMI_SERVER_DOWNLOAD_AS_CBZ=true
+      - downloadsPath = "/data/manga"
 
-    volumes:
+       volumes:
       # Persistent config storage on your array cache/pool
       - /mnt/user/appdata/suwayomi:/home/suwayomi/.local/share/suwayomi-server
       
-      # Keep your media and download paths exactly the same
-      - /mnt/user/data/media/manga:/data/manga
-      - /mnt/user/data/downloads/complete:/downloads
-
-      # Exact path to your manga share directory
+      # Cleaned Up Target Layout:
+      # Mapped to Grimmory's book drop folder on your Unraid host
       - /mnt/user/data/usenet/complete/manga:/data/manga
+      
+      # Mapped to your long-term archival manga storage share
+      - /mnt/user/data/media/manga:/data/media_archive
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.suwayomi.rule=Host(`manga.theblaskies.com`)"
