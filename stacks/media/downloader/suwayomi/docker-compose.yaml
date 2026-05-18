@@ -1,0 +1,32 @@
+services:
+  suwayomi:
+    image: ghcr.io/suwayomilauncher/suwayomi-server:latest
+    container_name: suwayomi
+    restart: unless-stopped
+    networks:
+      - proxy_net
+      - media_net
+    environment:
+      - PUID=99
+      - PGID=100
+      - TZ=America/New_York
+      - SUWAYOMI_SERVER_DOWNLOAD_AS_CBZ=true
+    volumes:
+      # Persistent config storage on your array cache/pool
+      - /mnt/user/appdata/suwayomi:/home/suwayomi/.local/share/Suwayomi-Server
+      # Exact path to your manga share directory
+      - /mnt/user/data/media/manga:/mnt/user/data/media/manga
+      # Mapped Usenet download folder for manual ingestion/processing
+      - /mnt/user/data/downloads/complete:/mnt/user/data/downloads/complete
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.suwayomi.rule=Host(`manga.theblaskies.com`)"
+      - "traefik.http.routers.suwayomi.entrypoints=websecure"
+      - "traefik.http.services.suwayomi.loadbalancer.server.port=4567"
+      - "traefik.docker.network=proxy_net"
+
+networks:
+  proxy_net:
+    external: true
+  media_net:
+    external: true
