@@ -1,6 +1,6 @@
 services:
   suwayomi:
-    image: ghcr.io/suwayomilauncher/suwayomi:latest
+    image: ghcr.io/suwayomi/suwayomi-server:v2.2.2154
     container_name: suwayomi
     restart: unless-stopped
     networks:
