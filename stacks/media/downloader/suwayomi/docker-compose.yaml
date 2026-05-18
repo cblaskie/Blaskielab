@@ -11,11 +11,15 @@ services:
       - PGID=100
       - TZ=America/New_York
       - SUWAYOMI_SERVER_DOWNLOAD_AS_CBZ=true
-      - EXTENSION_REPOS=["https://cdn.jsdelivr.net/gh/keiyoushi/extensions@repo/index.min.json"]
 
     volumes:
       # Persistent config storage on your array cache/pool
-      - /mnt/user/appdata/suwayomi:/home/suwayomi/.local/share/Suwayomi-Server
+      - /mnt/user/appdata/suwayomi:/home/suwayomi/.local/share/suwayomi-server
+      
+      # Keep your media and download paths exactly the same
+      - /mnt/user/data/media/manga:/data/manga
+      - /mnt/user/data/downloads/complete:/downloads
+
       # Exact path to your manga share directory
       - /mnt/user/data/usenet/complete/manga:/data/manga
     labels:
