@@ -11,6 +11,8 @@ services:
       - PGID=100
       - TZ=America/New_York
       - SUWAYOMI_SERVER_DOWNLOAD_AS_CBZ=true
+      - EXTENSION_REPOS=["https://cdn.jsdelivr.net/gh/keiyoushi/extensions@repo/index.min.json"]
+
     volumes:
       # Persistent config storage on your array cache/pool
       - /mnt/user/appdata/suwayomi:/home/suwayomi/.local/share/Suwayomi-Server
