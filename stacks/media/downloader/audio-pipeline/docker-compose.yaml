@@ -6,22 +6,22 @@ services:
     image: spotdl/spotify-downloader:latest
     container_name: spotdl
     restart: unless-stopped
-    # 1. FIXED: Removed user: "99:100" so Alpine can run apk add on boot
     entrypoint: >
       sh -c "
       apk add --no-cache gcompat libc6-compat &&
       ln -sf /lib/libc.musl-x86_64.so.1 /usr/lib/libresolv.so.2 &&
-      exec spotdl web --host 0.0.0.0 --web-use-output-dir
+      exec spotdl web --host 0.0.0.0 --web-use-output-dir --log-level INFO
       "
     volumes:
-      # Maps your music folder directly to spotDL's internal output path
       - /mnt/user/world/personal/shared/yoto:/music
-      # 2. FIXED: Keeps internal web data caches on your fast cache pool instead of the array
       - /mnt/user/appdata/spotdl:/root/.spotdl
+      - /mnt/user/appdata/spotdl/.cache:/root/.cache
     environment:
       - TZ=${TZ}
-    # 3. FIXED: Moved your arguments inside the custom entrypoint above so they don't get ignored
-    working_dir: /music
+      # 🛠️ FIX: Tells spotDL's backend logger to completely bypass writing a local log file
+      - SPOTDL_LOG_FILE=/dev/null
+    # Forces the internal working context away from root file paths
+    working_dir: /root/.spotdl
     networks:
       - proxy_net
     labels:
@@ -35,7 +35,7 @@ services:
   youtube-dl:
     image: alexta69/metube:latest
     container_name: youtube_audio_dl
-    user: "99:100"  # This is perfectly fine for MeTube because it doesn't need root system changes
+    user: "99:100"
     restart: unless-stopped
     volumes:
       - /mnt/user/world/personal/shared/yoto:/downloads
