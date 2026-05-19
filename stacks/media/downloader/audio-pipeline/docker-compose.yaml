@@ -1,24 +1,16 @@
-version: "3.8"
-
 services:
-  # 1. Spotify Downloader (Debian Native Multi-Arch Build)
+  # 1. Spotify Downloader (Debian-Native Web UI)
   spotdl:
-    # 🛠️ FIXED: Swapped to a Debian-based image that natively supports the tls_client compilation profiles
-    image: insrt/spotify-downloader:latest
+    image: techblog/spotify-downloader-ui:latest
     container_name: spotdl
     restart: unless-stopped
-    # 🛠️ FIXED: Aligns perfectly with Unraid permissions out-of-the-box
+    # 🛠️ FIXED: Aligns perfectly with Unraid permissions out of the box
     user: "99:100"
-    # Launders the web dashboard safely behind your network profile
-    command: ["web", "--host", "0.0.0.0", "--web-use-output-dir"]
     volumes:
-      # Maps your music folder directly to spotDL's web download landing path
-      - /mnt/user/world/personal/shared/yoto:/music
-      # Maps application data caches to your fast appdata SSD pool
-      - /mnt/user/appdata/spotdl:/data
+      # Maps your music folder directly to spotDL's web download path
+      - /mnt/user/world/personal/shared/yoto:/app/downloads
     environment:
       - TZ=${TZ}
-    working_dir: /music
     networks:
       - proxy_net
     labels:
@@ -26,6 +18,7 @@ services:
       - "traefik.http.routers.spotdl.rule=Host(`spotdl.theblaskies.com`)"
       - "traefik.http.routers.spotdl.entrypoints=websecure"
       - "traefik.http.routers.spotdl.tls.certresolver=cloudflare"
+      # The UI container natively listens on internal port 8800
       - "traefik.http.services.spotdl.loadbalancer.server.port=8800"
 
   # 2. YouTube-to-Audio (Metube)
