@@ -12,7 +12,7 @@ services:
       - PGID=1000
     command: web --host 0.0.0.0 --web-use-output-dir
     networks:
-      - traefik-net
+      - proxy_net
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.spotdl.rule=Host(`spotdl.theblaskies.com`)"
@@ -34,7 +34,7 @@ services:
       - OUTPUT_TEMPLATE=%(title)s.%(ext)s
       - YTDL_OPTIONS={"extract_audio":true,"audio_format":"mp3","quality":"0"}
     networks:
-      - traefik-net
+      - proxy_net
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ytdl.rule=Host(`ytdl.theblaskies.com`)"
@@ -43,5 +43,5 @@ services:
       - "traefik.http.services.ytdl.loadbalancer.server.port=8081"
 
 networks:
-  traefik-net:
+  proxy_net:
     external: true
