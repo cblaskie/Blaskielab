@@ -6,6 +6,12 @@ services:
     container_name: spotdl
     restart: unless-stopped
     user: "1000:1000"  # Ensures clean file permissions on your Unraid downloads
+    entrypoint: >
+      sh -c "
+      apk add --no-cache gcompat libc6-compat &&
+      ln -sf /lib/libc.musl-x86_64.so.1 /usr/lib/libresolv.so.2 &&
+      exec spotdl sync
+      "
     volumes:
       - /mnt/user/world/personal/shared/yoto:/music
     environment:
