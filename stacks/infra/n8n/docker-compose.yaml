@@ -5,12 +5,11 @@ services:
     image: n8nio/n8n:latest
     container_name: n8n_automation
     restart: unless-stopped
+    # Forces the container process to run using the correct internal node permissions
+    user: "1000:1000"
     volumes:
-      # Absolute path maps the database to Unraid's fast appdata cache pool
       - /mnt/user/appdata/n8n:/home/node/.n8n
     environment:
-      - PUID=99   # Native Unraid nobody permissions
-      - PGID=100  # Native Unraid users permissions
       - TZ=${TZ}
       - N8N_HOST=n8n.theblaskies.com
       - N8N_PORT=5678
