@@ -11,13 +11,12 @@ services:
       - PGID=100
       - TZ=America/New_York
       - SUWAYOMI_SERVER_DOWNLOAD_AS_CBZ=true
-      - downloadsPath = "/data/manga"
-
+      # Keeps your extensions pinned and active automatically on deployment
+      - EXTENSION_REPOS=["https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json"]
     volumes:
       # Persistent config storage on your array cache/pool
       - /mnt/user/appdata/suwayomi:/home/suwayomi/.local/share/suwayomi-server
       
-      # Cleaned Up Target Layout:
       # Mapped to Grimmory's book drop folder on your Unraid host
       - /mnt/user/data/usenet/complete/manga:/data/manga
       
@@ -30,7 +29,6 @@ services:
       - "traefik.http.services.suwayomi.loadbalancer.server.port=4567"
       - "traefik.docker.network=proxy_net"
       - "traefik.http.routers.suwayomi.tls.certresolver=cloudflare"
-
 
 networks:
   proxy_net:
