@@ -1,21 +1,27 @@
+version: "3.8"
+
 services:
-  # 1. Spotify Downloader (Debian Native)
+  # 1. Spotify Downloader (Alpine with Root Workspaces Fixed)
   spotdl:
-    # 1. FIXED: Switched to the official Ubuntu/Debian-based production tag
-    image: spotdl/spotify-downloader:ubuntu
+    image: spotdl/spotify-downloader:latest
     container_name: spotdl
     restart: unless-stopped
-    # 2. FIXED: Natively runs as Unraid's nobody user with zero container permission errors
-    user: "99:100"
-    # 3. FIXED: Removed the messy sh -c entrypoint since Debian doesn't need library patches
-    command: web --host 0.0.0.0 --web-use-output-dir
+    entrypoint: >
+      sh -c "
+      apk add --no-cache gcompat libc6-compat &&
+      ln -sf /lib/libc.musl-x86_64.so.1 /usr/lib/libresolv.so.2 &&
+      exec spotdl web --host 0.0.0.0 --web-use-output-dir
+      "
     volumes:
       # Maps your music folder directly to spotDL's internal output path
       - /mnt/user/world/personal/shared/yoto:/music
-      # Maps application data caches to your fast appdata SSD pool
-      - /mnt/user/appdata/spotdl:/home/spotdl/.spotdl
+      # FIXED: Overrides spotDL's active logging configuration directory paths
+      - /mnt/user/appdata/spotdl:/config
     environment:
       - TZ=${TZ}
+      # FIXED: Forces the application to route all configuration and log files 
+      # away from root system folders into your persistent appdata volume
+      - SPOTDL_HOME=/config
     working_dir: /music
     networks:
       - proxy_net
