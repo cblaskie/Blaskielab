@@ -26,7 +26,10 @@
         "patch",
         "minor"
       ],
-      "automerge": true
+      "groupName": "Homelab Container Updates (Minor/Patch)",
+      "groupSlug": "homelab-containers-minor-patch",
+      "automerge": true,
+      "platformAutomerge": true
     },
     {
       "matchUpdateTypes": [
