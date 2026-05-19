@@ -5,7 +5,7 @@ services:
     image: spotdl/spotify-downloader:latest
     container_name: spotdl
     restart: unless-stopped
-    user: "1000:1000"  # Ensures clean file permissions on your Unraid downloads
+    user: "99:100"  # Ensures clean file permissions on your Unraid downloads
     entrypoint: >
       sh -c "
       apk add --no-cache gcompat libc6-compat &&
@@ -30,13 +30,12 @@ services:
   youtube-dl:
     image: alexta69/metube:latest
     container_name: youtube_audio_dl
+    user: "99:100"
     restart: unless-stopped
     volumes:
       # Maps the exact same Unraid user share into Metube
       - /mnt/user/world/personal/shared/yoto:/downloads
     environment:
-      - PUID=1000
-      - PGID=1000
       - OUTPUT_TEMPLATE=%(title)s.%(ext)s
       - YTDL_OPTIONS={"extract_audio":true,"audio_format":"mp3","quality":"0"}
     networks:
