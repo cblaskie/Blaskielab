@@ -1,28 +1,29 @@
+version: "3.8"
+
 services:
   apprise:
     image: lscr.io/linuxserver/apprise-api:latest
     container_name: apprise_api
     restart: unless-stopped
     volumes:
-      # Stores your saved notification configurations permanently
+      # Maps your persistent storage directory on the host to /config inside the container
       - ./apprise-config:/config
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America/New_York
+      # Pulls variables cleanly from your .env file
+      - TZ=${TZ}
+      - APPRISE_CONFIG=${APPRISE_CONFIG}
+      - APPRISE_WEBHOOK_TOKEN=${APPRISE_WEBHOOK_TOKEN}
     networks:
       - proxy_net
     labels:
       - "traefik.enable=true"
-      # Secure routing via your domain
       - "traefik.http.routers.apprise.rule=Host(`notify.theblaskies.com`)"
       - "traefik.http.routers.apprise.entrypoints=websecure"
-      # Tells Traefik to pass this domain to your Cloudflare DNS challenge resolver
       - "traefik.http.routers.apprise.tls.certresolver=cloudflare"
-      # Apprise API listens internally on port 8000
       - "traefik.http.services.apprise.loadbalancer.server.port=8000"
 
 networks:
-  # Instructs Compose to connect to your existing Traefik network proxy layer
   proxy_net:
     external: true
