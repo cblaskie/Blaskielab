@@ -1,15 +1,29 @@
+version: "3.8"
+
 services:
-  # 1. Spotify Downloader (Official Image with Native PUID/PGID)
+  # 1. Spotify Downloader (Root-Escaped via Compose Override)
   spotdl:
-    image: jorenn92/spotdl-web:latest
+    image: spotdl/spotify-downloader:latest
     container_name: spotdl
     restart: unless-stopped
-    user: "99:100"
+    # 🛠️ FIXED: Overrides the image's built-in non-root user constraint
+    # This allows the entrypoint shell script to execute with true system authority
+    user: "0:0"
+    # 🛠️ FIXED: Runs the glibc compatibility patches and spawns the web interface sequentially
+    entrypoint: >
+      sh -c "
+      apk add --no-cache gcompat libc6-compat &&
+      ln -sf /lib/libc.musl-x86_64.so.1 /usr/lib/libresolv.so.2 &&
+      exec spotdl web --host 0.0.0.0 --web-use-output-dir
+      "
     volumes:
-      - /mnt/user/world/personal/shared/yoto:/downloads
-      - /mnt/user/appdata/spotdl:/app/data
+      # Maps your music folder directly to spotDL's output engine
+      - /mnt/user/world/personal/shared/yoto:/music
+      # Maps application data tables and web caches to your fast SSD cache drive
+      - /mnt/user/appdata/spotdl:/root/.spotdl
     environment:
       - TZ=${TZ}
+    working_dir: /music
     networks:
       - proxy_net
     labels:
@@ -17,7 +31,8 @@ services:
       - "traefik.http.routers.spotdl.rule=Host(`spotdl.theblaskies.com`)"
       - "traefik.http.routers.spotdl.entrypoints=websecure"
       - "traefik.http.routers.spotdl.tls.certresolver=cloudflare"
-      - "traefik.http.services.spotdl.loadbalancer.server.port=8000"
+      - "traefik.http.services.spotdl.loadbalancer.server.port=8800"
+
   # 2. YouTube-to-Audio (Metube)
   youtube-dl:
     image: alexta69/metube:latest
