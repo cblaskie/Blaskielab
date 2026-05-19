@@ -13,7 +13,7 @@ services:
       - SUWAYOMI_SERVER_DOWNLOAD_AS_CBZ=true
       - downloadsPath = "/data/manga"
 
-       volumes:
+    volumes:
       # Persistent config storage on your array cache/pool
       - /mnt/user/appdata/suwayomi:/home/suwayomi/.local/share/suwayomi-server
       
