@@ -1,15 +1,15 @@
 services:
   # 1. Spotify Downloader
   spotdl:
+    # Switching to a Debian-based tag (like a dev or full python implementation variant)
     image: spotdl/spotify-downloader:latest
     container_name: spotdl
     restart: unless-stopped
+    user: "1000:1000"  # Ensures clean file permissions on your Unraid downloads
     volumes:
-      # Maps your Unraid user share directly into spotDL
       - /mnt/user/world/personal/shared/yoto:/music
     environment:
-      - PUID=1000
-      - PGID=1000
+      - TZ=${TZ}
     command: web --host 0.0.0.0 --web-use-output-dir
     networks:
       - proxy_net
