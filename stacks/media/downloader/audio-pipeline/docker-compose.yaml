@@ -1,25 +1,24 @@
 version: "3.8"
 
 services:
-  # 1. Spotify Downloader (Root-Escaped via Compose Override)
+  # 1. Spotify Downloader (Alpine + Virtual Env Fixed)
   spotdl:
     image: spotdl/spotify-downloader:latest
     container_name: spotdl
     restart: unless-stopped
-    # 🛠️ FIXED: Overrides the image's built-in non-root user constraint
-    # This allows the entrypoint shell script to execute with true system authority
+    # 🛠️ FIXED: Run as root so apk can modify system network spaces
     user: "0:0"
-    # 🛠️ FIXED: Runs the glibc compatibility patches and spawns the web interface sequentially
+    # 🛠️ FIXED: Installs dependencies, links the DNS library, and targets the uv wrapper path
     entrypoint: >
       sh -c "
       apk add --no-cache gcompat libc6-compat &&
       ln -sf /lib/libc.musl-x86_64.so.1 /usr/lib/libresolv.so.2 &&
-      exec spotdl web --host 0.0.0.0 --web-use-output-dir
+      exec uv run --project /app spotdl web --host 0.0.0.0 --web-use-output-dir
       "
     volumes:
       # Maps your music folder directly to spotDL's output engine
       - /mnt/user/world/personal/shared/yoto:/music
-      # Maps application data tables and web caches to your fast SSD cache drive
+      # Maps application data caches to your fast SSD cache drive
       - /mnt/user/appdata/spotdl:/root/.spotdl
     environment:
       - TZ=${TZ}
