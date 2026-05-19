@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  # 1. Spotify Downloader
+  spotdl:
+    image: spotdl/spotify-downloader:latest
+    container_name: spotdl
+    restart: unless-stopped
+    volumes:
+      # Maps your Unraid user share directly into spotDL
+      - /mnt/user/world/personal/shared/yoto:/music
+    environment:
+      - PUID=1000
+      - PGID=1000
+    command: web --host 0.0.0.0 --web-use-output-dir
+    networks:
+      - traefik-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.spotdl.rule=Host(`spotdl.theblaskies.com`)"
+      - "traefik.http.routers.spotdl.entrypoints=websecure"
+      - "traefik.http.routers.spotdl.tls.certresolver=cloudflare"
+      - "traefik.http.services.spotdl.loadbalancer.server.port=8800"
+
+  # 2. YouTube-to-Audio (Metube)
+  youtube-dl:
+    image: alexta69/metube:latest
+    container_name: youtube_audio_dl
+    restart: unless-stopped
+    volumes:
+      # Maps the exact same Unraid user share into Metube
+      - /mnt/user/world/personal/shared/yoto:/downloads
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - OUTPUT_TEMPLATE=%(title)s.%(ext)s
+      - YTDL_OPTIONS={"extract_audio":true,"audio_format":"mp3","quality":"0"}
+    networks:
+      - traefik-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ytdl.rule=Host(`ytdl.theblaskies.com`)"
+      - "traefik.http.routers.ytdl.entrypoints=websecure"
+      - "traefik.http.routers.ytdl.tls.certresolver=cloudflare"
+      - "traefik.http.services.ytdl.loadbalancer.server.port=8081"
+
+networks:
+  traefik-net:
+    external: true
