@@ -1,22 +1,27 @@
+version: "3.8"
+
 services:
   # 1. Spotify Downloader
   spotdl:
-    # Switching to a Debian-based tag (like a dev or full python implementation variant)
     image: spotdl/spotify-downloader:latest
     container_name: spotdl
     restart: unless-stopped
-    user: "99:100"  # Ensures clean file permissions on your Unraid downloads
+    # 1. FIXED: Removed user: "99:100" so Alpine can run apk add on boot
     entrypoint: >
       sh -c "
       apk add --no-cache gcompat libc6-compat &&
       ln -sf /lib/libc.musl-x86_64.so.1 /usr/lib/libresolv.so.2 &&
-      exec spotdl sync
+      exec spotdl web --host 0.0.0.0 --web-use-output-dir
       "
     volumes:
+      # Maps your music folder directly to spotDL's internal output path
       - /mnt/user/world/personal/shared/yoto:/music
+      # 2. FIXED: Keeps internal web data caches on your fast cache pool instead of the array
+      - /mnt/user/appdata/spotdl:/root/.spotdl
     environment:
       - TZ=${TZ}
-    command: web --host 0.0.0.0 --web-use-output-dir
+    # 3. FIXED: Moved your arguments inside the custom entrypoint above so they don't get ignored
+    working_dir: /music
     networks:
       - proxy_net
     labels:
@@ -30,10 +35,9 @@ services:
   youtube-dl:
     image: alexta69/metube:latest
     container_name: youtube_audio_dl
-    user: "99:100"
+    user: "99:100"  # This is perfectly fine for MeTube because it doesn't need root system changes
     restart: unless-stopped
     volumes:
-      # Maps the exact same Unraid user share into Metube
       - /mnt/user/world/personal/shared/yoto:/downloads
     environment:
       - OUTPUT_TEMPLATE=%(title)s.%(ext)s
