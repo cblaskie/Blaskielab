@@ -1,27 +1,22 @@
-version: "3.8"
-
 services:
-  # 1. Spotify Downloader
+  # 1. Spotify Downloader (Debian Native)
   spotdl:
-    image: spotdl/spotify-downloader:latest
+    # 1. FIXED: Switched to the official Ubuntu/Debian-based production tag
+    image: spotdl/spotify-downloader:ubuntu
     container_name: spotdl
     restart: unless-stopped
-    entrypoint: >
-      sh -c "
-      apk add --no-cache gcompat libc6-compat &&
-      ln -sf /lib/libc.musl-x86_64.so.1 /usr/lib/libresolv.so.2 &&
-      exec spotdl web --host 0.0.0.0 --web-use-output-dir --log-level INFO
-      "
+    # 2. FIXED: Natively runs as Unraid's nobody user with zero container permission errors
+    user: "99:100"
+    # 3. FIXED: Removed the messy sh -c entrypoint since Debian doesn't need library patches
+    command: web --host 0.0.0.0 --web-use-output-dir
     volumes:
+      # Maps your music folder directly to spotDL's internal output path
       - /mnt/user/world/personal/shared/yoto:/music
-      - /mnt/user/appdata/spotdl:/root/.spotdl
-      - /mnt/user/appdata/spotdl/.cache:/root/.cache
+      # Maps application data caches to your fast appdata SSD pool
+      - /mnt/user/appdata/spotdl:/home/spotdl/.spotdl
     environment:
       - TZ=${TZ}
-      # 🛠️ FIX: Tells spotDL's backend logger to completely bypass writing a local log file
-      - SPOTDL_LOG_FILE=/dev/null
-    # Forces the internal working context away from root file paths
-    working_dir: /root/.spotdl
+    working_dir: /music
     networks:
       - proxy_net
     labels:
