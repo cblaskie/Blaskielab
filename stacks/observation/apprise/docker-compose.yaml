@@ -6,12 +6,11 @@ services:
     container_name: apprise_api
     restart: unless-stopped
     volumes:
-      # Maps your persistent storage directory on the host to /config inside the container
-      - ./apprise-config:/config
+      # Relative path: Points directly to a 'config' folder inside your GitHub repo clone
+      - ./config:/config
     environment:
-      - PUID=1000
-      - PGID=1000
-      # Pulls variables cleanly from your .env file
+      - PUID=99   # Keeps Unraid file permissions happy
+      - PGID=100
       - TZ=${TZ}
       - APPRISE_CONFIG=${APPRISE_CONFIG}
       - APPRISE_WEBHOOK_TOKEN=${APPRISE_WEBHOOK_TOKEN}
