@@ -1,26 +1,15 @@
-version: "3.8"
-
 services:
   # 1. Spotify Downloader (Official Image with Native PUID/PGID)
   spotdl:
-    image: spotdl/spotify-downloader:latest
+    image: jorenn92/spotdl-web:latest
     container_name: spotdl
     restart: unless-stopped
-    # 1. FIXED: Removed the user: directive completely to let the entrypoint run as root
-    # 2. FIXED: Removed all complex sh -c overrides; use their native startup script
-    command: web --host 0.0.0.0 --web-use-output-dir
+    user: "99:100"
     volumes:
-      # Maps your music folder directly to spotDL's internal output path
-      - /mnt/user/world/personal/shared/yoto:/music
-      # Maps application data caches to your fast appdata SSD pool
-      - /mnt/user/appdata/spotdl:/config
+      - /mnt/user/world/personal/shared/yoto:/downloads
+      - /mnt/user/appdata/spotdl:/app/data
     environment:
       - TZ=${TZ}
-      # 3. FIXED: Passed their exact expected environment flags for Unraid
-      - PUID=99   # Unraid nobody user
-      - PGID=100  # Unraid users group
-      - SPOTDL_HOME=/config
-    working_dir: /music
     networks:
       - proxy_net
     labels:
@@ -28,8 +17,7 @@ services:
       - "traefik.http.routers.spotdl.rule=Host(`spotdl.theblaskies.com`)"
       - "traefik.http.routers.spotdl.entrypoints=websecure"
       - "traefik.http.routers.spotdl.tls.certresolver=cloudflare"
-      - "traefik.http.services.spotdl.loadbalancer.server.port=8800"
-
+      - "traefik.http.services.spotdl.loadbalancer.server.port=8000"
   # 2. YouTube-to-Audio (Metube)
   youtube-dl:
     image: alexta69/metube:latest
