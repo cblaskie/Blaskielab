@@ -2,19 +2,22 @@ services:
   renovate:
     image: renovate/renovate:latest@sha256:876cab840558ae1b2bea8b8ef69402175e88f942063a015adac54a0ad61818ed
     container_name: renovate
-    restart: unless-stopped
+    # 1. FIXED: Removed "restart: unless-stopped" to stop the infinite loop chaos
 
     environment:
       RENOVATE_PLATFORM: github
       RENOVATE_TOKEN: ${RENOVATE_TOKEN}
 
       RENOVATE_GIT_AUTHOR: "Obie Bot <renovate@theblaskies.com>"
-      RENOVATE_AUTODISCOVER: "true"
+      
+      # 2. FIXED: Turned autodiscover to false so it stops scanning your other repos
+      RENOVATE_AUTODISCOVER: "false"
+      
       RENOVATE_BASE_DIR: /tmp/renovate
       RENOVATE_CONCURRENT_LIMIT: "1"
       RENOVATE_PR_CONCURRENT_LIMIT: "2"
-      RENOVATE_GIT_FS: "true"
-      # Point Renovate at your homelab repo
+      
+      # 3. FIXED: Removed the broken RENOVATE_GIT_FS setting
       RENOVATE_REPOSITORIES: "cblaskie/Blaskielab"
 
       # Logging
@@ -23,9 +26,4 @@ services:
     volumes:
       - /mnt/user/appdata/renovate:/tmp/renovate
 
-    networks:
-      - proxy_net
-
-networks:
-  proxy_net:
-    external: true
+    # 4. FIXED: Removed the proxy_net hookup since Renovate only needs outbound access to GitHub
