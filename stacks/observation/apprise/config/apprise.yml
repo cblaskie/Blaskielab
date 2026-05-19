@@ -1,0 +1,15 @@
+# config/apprise.yml
+urls:
+  # Route critical Unraid alerts to #server-alerts
+  - discord://ID_1/TOKEN_1:
+      - tags: critical, alerts
+
+  # Route GitOps and Renovate tasks to #gitops-deploy and #image-updates
+  - discord://ID_2/TOKEN_2:
+      - tags: deploy
+  - discord://ID_3/TOKEN_3:
+      - tags: updates
+
+  # Route your media pipeline downloads straight to #yoto-pipeline
+  - discord://ID_4/TOKEN_4:
+      - tags: yoto-pipeline
