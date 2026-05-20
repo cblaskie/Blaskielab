@@ -1,0 +1,24 @@
+theme: dynamic
+
+pages:
+  - name: Launchpad
+    columns:
+      # Left Column: Time, Weather, and App Bookmarks
+      - size: small
+        widgets:
+          - type: clock
+            hour_format: 12
+          - type: weather
+            location: Durham, North Carolina
+            unit: fahrenheit
+          - $include: widgets/bookmarks.yml
+
+      # Center Column: Deployment Monitoring
+      - size: small
+        widgets:
+          - $include: widgets/infrastructure.yml
+
+      # Right Column: Content Streams
+      - size: large
+        widgets:
+          - $include: widgets/feeds.yml
