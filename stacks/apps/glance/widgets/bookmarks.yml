@@ -1,0 +1,10 @@
+type: bookmarks
+groups:
+  - name: Audio Automation
+    links:
+      - title: Spotify Downloader
+        url: https://spotdl.theblaskies.com
+        icon: spotify
+      - title: YouTube Audio
+        url: https://ytdl.theblaskies.com
+        icon: youtube
