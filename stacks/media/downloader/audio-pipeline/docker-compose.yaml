@@ -1,26 +1,25 @@
 services:
-  # 1. Spotify Downloader (Official Image + Alpine Library Patch)
+  # 1. Spotify Downloader (Official Image + Anonymous Volume Overlays)
   spotdl:
     image: spotdl/spotify-downloader:latest
     container_name: spotdl
     restart: unless-stopped
-    # 🛠️ FIXED: Replaced standard command with a shell string that patches the Alpine 
-    # libresolv.so.2 bug before kicking off the native web interface
-    command: >
-      sh -c "
-      apk add --no-cache gcompat libc6-compat &&
-      ln -sf /lib/libc.musl-x86_64.so.1 /usr/lib/libresolv.so.2 &&
-      exec uv run spotdl web --host 0.0.0.0 --web-use-output-dir
-      "
+    # 🛠️ FIXED: Run cleanly as your Unraid user profile
+    user: "99:100"
+    # 🛠️ FIXED: Force-launches the built-in web daemon directly
+    command: web --host 0.0.0.0 --web-use-output-dir
     volumes:
       # Maps your music folder directly to spotDL's output engine
       - /mnt/user/world/personal/shared/yoto:/music
+      # 🛠️ FIXED: Intercepts cache generation by mounting a writable anonymous space
+      - /app/.cache
     environment:
       - TZ=${TZ}
-      # 🛠️ FIXED: Passes your exact Unraid user IDs so downloads match nobody:users
-      - PUID=99
-      - PGID=100
-      - UMASK=022
+      # 🛠️ FIXED: Routes configuration data inside the writable app execution profile
+      - HOME=/app
+      - UV_CACHE_DIR=/app/.cache/uv
+      - SPOTDL_HOME=/app/.spotdl
+    working_dir: /music
     networks:
       - proxy_net
     labels:
