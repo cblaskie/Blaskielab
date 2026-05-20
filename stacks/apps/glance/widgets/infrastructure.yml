@@ -1,0 +1,5 @@
+- type: monitor
+  title: Edge Ingress
+  sites:
+    - title: Traefik Proxy
+      url: https://traefik.theblaskies.com
