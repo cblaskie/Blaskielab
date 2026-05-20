@@ -1,19 +1,24 @@
 services:
-  # 1. Spotify Downloader (Debian-Native Web UI)
+  # 1. Spotify Downloader (Official Image + Volume Mask Fix)
   spotdl:
-    image: techblog/spotify-downloader-ui:latest
+    image: spotdl/spotify-downloader:latest
     container_name: spotdl
     restart: unless-stopped
-    # Natively runs under your standard Unraid user permissions
+    # 1. FIXED: Drops permissions to Unraid non-root user cleanly
     user: "99:100"
+    # 2. FIXED: Uses the native web command directly
+    command: web --host 0.0.0.0 --web-use-output-dir
     volumes:
-      # Maps your music folder directly to spotDL's web download folder
-      - /mnt/user/world/personal/shared/yoto:/app/downloads
+      # Maps your music folder directly to spotDL's output engine
+      - /mnt/user/world/personal/shared/yoto:/music
+      # 3. FIXED: Masks the internal cache directories with writable anonymous volumes
+      - /tmp/.spotdl
+      - /tmp/.cache
     environment:
       - TZ=${TZ}
-      # 🛠️ FIX: Tells python to build its hidden configuration caches inside 
-      # the app folder instead of trying to write to the locked root system drive
-      - HOME=/app
+      # 4. FIXED: Directs home environment context to the open /tmp folder
+      - HOME=/tmp
+    working_dir: /music
     networks:
       - proxy_net
     labels:
