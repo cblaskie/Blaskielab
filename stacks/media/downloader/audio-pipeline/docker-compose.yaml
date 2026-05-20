@@ -1,25 +1,18 @@
 services:
-  # 1. Spotify Downloader (Official Image + Anonymous Volume Overlays)
+  # 1. Spotify Downloader (Official Debian Build Running as Root)
   spotdl:
     image: spotdl/spotify-downloader:latest
     container_name: spotdl
     restart: unless-stopped
-    # 🛠️ FIXED: Run cleanly as your Unraid user profile
-    user: "99:100"
-    # 🛠️ FIXED: Force-launches the built-in web daemon directly
-    command: web --host 0.0.0.0 --web-use-output-dir
+    # 🛠️ FIXED: Forces the container to execute with full root clearance
+    user: "0:0"
+    # 🛠️ FIXED: Matches the brand new entrypoint schema to launch the web daemon natively
+    command: ["web", "--host", "0.0.0.0", "--port", "8800", "--web-use-output-dir", "--output", "/music"]
     volumes:
       # Maps your music folder directly to spotDL's output engine
       - /mnt/user/world/personal/shared/yoto:/music
-      # 🛠️ FIXED: Intercepts cache generation by mounting a writable anonymous space
-      - /app/.cache
     environment:
       - TZ=${TZ}
-      # 🛠️ FIXED: Routes configuration data inside the writable app execution profile
-      - HOME=/app
-      - UV_CACHE_DIR=/app/.cache/uv
-      - SPOTDL_HOME=/app/.spotdl
-    working_dir: /music
     networks:
       - proxy_net
     labels:
