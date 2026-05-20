@@ -1,24 +1,26 @@
 services:
-  # 1. Spotify Downloader (Official Image + Volume Mask Fix)
+  # 1. Spotify Downloader (Official Image + Alpine Library Patch)
   spotdl:
     image: spotdl/spotify-downloader:latest
     container_name: spotdl
     restart: unless-stopped
-    # 1. FIXED: Drops permissions to Unraid non-root user cleanly
-    user: "99:100"
-    # 2. FIXED: Uses the native web command directly
-    command: web --host 0.0.0.0 --web-use-output-dir
+    # 🛠️ FIXED: Replaced standard command with a shell string that patches the Alpine 
+    # libresolv.so.2 bug before kicking off the native web interface
+    command: >
+      sh -c "
+      apk add --no-cache gcompat libc6-compat &&
+      ln -sf /lib/libc.musl-x86_64.so.1 /usr/lib/libresolv.so.2 &&
+      exec uv run spotdl web --host 0.0.0.0 --web-use-output-dir
+      "
     volumes:
       # Maps your music folder directly to spotDL's output engine
       - /mnt/user/world/personal/shared/yoto:/music
-      # 3. FIXED: Masks the internal cache directories with writable anonymous volumes
-      - /tmp/.spotdl
-      - /tmp/.cache
     environment:
       - TZ=${TZ}
-      # 4. FIXED: Directs home environment context to the open /tmp folder
-      - HOME=/tmp
-    working_dir: /music
+      # 🛠️ FIXED: Passes your exact Unraid user IDs so downloads match nobody:users
+      - PUID=99
+      - PGID=100
+      - UMASK=022
     networks:
       - proxy_net
     labels:
