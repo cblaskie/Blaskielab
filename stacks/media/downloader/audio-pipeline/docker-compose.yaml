@@ -1,12 +1,14 @@
 services:
-  # 1. Spotify Downloader (Official Debian Build Running as Root)
+  # 1. Spotify Downloader (Built Locally From Official Dev Branch)
   spotdl:
-    image: spotdl/spotify-downloader:latest
+    build:
+      # Instructs Komodo to fetch the live code directly from the official dev branch
+      context: https://github.com/spotDL/spotify-downloader.git#dev
     container_name: spotdl
     restart: unless-stopped
-    # 🛠️ FIXED: Forces the container to execute with full root clearance
+    # Runs under root to allow uv's project compiler to initialize its tracking data blocks
     user: "0:0"
-    # 🛠️ FIXED: Matches the brand new entrypoint schema to launch the web daemon natively
+    # Matches the updated dev branch parameters to bind the web server correctly
     command: ["web", "--host", "0.0.0.0", "--port", "8800", "--web-use-output-dir", "--output", "/music"]
     volumes:
       # Maps your music folder directly to spotDL's output engine
