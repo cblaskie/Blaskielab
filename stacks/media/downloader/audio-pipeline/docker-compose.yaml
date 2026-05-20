@@ -1,14 +1,15 @@
 services:
-  # 1. Spotify Downloader (Built Locally From Official Dev Branch)
+  # 1. Spotify Downloader (Official Dev Branch + Web Path Fix)
   spotdl:
     build:
-      # Instructs Komodo to fetch the live code directly from the official dev branch
       context: https://github.com/spotDL/spotify-downloader.git#dev
     container_name: spotdl
     restart: unless-stopped
-    # Runs under root to allow uv's project compiler to initialize its tracking data blocks
+    # Executes with full write clearance to handle local dependencies on boot
     user: "0:0"
-    # Matches the updated dev branch parameters to bind the web server correctly
+    # 🛠️ FIXED: Sets execution context to /app so Jinja2 can load home.html.j2 natively
+    working_dir: /app
+    # 🛠️ FIXED: Instructs the web interface to push all downloads to the mounted /music volume path
     command: ["web", "--host", "0.0.0.0", "--port", "8800", "--web-use-output-dir", "--output", "/music"]
     volumes:
       # Maps your music folder directly to spotDL's output engine
