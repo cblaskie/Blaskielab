@@ -1,0 +1,39 @@
+# 3. Central System Dashboard & Cockpit (Timestamp-Based Sync)
+  glance:
+    image: glanceapp/glance:latest
+    container_name: glance
+    restart: unless-stopped
+    volumes:
+      # Maps your main persistent, working appdata directory
+      - /mnt/user/appdata/glance:/app/config
+      # Maps your local Komodo repository folder as the read-only template source
+      - /mnt/user/appdata/komodo/repos/blaskielab/audio-pipeline:/repo_backup:ro
+    # 🛠️ FIXED: Uses native timestamp comparisons to sync updates from GitHub instantly
+    entrypoint: >
+      sh -c "
+      echo 'Syncing any fresh updates from GitHub repo to appdata...'
+      
+      # 1. Sync master config if the repo version is newer
+      if [ -f /repo_backup/glance.yml ]; then
+        cp -u /repo_backup/glance.yml /app/config/glance.yml
+      fi
+
+      # 2. Sync widgets subfolder if any repo files are newer
+      if [ -d /repo_backup/widgets ]; then
+        mkdir -p /app/config/widgets
+        cp -ru /repo_backup/widgets/. /app/config/widgets/
+      fi
+
+      echo 'Sync complete. Launching Glance cockpit...'
+      exec /app/glance --config /app/config/glance.yml
+      "
+    ports:
+      - 8080:8080
+    networks:
+      - proxy_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.glance.rule=Host(`home.theblaskies.com`)"
+      - "traefik.http.routers.glance.entrypoints=websecure"
+      - "traefik.http.routers.glance.tls.certresolver=cloudflare"
+      - "traefik.http.services.glance.loadbalancer.server.port=8080"
