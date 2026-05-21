@@ -35,6 +35,7 @@ services:
       - /mnt/user/world/personal/shared/yoto:/downloads
     environment:
       - OUTPUT_TEMPLATE=%(title)s.%(ext)s
+      - OUTPUT_TEMPLATE_PLAYLIST=%(playlist_title)s/%(title)s.%(ext)s
       - YTDL_OPTIONS={"extract_audio":true,"audio_format":"mp3","quality":"0"}
     networks:
       - proxy_net
