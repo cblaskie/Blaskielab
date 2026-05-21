@@ -4,20 +4,28 @@ services:
     container_name: kometa
     restart: unless-stopped
 
+    # Sources path configurations natively from your companion file
     env_file:
       - .env
 
+    # Maps your local Unraid storage points
     volumes:
-      - /mnt/user/appdata/kometa:/config
+      - /mnt/user/appdata/kometa:/config:rw
       - /mnt/user/data/media/assets:/config/assets:rw
 
+    # Attaches cleanly to your pre-existing environment networks
     networks:
       - media_net
       - proxy_net
 
+    # Integrates seamlessly with your Traefik infrastructure rules
+    labels:
+      - "traefik.enable=false" # Explicitly tells Traefik not to expose this to the web
+      - "com.docker.compose.project=media"
+
+# Defines the external network parameters 
 networks:
   media_net:
     external: true
-
   proxy_net:
     external: true
