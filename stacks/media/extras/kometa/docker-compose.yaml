@@ -11,7 +11,7 @@ services:
     # Maps your local Unraid storage points
     volumes:
       - /mnt/user/appdata/kometa:/config:rw
-      - /mnt/user/data/media/assets:/config/assets:rw
+      - /mnt/user/data/assets:/config/assets:rw
 
     # Attaches cleanly to your pre-existing environment networks
     networks:
