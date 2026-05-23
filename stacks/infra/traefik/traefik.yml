@@ -16,6 +16,12 @@ entryPoints:
 
   websecure:
     address: ":443"
+    # Added configuration block to handle cross-VLAN proxies
+    forwardedHeaders:
+      trustedIPs:
+        - "127.0.0.1/32"
+        - "192.168.0.0/16"  # Trusts your main LAN and your new IoT VLAN ranges
+        - "172.16.0.0/12"   # Trusts internal Docker bridge networks
 
 providers:
   docker:
