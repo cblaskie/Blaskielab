@@ -1,0 +1,16 @@
+http:
+  routers:
+    jetkvm-router:
+      rule: "Host(`kvm.theblaskies.com`)"
+      entryPoints:
+        - websecure
+      service: jetkvm-service
+      tls:
+        certResolver: cloudflare
+
+  services:
+    jetkvm-service:
+      loadBalancer:
+        servers:
+          - url: "http://10.69.20.15:80" # Locked into your safe Services IP block
+        passHostHeader: true
