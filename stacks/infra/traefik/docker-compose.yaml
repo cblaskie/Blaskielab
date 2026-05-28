@@ -18,7 +18,6 @@ services:
     networks:
       - proxy_net
 
-
   traefik:
     image: traefik@sha256:03650d05c2ce54959c1016c879371d20ad303ecbaecc1621f6ed231cd2e0b516
     container_name: traefik
@@ -46,7 +45,11 @@ services:
 
     networks:
       - proxy_net
+      - iot_vlan_bridge  # 🌟 Added: Taps Traefik directly into VLAN 30
 
 networks:
   proxy_net:
+    external: true
+  iot_vlan_bridge:     # 🌟 Added: Maps the external Unraid br0.30 bridge interface
+    name: br0.30
     external: true
