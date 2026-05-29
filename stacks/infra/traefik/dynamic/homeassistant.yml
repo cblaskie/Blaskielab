@@ -15,7 +15,7 @@ http:
       loadBalancer:
         passHostHeader: true
         servers:
-          - url: "http://10.69.1.100:8123"
+          - url: "http://10.69.30.3:8123"
 
   middlewares:
     homeassistant-headers:
