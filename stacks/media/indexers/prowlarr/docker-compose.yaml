@@ -37,6 +37,7 @@ services:
 
     networks:
       - media_net
+      - proxy_net
 
 networks:
   media_net:
