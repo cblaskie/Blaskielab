@@ -1,23 +1,22 @@
 services:
   whoami:
     image: traefik/whoami:latest
-    container_name: whoami
+    container_name: test-whoami
     restart: unless-stopped
     networks:
-      - proxy_net
+      - proxy_net # Must connect to your shared external network
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=proxy_net"
-
-      # Routing Rules
+      
+      # 1. Define your test subdomain rule
       - "traefik.http.routers.whoami.rule=Host(`whoami.theblaskies.com`)"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.tls.certresolver=cloudflare"
-
-      # OAuth middleware
-      - "traefik.http.routers.whoami.middlewares=oauth2-auth@file"
-
-      # Service port
+      
+      # 🔐 2. The exact middleware combo string to add!
+      - "traefik.http.routers.whoami.middlewares=oauth2-auth@file,pretty-errors@file"
+      
+      # 3. Tell Traefik which port whoami listens on internally
       - "traefik.http.services.whoami.loadbalancer.server.port=80"
 
 networks:
