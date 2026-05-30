@@ -56,7 +56,7 @@ http:
           - "401"
         # 1. We change /sign_in to /start to skip the manual button.
         # 2. We use {url} to ensure the destination is preserved.
-        query: "/oauth2/start?rd={url}"
+        query: "/oauth2/auth?rd={url}"
         service: oauth2-proxy-service
 
     oauth2-logout:
