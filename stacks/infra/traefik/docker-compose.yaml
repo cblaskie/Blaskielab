@@ -47,6 +47,20 @@ services:
     networks:
       - proxy_net
 
+  error-pages:
+    image: ghcr.io/tarampampam/error-pages:latest
+    container_name: error-pages
+    restart: unless-stopped
+    environment:
+      - TEMPLATE_NAME=shuffle # Pick your aesthetic: ghost, l33t, matrix, connection, etc.
+      - SHOW_DETAILS=true
+    networks:
+      - proxy_net
+    labels:
+      - "traefik.enable=true"
+      # This registers it globally for Traefik's file provider to hook into
+      - "traefik.http.services.error-pages-service.loadbalancer.server.port=8080"
+
 networks:
   proxy_net:
     external: true
