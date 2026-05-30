@@ -27,6 +27,12 @@ http:
         servers:
           - url: "http://oauth2-proxy:4180"
 
+    # ⬇️ ADDED: Maps your container to the file provider
+    error-pages-service:
+      loadBalancer:
+        servers:
+          - url: "http://error-pages:8080"
+
   middlewares:
     # v3 Logic: Chain Verify + Signin
     oauth2-auth:
@@ -43,6 +49,7 @@ http:
           - "X-Auth-Request-User"
           - "X-Auth-Request-Email"
           - "X-Auth-Request-Groups"
+
     oauth-signin:
       errors:
         status:
@@ -56,3 +63,12 @@ http:
       redirectRegex:
         regex: "^https://auth.theblaskies.com/logout$"
         replacement: "https://auth.theblaskies.com/oauth2/sign_out?rd=https://home.theblaskies.com"
+
+    # ⬇️ ADDED: The Shuffle-themed Error Dashboard Middleware
+    pretty-errors:
+      errors:
+        status:
+          - "404"
+          - "500-504" # Intercepts app crashes, bad gateways, and connection timeouts
+        service: error-pages-service
+        query: "/{status}.html"
