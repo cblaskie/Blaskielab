@@ -7,11 +7,11 @@ http:
           - url: "http://error-pages:8080"
 
   middlewares:
-    # 🔐 Restored High Management Port Authentication Gateway
+    # 🔐 Native v4 Scoped Portal Verification Route
     pocketid-auth:
       forwardAuth:
-        # 🔄 FIXED: Pointed back to port 4181 for native authentication parsing
-        address: "http://traefik-forward-auth:4181/_oauth/verify"
+        # 🎯 FIXED: Explicitly targeting your 'main' portal path scheme on port 4181
+        address: "http://traefik-forward-auth:4181/portals/main/verify"
         trustForwardHeader: true
         authResponseHeaders:
           - "X-Forwarded-User"
