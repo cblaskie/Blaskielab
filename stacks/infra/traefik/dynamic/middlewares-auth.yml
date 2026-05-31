@@ -7,11 +7,11 @@ http:
           - url: "http://error-pages:8080"
 
   middlewares:
-    # 🔐 The Unified Single Sign-On Gateway
+    # 🔐 Clean Single Sign-On Verification Gateway
     pocketid-auth:
       forwardAuth:
-        # 🎯 Crucial: Pointed to port 80 and targeting your config's "main" portal
-        address: "http://traefik-forward-auth:80/_oauth/verify?portal=main"
+        # 🔄 FIXED: Removed the query string to stop the 500 loop
+        address: "http://traefik-forward-auth:80/_oauth/verify"
         trustForwardHeader: true
         authResponseHeaders:
           - "X-Forwarded-User"
