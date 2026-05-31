@@ -4,9 +4,9 @@ services:
     container_name: traefik-forward-auth
     restart: unless-stopped
     
-    # This pulls all your keys, secrets, and domains from the .env file
-    env_file:
-      - .env
+    # 🔒 SAFE FOR GITHUB: Mounts the local server folder safely out of Git's reach
+    volumes:
+      - /mnt/user/appdata/traefik-forward-auth/config.yaml:/etc/traefik-forward-auth/config.yaml:ro
       
     networks:
       - proxy_net
