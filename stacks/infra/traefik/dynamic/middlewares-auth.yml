@@ -1,22 +1,19 @@
 http:
   services:
-    # Connects Traefik to your centralized error-pages container
     error-pages-service:
       loadBalancer:
         servers:
           - url: "http://error-pages:8080"
 
   middlewares:
-    # 🔐 Native v4 Scoped Portal Verification Route
+    # 🔐 Verified v4 Dynamic Middleware Mapping
     pocketid-auth:
       forwardAuth:
-        # 🎯 FIXED: Explicitly targeting your 'main' portal path scheme on port 4181
-        address: "http://traefik-forward-auth:4181/portals/main/verify"
+        address: "http://traefik-forward-auth:4181/portals/main"
         trustForwardHeader: true
         authResponseHeaders:
           - "X-Forwarded-User"
 
-    # 🎨 Your Shuffle-themed Custom Error Dashboard Middleware
     pretty-errors:
       errors:
         status:
