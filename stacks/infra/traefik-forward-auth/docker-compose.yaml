@@ -1,21 +1,20 @@
 services:
   # --- Traefik Forward Auth Layer ---
-  traefik-forward-auth:
+    traefik-forward-auth:
     image: ghcr.io/italypaleale/traefik-forward-auth:4
     container_name: traefik-forward-auth
     restart: unless-stopped
     volumes:
-      # 🔒 SAFE FOR GITHUB: Points to your local server's absolute configuration path
-      - /mnt/user/appdata/traefik-forward-auth/config.yaml:/etc/traefik-forward-auth/config.yaml:ro
+      - /mnt/user/appdata/traefik-forward-auth:/etc/traefik-forward-auth
     networks:
       - proxy_net
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.auth.rule=Host(`auth.theblaskies.com`)"
-      - "traefik.http.routers.auth.entrypoints=websecure"
-      - "traefik.http.routers.auth.tls.certresolver=cloudflare"
-      # 🎯 Ensures Traefik targets the correct management interface port
-      - "traefik.http.services.auth.loadbalancer.server.port=4181"
+      # 🎯 FIXED: Changed the router identity to break away from stale ghost rules
+      - "traefik.http.routers.tfa-secure-router.rule=Host(`auth.theblaskies.com`)"
+      - "traefik.http.routers.tfa-secure-router.entrypoints=websecure"
+      - "traefik.http.routers.tfa-secure-router.tls.certresolver=cloudflare"
+      - "traefik.http.services.tfa-secure-service.loadbalancer.server.port=4181"
 
 networks:
   proxy_net:
