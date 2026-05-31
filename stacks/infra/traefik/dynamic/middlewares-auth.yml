@@ -7,11 +7,11 @@ http:
           - url: "http://error-pages:8080"
 
   middlewares:
-    # 🔐 Clean Single Sign-On Verification Gateway
+    # 🔐 Restored High Management Port Authentication Gateway
     pocketid-auth:
       forwardAuth:
-        # 🔄 FIXED: Removed the query string to stop the 500 loop
-        address: "http://traefik-forward-auth:80/_oauth/verify"
+        # 🔄 FIXED: Pointed back to port 4181 for native authentication parsing
+        address: "http://traefik-forward-auth:4181/_oauth/verify"
         trustForwardHeader: true
         authResponseHeaders:
           - "X-Forwarded-User"
