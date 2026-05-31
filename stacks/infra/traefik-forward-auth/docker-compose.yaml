@@ -17,21 +17,6 @@ services:
       # Tells Traefik that the internal app engine listens natively on port 80
       - "traefik.http.services.auth.loadbalancer.server.port=80"
 
-  # --- Centralized Pretty Error Pages Layer ---
-  error-pages:
-    image: ghcr.io/tarampampam/error-pages:latest
-    container_name: error-pages
-    restart: unless-stopped
-    environment:
-      - TEMPLATE_NAME=shuffle # 🎨 Your custom Shuffle aesthetic theme
-      - SHOW_DETAILS=true
-    networks:
-      - proxy_net
-    labels:
-      - "traefik.enable=true"
-      # Registers this service so Traefik's file provider can interact with it
-      - "traefik.http.services.error-pages-service.loadbalancer.server.port=8080"
-
 networks:
   proxy_net:
     external: true
