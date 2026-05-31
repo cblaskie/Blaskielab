@@ -6,8 +6,7 @@ services:
     
     # 🔒 SAFE FOR GITHUB: Mounts the local server folder safely out of Git's reach
     volumes:
-      - /mnt/user/appdata/traefik-forward-auth/config.yaml:/etc/traefik-forward-auth/config.yaml:ro
-      
+      - /mnt/user/appdata/traefik-forward-auth:/etc/traefik-forward-auth      
     networks:
       - proxy_net
     labels:
