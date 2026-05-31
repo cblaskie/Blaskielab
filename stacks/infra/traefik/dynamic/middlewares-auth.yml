@@ -7,19 +7,19 @@ http:
           - url: "http://error-pages:8080"
 
   middlewares:
-    # ⬇️ ADDED: The new simplified Traefik Forward Auth middleware
+    # The new simplified Traefik Forward Auth middleware
     pocketid-auth:
       forwardAuth:
-        address: "http://traefik-forward-auth:4181"
+        address: "http://traefik-forward-auth:80" 
         trustForwardHeader: true
         authResponseHeaders:
           - "X-Forwarded-User"
 
-    # ⬇️ KEPT: Your Shuffle-themed Error Dashboard Middleware
+    # Your Shuffle-themed Error Dashboard Middleware
     pretty-errors:
       errors:
         status:
           - "404"
-          - "500-504" # Intercepts app crashes, bad gateways, and connection timeouts
+          - "500-504"
         service: error-pages-service
         query: "/{status}.html"
