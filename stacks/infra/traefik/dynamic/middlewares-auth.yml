@@ -1,21 +1,22 @@
 http:
   services:
-    # Maps your error-pages container to the file provider
+    # Connects Traefik to your centralized error-pages container
     error-pages-service:
       loadBalancer:
         servers:
           - url: "http://error-pages:8080"
 
   middlewares:
-    # The new simplified Traefik Forward Auth middleware
+    # 🔐 The Unified Single Sign-On Gateway
     pocketid-auth:
       forwardAuth:
-        address: "http://traefik-forward-auth:80" 
+        # 🎯 Crucial: Pointed to port 80 and targeting your config's "main" portal
+        address: "http://traefik-forward-auth:80/_oauth/verify?portal=main"
         trustForwardHeader: true
         authResponseHeaders:
           - "X-Forwarded-User"
 
-    # Your Shuffle-themed Error Dashboard Middleware
+    # 🎨 Your Shuffle-themed Custom Error Dashboard Middleware
     pretty-errors:
       errors:
         status:
