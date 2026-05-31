@@ -1,0 +1,22 @@
+services:
+  traefik-forward-auth:
+    image: ghcr.io/italypaleale/traefik-forward-auth:4
+    container_name: traefik-forward-auth
+    restart: unless-stopped
+    environment:
+      - PROVIDER=generic
+      - PROVIDER_GENERIC_ISSUER=https://id.theblaskies.com
+      - CLIENT_ID=4b794b03-93f7-4db0-8e58-05c4820401cf
+      - CLIENT_SECRET=LrevjVvJKiT4SOsNp2ipswdONXjsSRKL
+      # Generate a random string for this (e.g., openssl rand -hex 16)
+      - SECRET=put_a_random_string_here_for_cookie_encryption 
+      - AUTH_HOST=auth.theblaskies.com
+      - COOKIE_DOMAIN=.theblaskies.com # Note the leading dot for SSO!
+    networks:
+      - proxy_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.auth.rule=Host(`auth.theblaskies.com`)"
+      - "traefik.http.routers.auth.entrypoints=websecure"
+      - "traefik.http.routers.auth.tls.certresolver=cloudflare"
+      - "traefik.http.services.auth.loadbalancer.server.port=4181"
