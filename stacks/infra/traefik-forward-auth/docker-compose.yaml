@@ -4,7 +4,8 @@ services:
     image: ghcr.io/italypaleale/traefik-forward-auth:4
     container_name: traefik-forward-auth
     restart: unless-stopped
-    command: ["--default-portal=main"]
+    environment:
+      - TFA_DEFAULT_PORTAL=main
     volumes:
       # 🔒 SAFE FOR GITHUB: Points to your local server's absolute configuration path
       - /mnt/user/appdata/traefik-forward-auth/config.yaml:/etc/traefik-forward-auth/config.yaml:ro
