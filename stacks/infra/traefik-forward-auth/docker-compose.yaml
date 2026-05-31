@@ -15,8 +15,8 @@ services:
       - "traefik.http.routers.auth.rule=Host(`auth.theblaskies.com`)"
       - "traefik.http.routers.auth.entrypoints=websecure"
       - "traefik.http.routers.auth.tls.certresolver=cloudflare"
-      # Tells Traefik that the internal app engine listens natively on port 80
-      - "traefik.http.services.auth.loadbalancer.server.port=80"
+      # 🎯 Ensures Traefik targets the correct management interface port
+      - "traefik.http.services.auth.loadbalancer.server.port=4181"
 
 networks:
   proxy_net:
