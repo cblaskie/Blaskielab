@@ -10,26 +10,26 @@ services:
       # Main persistent appdata directory where Glance looks for its active configuration
       - /mnt/user/appdata/glance:/app/config
       
-      # 🛠️ FIXED: Points directly to where Komodo pulls your GitHub repo on your host system
+      # Points directly to where Komodo pulls your GitHub repo on your host system
       - /etc/komodo/repos/Blaskielab:/repo_backup:ro
       
-    # 🔄 FIXED & TESTED: Uses native timestamp comparisons to sync updates from GitHub instantly on startup
+    # 🔄 FIXED: Multi-line string format explicitly separated with semi-colons for lightweight sh shells
     entrypoint: >
       sh -c "
-      echo 'Syncing any fresh updates from GitHub repo to appdata...'
+      echo 'Syncing fresh updates from GitHub repo subfolder...';
       
-      # 1. Sync master config if the repo version is newer
-      if [ -f /repo_backup/glance.yml ]; then
-        cp -u /repo_backup/glance.yml /app/config/glance.yml
-      fi
+      # 1. Sync master config if the repo version inside the stack folder is newer
+      if [ -f /repo_backup/stacks/apps/glance/glance.yml ]; then
+        cp -u /repo_backup/stacks/apps/glance/glance.yml /app/config/glance.yml;
+      fi;
 
       # 2. Sync widgets subfolder if any repo files are newer
-      if [ -d /repo_backup/widgets ]; then
-        mkdir -p /app/config/widgets
-        cp -ru /repo_backup/widgets/. /app/config/widgets/
-      fi
+      if [ -d /repo_backup/stacks/apps/glance/widgets ]; then
+        mkdir -p /app/config/widgets;
+        cp -ru /repo_backup/stacks/apps/glance/widgets/. /app/config/widgets/;
+      fi;
 
-      echo 'Sync complete. Launching Glance cockpit...'
+      echo 'Sync complete. Launching Glance cockpit...';
       exec /app/glance --config /app/config/glance.yml
       "
     networks:
