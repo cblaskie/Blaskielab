@@ -27,8 +27,6 @@ services:
       - "traefik.http.routers.glance.entrypoints=websecure"
       - "traefik.http.routers.glance.tls.certresolver=cloudflare"
       
-      # 🔐 SECURED: Chains your file-based PocketID authentication gate and error handlers
-      - "traefik.http.routers.glance.middlewares=pocketid-auth@file,pretty-errors@file"
       
       # Tells Traefik to look for Glance on its native internal port
       - "traefik.http.services.glance.loadbalancer.server.port=8080"
