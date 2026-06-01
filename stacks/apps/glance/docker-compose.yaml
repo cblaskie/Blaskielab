@@ -7,30 +7,30 @@ services:
     container_name: glance
     restart: unless-stopped
     
-    # Explicitly tells Glance exactly where to read the config file inside the mount
+    # Directs Glance explicitly to its configuration path
     environment:
       - GLANCE_CONFIG=/app/config/glance.yml
       
     volumes:
-      # Points back to your standard Unraid appdata share
+      # Maps your verified local Unraid appdata share path
       - /mnt/user/appdata/glance:/app/config:ro
     networks:
       - proxy_net
     labels:
       - "traefik.enable=true"
       
-      # 🎯 EXPLICIT: Forces Traefik to look for this container on the correct shared network mesh
+      # Forces Traefik to look for this container on the correct shared network mesh
       - "traefik.docker.network=proxy_net"
       
-      # 🛠️ SYNTAX FIX: Swapped backticks for single quotes to prevent string parsing drops
+      # Routing parameters for your primary domain root (Single Quotes fix formatting errors)
       - "traefik.http.routers.glance.rule=Host('home.theblaskies.com')"
       - "traefik.http.routers.glance.entrypoints=websecure"
       - "traefik.http.routers.glance.tls.certresolver=cloudflare"
       
-      # 🔐 SECURED: Protected by your external PocketID auth gate and error file definitions
+      # 🔐 SECURED: Chains your file-based PocketID authentication gate and error handlers
       - "traefik.http.routers.glance.middlewares=pocketid-auth@file,pretty-errors@file"
       
-      # Target the standard internal port Glance natively uses
+      # Tells Traefik to look for Glance on its native internal port
       - "traefik.http.services.glance.loadbalancer.server.port=8080"
 
 networks:
