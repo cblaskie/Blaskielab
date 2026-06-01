@@ -1,0 +1,26 @@
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    volumes:
+      # Persistent local storage folder for database and dashboard assets
+      - /mnt/user/appdata/uptime-kuma:/app/data
+      # Read-only Docker socket binding allows you to monitor other local containers natively
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy_net
+    labels:
+      - "traefik.enable=true"
+      # Exposes standard Traefik tags using routing backticks
+      - "traefik.http.routers.uptime-kuma.rule=Host(`uptime.theblaskies.com`)"
+      - "traefik.http.routers.uptime-kuma.entrypoints=websecure"
+      - "traefik.http.routers.uptime-kuma.tls.certresolver=cloudflare"
+      # Uptime Kuma natively listens on port 3001 inside the container
+      - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
+
+networks:
+  proxy_net:
+    external: true
