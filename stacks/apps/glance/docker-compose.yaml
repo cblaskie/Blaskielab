@@ -6,8 +6,13 @@ services:
     image: glanceapp/glance:latest
     container_name: glance
     restart: unless-stopped
+    
+    # 🎯 THE FIX: Explicitly tell Glance exactly where to read the config file inside the mount
+    environment:
+      - GLANCE_CONFIG=/app/config/glance.yml
+      
     volumes:
-      # 🎯 THE FIX: Mount the repository subfolder directly into the container as its config directory
+      # Mounts the folder containing your docker-compose and glance.yml directly
       - /etc/komodo/repos/Blaskielab/stacks/apps/glance:/app/config:ro
     networks:
       - proxy_net
