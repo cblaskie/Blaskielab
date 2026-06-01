@@ -1,37 +1,14 @@
 version: "3.8"
 
 services:
-  # 3. Central System Dashboard & Cockpit (Timestamp-Based Sync)
+  # 3. Central System Dashboard & Cockpit
   glance:
     image: glanceapp/glance:latest
     container_name: glance
     restart: unless-stopped
     volumes:
-      # Main persistent appdata directory where Glance looks for its active configuration
-      - /mnt/user/appdata/glance:/app/config
-      
-      # Points directly to where Komodo pulls your GitHub repo on your host system
-      - /etc/komodo/repos/Blaskielab:/repo_backup:ro
-      
-    # 🔄 FIXED: Multi-line string format explicitly separated with semi-colons for lightweight sh shells
-    entrypoint: >
-      sh -c "
-      echo 'Syncing fresh updates from GitHub repo subfolder...';
-      
-      # 1. Sync master config if the repo version inside the stack folder is newer
-      if [ -f /repo_backup/stacks/apps/glance/glance.yml ]; then
-        cp -u /repo_backup/stacks/apps/glance/glance.yml /app/config/glance.yml;
-      fi;
-
-      # 2. Sync widgets subfolder if any repo files are newer
-      if [ -d /repo_backup/stacks/apps/glance/widgets ]; then
-        mkdir -p /app/config/widgets;
-        cp -ru /repo_backup/stacks/apps/glance/widgets/. /app/config/widgets/;
-      fi;
-
-      echo 'Sync complete. Launching Glance cockpit...';
-      exec /app/glance --config /app/config/glance.yml
-      "
+      # 🎯 THE FIX: Mount the repository subfolder directly into the container as its config directory
+      - /etc/komodo/repos/Blaskielab/stacks/apps/glance:/app/config:ro
     networks:
       - proxy_net
     labels:
@@ -40,10 +17,10 @@ services:
       - "traefik.http.routers.glance.entrypoints=websecure"
       - "traefik.http.routers.glance.tls.certresolver=cloudflare"
       
-      # 🔐 SECURED: Pass traffic through your PocketID auth gateway and custom error templates
+      # 🔐 SECURED: Protected by PocketID authentication gate and error handlers
       - "traefik.http.routers.glance.middlewares=pocketid-auth@file,pretty-errors@file"
       
-      # Tells Traefik to look for Glance on its native internal port
+      # Target the standard internal port Glance natively uses
       - "traefik.http.services.glance.loadbalancer.server.port=8080"
 
 networks:
