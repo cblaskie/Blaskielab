@@ -4,26 +4,30 @@ services:
     container_name: kometa
     restart: unless-stopped
 
-    # Sources path configurations natively from your companion file
     env_file:
       - .env
 
-    # Maps your local Unraid storage points
     volumes:
-      - /mnt/user/appdata/kometa:/config:rw
-      - /mnt/user/data/assets:/config/assets:rw
+      - /mnt/user/appdata/kometa:/config
+      - /mnt/user/data/media/assets:/config/assets:rw
 
-    # Attaches cleanly to your pre-existing environment networks
     networks:
       - media_net
       - proxy_net
 
-    # Integrates seamlessly with your Traefik infrastructure rules
     labels:
-      - "traefik.enable=false" # Explicitly tells Traefik not to expose this to the web
-      - "com.docker.compose.project=media"
+      - "traefik.enable=true"
+      # Using strict backticks (`) for the domain string to satisfy Traefik's internal syntax compiler
+      - "traefik.http.routers.kometa.rule=Host(`kometa.theblaskies.com`)"
+      - "traefik.http.routers.kometa.entrypoints=websecure"
+      - "traefik.http.routers.kometa.tls.certresolver=cloudflare"
+      
+      # 🔐 SECURED: Chains your stabilized single sign-on gate with your custom error dashboard
+      - "traefik.http.routers.kometa.middlewares=pocketid-auth@file,pretty-errors@file"
+      
+      # Targets the internal web port that the core Kometa web UI/API server listens on
+      - "traefik.http.services.kometa.loadbalancer.server.port=8080"
 
-# Defines the external network parameters 
 networks:
   media_net:
     external: true
