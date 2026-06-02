@@ -21,10 +21,7 @@ services:
       - "traefik.http.routers.kometa.rule=Host(`kometa.theblaskies.com`)"
       - "traefik.http.routers.kometa.entrypoints=websecure"
       - "traefik.http.routers.kometa.tls.certresolver=cloudflare"
-      
-      # 🔐 SECURED: Chains your stabilized single sign-on gate with your custom error dashboard
-      - "traefik.http.routers.kometa.middlewares=pocketid-auth@file,pretty-errors@file"
-      
+            
       # Targets the internal web port that the core Kometa web UI/API server listens on
       - "traefik.http.services.kometa.loadbalancer.server.port=8080"
 
