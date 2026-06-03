@@ -1,24 +1,21 @@
 services:
   renovate:
-    image: renovate/renovate:latest@sha256:876cab840558ae1b2bea8b8ef69402175e88f942063a015adac54a0ad61818ed
+    image: renovate/renovate:latest@sha256:8f818dc7f121a48a4d49412516588b8c4c900697455174983328e796f24971ab
     container_name: renovate
-    # 1. FIXED: Removed "restart: unless-stopped" to stop the infinite loop chaos
+    restart: unless-stopped
 
     environment:
       RENOVATE_PLATFORM: github
       RENOVATE_TOKEN: ${RENOVATE_TOKEN}
 
       RENOVATE_GIT_AUTHOR: "Obie Bot <renovate@theblaskies.com>"
-      
-      # 2. FIXED: Turned autodiscover to false so it stops scanning your other repos
-      RENOVATE_AUTODISCOVER: "false"
-      
+      RENOVATE_AUTODISCOVER: "true"
       RENOVATE_BASE_DIR: /tmp/renovate
-      RENOVATE_CONCURRENT_LIMIT: "1"
-      RENOVATE_PR_CONCURRENT_LIMIT: "2"
-      
-      # 3. FIXED: Removed the broken RENOVATE_GIT_FS setting
+      RENOVATE_GIT_FS: "true"
       RENOVATE_REPOSITORIES: "cblaskie/Blaskielab"
+
+      # 🌟 FIXED: Stripped out the restrictive RENOVATE_CONCURRENT_LIMIT 
+      # and RENOVATE_PR_CONCURRENT_LIMIT variables so they don't fight your renovate.json!
 
       # Logging
       LOG_LEVEL: info
@@ -26,4 +23,9 @@ services:
     volumes:
       - /mnt/user/appdata/renovate:/tmp/renovate
 
-    # 4. FIXED: Removed the proxy_net hookup since Renovate only needs outbound access to GitHub
+    networks:
+      - proxy_net # 🌟 FIXED: Attached natively to your existing external proxy structure
+
+networks:
+  proxy_net:
+    external: true # 🌟 FIXED: Informs the engine this is permanent, clearing out the "network not found" loop
