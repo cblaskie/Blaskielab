@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   apprise:
-    image: lscr.io/linuxserver/apprise-api:latest
+    image: lscr.io/linuxserver/apprise-api:latest@sha256:3bd6549f260f0d6c7459f5d86f3bf1679be3177ef795b2f24513146a32bc6850
     container_name: apprise_api
     restart: unless-stopped
     volumes:

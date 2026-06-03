@@ -3,7 +3,7 @@ version: "3.8"
 services:
   # 3. Central System Dashboard & Cockpit
   glance:
-    image: glanceapp/glance:latest
+    image: glanceapp/glance:latest@sha256:32ab73d80f2b8b5fb0735b0431deb36b93fbb6b2fb43592449b0178c8b83e350
     container_name: glance
     restart: unless-stopped
     
