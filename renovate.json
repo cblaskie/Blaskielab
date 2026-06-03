@@ -5,8 +5,10 @@
   ],
   "timezone": "America/New_York",
   "dependencyDashboard": true,
-  "prConcurrentLimit": 5,
-  "prHourlyLimit": 2,
+  
+  "prConcurrentLimit": 20,       // 🌟 INCREASED: Allows up to 20 open PRs so your updates aren't throttled
+  "prHourlyLimit": 0,            // 🌟 FIXED: Set to 0 to completely disable the hourly creation limit
+  
   "schedule": [
     "after 10pm",
     "before 5am"
