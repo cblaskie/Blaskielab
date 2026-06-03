@@ -16,7 +16,7 @@ services:
       - /mnt/user/appdata/posterizarr:/config
       - /mnt/user/appdata/posterizarr/manualassets:/manualassets
       - /mnt/user/appdata/posterizarr/assetsbackup:/assetsbackup
-      - /mnt/user/data/media/assets:/assets:rw
+      - /mnt/user/data/assets:/assets:rw
 
     networks:
       - media_net
