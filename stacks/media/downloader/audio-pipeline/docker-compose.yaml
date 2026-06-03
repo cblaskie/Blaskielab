@@ -27,7 +27,7 @@ services:
 
   # 2. YouTube-to-Audio (Metube)
   youtube-dl:
-    image: alexta69/metube:latest
+    image: alexta69/metube:latest@sha256:c5ed53d2e9f3aff3982a599aac74388d36879722b1a553a9ae0200346a321ec9
     container_name: youtube_audio_dl
     user: "99:100"
     restart: unless-stopped

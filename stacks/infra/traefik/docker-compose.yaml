@@ -48,7 +48,7 @@ services:
       - proxy_net
 
   error-pages:
-    image: ghcr.io/tarampampam/error-pages:latest
+    image: ghcr.io/tarampampam/error-pages:latest@sha256:b8ded6f847df91075429cf79cb9491bfd7d96de69936555498a2ff0614e003e4
     container_name: error-pages
     restart: unless-stopped
     environment:
