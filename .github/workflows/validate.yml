@@ -19,6 +19,17 @@ jobs:
           # Finds all compose configuration files and evaluates their syntax structure
           find . -type f \( -name "docker-compose.yml" -o -name "docker-compose.yaml" -o -name "compose.yml" -o -name "compose.yaml" \) | while read -r file; do
             echo "Checking: $file"
+            
+            # Extract the folder path containing the compose file
+            dir_path=$(dirname "$file")
+            
+            # 🌟 FIX: If the folder expects a .env file that isn't committed, mock an empty one for the compiler
+            if [ ! -f "$dir_path/.env" ]; then
+              echo "  -> Creating temporary mock .env file for validation tracking"
+              touch "$dir_path/.env"
+            fi
+            
+            # Validate syntax quietly
             docker compose -f "$file" config --quiet
           done
 
@@ -32,7 +43,6 @@ jobs:
       - name: Run YAML Lint
         uses: ibiqlik/action-yamllint@v3
         with:
-          # Skips warning flags on formatting preferences, but strictly blocks execution syntax failures
           config_data: |
             extends: default
             rules:
