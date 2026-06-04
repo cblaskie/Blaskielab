@@ -5,10 +5,10 @@
   ],
   "timezone": "America/New_York",
   "dependencyDashboard": true,
-  "fetchReleaseNotes": "always",     // 🌟 ADDED: Aggressively fetches and attaches release changelogs to PR descriptions
+  "fetchReleaseNotes": "always",
   
-  "prConcurrentLimit": 20,       // Allows up to 20 open PRs so your updates aren't throttled
-  "prHourlyLimit": 0,            // Set to 0 to completely disable the hourly creation limit
+  "prConcurrentLimit": 20,
+  "prHourlyLimit": 0,
   
   "schedule": [
     "after 10pm",
@@ -22,15 +22,13 @@
       "pinDigests": true
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
+      // 🌟 FIXED: Removed 'matchDatasources' constraint to bundle EVERYTHING minor/patch into one PR
       "matchUpdateTypes": [
         "patch",
         "minor"
       ],
-      "groupName": "Homelab Container Updates (Minor/Patch)",
-      "groupSlug": "homelab-containers-minor-patch",
+      "groupName": "All Homelab Minor/Patch Updates",
+      "groupSlug": "all-homelab-minor-patch",
       "automerge": true,
       "platformAutomerge": true
     },
