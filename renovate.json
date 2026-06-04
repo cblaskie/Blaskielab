@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    ":issueCreationErrorNotice"  // 🌟 ADDED: Tells Renovate to automatically open a GitHub Issue if an update fails validation/CI checks
   ],
   "timezone": "America/New_York",
   "dependencyDashboard": true,
@@ -10,10 +11,10 @@
   "prConcurrentLimit": 20,
   "prHourlyLimit": 0,
   
-  // 🌟 BRANCH COMPRESSION & HYGIENE CONFIG
+  // BRANCH COMPRESSION & HYGIENE CONFIG
   "automergeType": "squash",
   "rebaseWhen": "behind-base-branch",
-  "prCreation": "not-pending",
+  "prCreation": "not-pending",    // Prevents making a generic PR until background validations run green
   
   "schedule": [
     "after 10pm",
