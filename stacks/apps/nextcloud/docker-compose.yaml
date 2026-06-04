@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  nextcloud-db:
+    image: mariadb:10.11
+    container_name: nextcloud-db
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      # 🌟 REPLACE THESE: Change these placeholder values to protect your database connection
+      - MYSQL_PASSWORD=ChangeMeToSomethingSecure123!
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+    volumes:
+      - /mnt/user/appdata/nextcloud/db:/var/lib/mysql
+    networks:
+      - proxy_net
+
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud
+    restart: unless-stopped
+    depends_on:
+      - nextcloud-db
+    environment:
+      - MYSQL_HOST=nextcloud-db
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      # 🌟 MUST MATCH: Ensure this matches the database container password defined above
+      - MYSQL_PASSWORD=ChangeMeToSomethingSecure123!
+    volumes:
+      # Application configuration and primary asset core
+      - /mnt/user/appdata/nextcloud/app:/var/www/html
+      # Heavy file-storage chunk directory
+      - /mnt/user/appdata/nextcloud/data:/var/www/html/data
+    networks:
+      - proxy_net
+    labels:
+      - "traefik.enable=true"
+      # Exposes standard Traefik routing rules matching your homelab pattern
+      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.theblaskies.com`)"
+      - "traefik.http.routers.nextcloud.entrypoints=websecure"
+      - "traefik.http.routers.nextcloud.tls.certresolver=cloudflare"
+      # Nextcloud natively listens on port 80 inside the container
+      - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
+      
+      # 🌟 REVERSE PROXY FIXES: Nextcloud requires explicit redirect rules for carddav/calldav synchronization
+      - "traefik.http.middlewares.nextcloud-dav.redirectregex.regex=https:\\/\\/([^\\/]+)\\/.well-known\\/(card|cal)dav"
+      - "traefik.http.middlewares.nextcloud-dav.redirectregex.replacement=https://$$1/remote.php/dav/"
+      - "traefik.http.routers.nextcloud.middlewares=nextcloud-dav"
+
+networks:
+  proxy_net:
+    external: true
