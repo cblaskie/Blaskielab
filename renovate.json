@@ -5,7 +5,7 @@
   ],
   "timezone": "America/New_York",
   "dependencyDashboard": true,
-  "fetchReleaseNotes": "always",
+  "fetchChangeLogs": "always",
   "prConcurrentLimit": 20,
   "prHourlyLimit": 0,
   "automergeType": "squash",
