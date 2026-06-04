@@ -28,3 +28,8 @@ services:
       - traefik.http.routers.tcm.entrypoints=websecure
       - traefik.http.routers.tcm.tls=true
       - traefik.http.services.tcm.loadbalancer.server.port=4242
+
+      # Add this declaration to the absolute bottom of the file
+networks:
+  proxy_net:
+    external: true
