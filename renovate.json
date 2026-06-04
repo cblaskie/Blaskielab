@@ -10,6 +10,11 @@
   "prConcurrentLimit": 20,
   "prHourlyLimit": 0,
   
+  // 🌟 BRANCH COMPRESSION & HYGIENE CONFIG
+  "automergeType": "squash",
+  "rebaseWhen": "behind-base-branch",
+  "prCreation": "not-pending",
+  
   "schedule": [
     "after 10pm",
     "before 5am"
@@ -22,7 +27,6 @@
       "pinDigests": true
     },
     {
-      // 🌟 FIXED: Removed 'matchDatasources' constraint to bundle EVERYTHING minor/patch into one PR
       "matchUpdateTypes": [
         "patch",
         "minor"
