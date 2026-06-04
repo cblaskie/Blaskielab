@@ -33,3 +33,5 @@ services:
 networks:
   proxy_net:
     external: true
+  media_net:
+    external: true  
