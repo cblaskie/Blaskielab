@@ -1,0 +1,40 @@
+name: Configuration Validations
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-compose:
+    name: Validate Docker Compose
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Verify Compose Syntax
+        run: |
+          # Finds all compose configuration files and evaluates their syntax structure
+          find . -type f \( -name "docker-compose.yml" -o -name "docker-compose.yaml" -o -name "compose.yml" -o -name "compose.yaml" \) | while read -r file; do
+            echo "Checking: $file"
+            docker compose -f "$file" config --quiet
+          done
+
+  lint-yaml:
+    name: Lint YAML Configurations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run YAML Lint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          # Skips warning flags on formatting preferences, but strictly blocks execution syntax failures
+          config_data: |
+            extends: default
+            rules:
+              line-length: disable
+              document-start: disable
