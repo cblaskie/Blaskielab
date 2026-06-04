@@ -15,34 +15,34 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Verify Compose Syntax
-        # 🌟 FORCE ENFORCEMENT: Captures errors to an output log file
         id: compose_check
         run: |
-          ERROR_LOG=""
+          # 🌟 ABSOLUTE PATH SAFETIES: Pre-create host appdata root mount frames for uncommitted configs
+          sudo mkdir -p /mnt/user/appdata/komodo
+          sudo touch /mnt/user/appdata/komodo/.env
+          sudo chmod -R 777 /mnt/user/appdata
+          
           find . -type f \( -name "docker-compose.yml" -o -name "docker-compose.yaml" -o -name "compose.yml" -o -name "compose.yaml" \) | while read -r file; do
+            echo "Checking: $file"
+            
             if [ ! -s "$file" ] || ! grep -q '[^[:space:]#]' "$file"; then
+              echo "  -> Skipping empty/comment skeleton"
               continue
             fi
             if ! grep -q "services:" "$file"; then
+              echo "  -> Skipping config skeleton without services"
               continue
             fi
+            
+            # Handle localized folder dependencies
             dir_path=$(dirname "$file")
             if [ ! -f "$dir_path/.env" ]; then
               touch "$dir_path/.env"
             fi
             
-            # Run config check and log standard errors out
-            if ! docker compose -f "$file" config --quiet 2>&1; then
+            # Run layout validation check and capture actual trace errors out
+            if ! docker compose -f "$file" config --quiet; then
               echo "Syntax failure detected in: $file"
               exit 1
             fi
           done
-
-      # 🌟 AUTOMATED ISSUE CREATOR: Opens an explicit GitHub Issue if the validation step fails
-      - name: Open Issue on Failure
-        if: failure() && github.event_name == 'pull_request'
-        uses: JasonEtco/create-an-issue@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          filename: .github/failed_validation_template.md
