@@ -23,15 +23,15 @@ services:
       - media_net
       - proxy_net
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.tcm.rule=Host(`tcm.theblaskies.com`)
-      - traefik.http.routers.tcm.entrypoints=websecure
-      - traefik.http.routers.tcm.tls=true
-      - traefik.http.services.tcm.loadbalancer.server.port=4242
+      - "traefik.enable=true"
+      - "traefik.http.routers.tcm.rule=Host(`tcm.theblaskies.com`)"
+      - "traefik.http.routers.tcm.entrypoints=websecure"
+      - "traefik.http.routers.tcm.tls=true"
+      # 🌟 FIXED: Changed port mapping to 8080 to match your services block above
+      - "traefik.http.services.tcm.loadbalancer.server.port=8080"
 
-      # Add this declaration to the absolute bottom of the file
 networks:
   proxy_net:
     external: true
   media_net:
-    external: true  
+    external: true
