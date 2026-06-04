@@ -1,0 +1,20 @@
+name: JSON Lint
+
+on:
+  pull_request:
+    paths:
+      - '**/*.json'
+
+jobs:
+  json-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Validate JSON Formatting
+        run: |
+          find . -name "*.json" ! -path "*/node_modules/*" | while read -r file; do
+            echo "Validating JSON structure: $file"
+            jq . "$file" > /dev/null
+          done
