@@ -6,7 +6,7 @@ http:
         - websecure
       service: pelican-panel-backend
       tls:
-        certResolver: cloudflare # <-- Explicitly uses your Cloudflare TLS provider
+        certResolver: cloudflare
 
     pelican-wings:
       rule: "Host(`wings.theblaskies.com`)"
@@ -14,15 +14,15 @@ http:
         - websecure
       service: pelican-wings-backend
       tls:
-        certResolver: cloudflare # <-- Explicitly uses your Cloudflare TLS provider
+        certResolver: cloudflare
 
   services:
     pelican-panel-backend:
       loadBalancer:
         servers:
-          - url: "http://10.69.30.30:8080"
+          - url: "http://10.69.30.30:8080" # <-- Nginx Web Panel
 
     pelican-wings-backend:
       loadBalancer:
         servers:
-          - url: "http://10.69.30.30:8081"
+          - url: "http://10.69.30.30:8081" # <-- Wings Daemon
