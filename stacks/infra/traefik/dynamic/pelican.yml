@@ -1,0 +1,15 @@
+http:
+  routers:
+    pelican-panel:
+      rule: "Host(`pelican.theblaskies.com`)" # <-- Change this to your public domain name
+      entryPoints:
+        - websecure
+      service: pelican-backend
+      tls:
+        certResolver: cloudflare # <-- Change this to match your Traefik SSL resolver name
+
+  services:
+    pelican-backend:
+      loadBalancer:
+        servers:
+          - url: "http://10.69.30.30:8080" # <-- Change this to your Pelican VM's IP address
