@@ -1,15 +1,28 @@
 http:
   routers:
     pelican-panel:
-      rule: "Host(`pelican.theblaskies.com`)" # <-- Change this to your public domain name
+      rule: "Host(`pelican.theblaskies.com`)"
       entryPoints:
         - websecure
-      service: pelican-backend
+      service: pelican-panel-backend
       tls:
-        certResolver: cloudflare # <-- Change this to match your Traefik SSL resolver name
+        certResolver: cloudflare # <-- Change if your Traefik resolver has a different name
+
+    pelican-wings:
+      rule: "Host(`wings.theblaskies.com`)"
+      entryPoints:
+        - websecure
+      service: pelican-wings-backend
+      tls:
+        certResolver: cloudflare # <-- Change if your Traefik resolver has a different name
 
   services:
-    pelican-backend:
+    pelican-panel-backend:
       loadBalancer:
         servers:
-          - url: "http://10.69.30.30:8080" # <-- Change this to your Pelican VM's IP address
+          - url: "http://10.69.30.30:8080" # <-- Pointed to your Nginx port
+
+    pelican-wings-backend:
+      loadBalancer:
+        servers:
+          - url: "http://10.69.30.30:8081" # <-- Pointed to your Wings port
