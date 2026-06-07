@@ -1,6 +1,6 @@
 services:
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:2.3.5@sha256:4b52038b7b6452a20c145239fa07d8218d1541d736a96c43aa0a5f60141cab28
+    image: lscr.io/linuxserver/prowlarr:2.3.5@sha256:2489c6dbaf11e3a6d71aeb2e6980d04193d4af611aa7064a974851222fd41722
     container_name: prowlarr
     restart: unless-stopped
     env_file:
