@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+  # Time-Series Database Engine
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    restart: unless-stopped
+    networks:
+      - proxy_net
+    volumes:
+      - /mnt/user/appdata/influxdb/data:/var/lib/influxdb2
+      - /mnt/user/appdata/influxdb/config:/etc/influxdb2
+    environment:
+      - INFLUXD_REPORTING_DISABLED=true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.influxdb.rule=Host(`influx.theblaskies.com`)"
+      - "traefik.http.routers.influxdb.entrypoints=websecure"
+      - "traefik.http.routers.influxdb.tls.certresolver=cloudflare"
+      - "traefik.http.services.influxdb.loadbalancer.server.port=8086"
+
+  # Visualization Dashboard Panel
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    restart: unless-stopped
+    networks:
+      - proxy_net
+    depends_on:
+      - influxdb
+    volumes:
+      - /mnt/user/appdata/grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ALLOW_EMBEDDING=true # Allows embedding into Home Assistant
+      - GF_USERS_ALLOW_SIGN_UP=false
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.theblaskies.com`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls.certresolver=cloudflare"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+
+  # Plex Media Analytics Engine
+  tautulli:
+    image: ghcr.io/tautulli/tautulli:latest
+    container_name: tautulli
+    restart: unless-stopped
+    networks:
+      - proxy_net
+    volumes:
+      - /mnt/user/appdata/tautulli:/config
+    environment:
+      - PUID=99          
+      - PGID=100         
+      - TZ=America/New_York
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tautulli.rule=Host(`tautulli.theblaskies.com`)"
+      - "traefik.http.routers.tautulli.entrypoints=websecure"
+      - "traefik.http.routers.tautulli.tls.certresolver=cloudflare"
+      - "traefik.http.services.tautulli.loadbalancer.server.port=8181"
+
+networks:
+  proxy_net:
+    external: true
