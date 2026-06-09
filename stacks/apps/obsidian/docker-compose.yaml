@@ -42,17 +42,18 @@ services:
   # ---------------------------------------------------------------------
   # 2. Obsidian Web UI (Front-end streaming desktop interface)
   # ---------------------------------------------------------------------
-  obsidian-web:
-    image: lscr.io/linuxserver/obsidian:latest
+obsidian-web:
+    # Swapped from :latest (WebRTC/Selkies) to :kasmvnc (Standard HTTPS web socket streaming)
+    image: lscr.io/linuxserver/obsidian:kasmvnc
     container_name: obsidian-web-ui
     restart: unless-stopped
     environment:
-      - P_ID=1000
-      - P_GID=1000
+      - PUID=1000
+      - PGID=1000
       - TZ=America/New_York
     volumes:
       - ./web-config:/config
-      - ./vault-storage:/vault  # Note markdown files save to this local folder
+      - ./vault-storage:/vault
     networks:
       - proxy_net
     expose:
@@ -60,14 +61,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy_net"
-      
-      # HTTP Router Configuration
       - "traefik.http.routers.obsidian-web.rule=Host(`${SUBDOMAIN_WEB}.${DOMAIN}`)"
       - "traefik.http.routers.obsidian-web.entrypoints=websecure"
       - "traefik.http.routers.obsidian-web.tls=true"
       - "traefik.http.routers.obsidian-web.tls.certresolver=cloudflare"
-      
-      # HTTP Service Definition
       - "traefik.http.services.obsidian-web.loadbalancer.server.port=3000"
 
 networks:
