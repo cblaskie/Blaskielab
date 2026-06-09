@@ -8,7 +8,7 @@
   "fetchChangeLogs": "always",
   "prConcurrentLimit": 20,
   "prHourlyLimit": 0,
-  "automergeType": "squash",
+  "automergeType": "pr",
   "rebaseWhen": "behind-base-branch",
   "prCreation": "not-pending",
   "schedule": [
