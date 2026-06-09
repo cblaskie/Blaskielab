@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+# 🌟 FIX 1: Silences the GitHub Runner Node.js 20 Deprecation Warnings
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   validate-compose:
     name: Validate Docker Compose
@@ -21,6 +25,16 @@ jobs:
           sudo mkdir -p /mnt/user/appdata/komodo
           sudo touch /mnt/user/appdata/komodo/.env
           sudo chmod -R 777 /mnt/user/appdata
+          
+          # 🌟 FIX 2: Export global dummy variables so Docker Compose validator never sees empty volume specs
+          export APPDATA_PATH="./mock-appdata"
+          export DOMAIN="localhost"
+          export SUBDOMAIN="sync"
+          export SUBDOMAIN_WEB="notes"
+          export COUCHDB_USER="admin"
+          export COUCHDB_PASSWORD="password"
+          export COUCHDB_DATABASE="vault"
+          export TZ="UTC"
           
           find . -type f \( -name "docker-compose.yml" -o -name "docker-compose.yaml" -o -name "compose.yml" -o -name "compose.yaml" \) | while read -r file; do
             echo "Checking: $file"
