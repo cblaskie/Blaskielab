@@ -1,7 +1,5 @@
 services:
-  # ---------------------------------------------------------------------
-  # 1. CouchDB Sync Server (Back-end database for mobile app syncing)
-  # ---------------------------------------------------------------------
+  # 1. CouchDB Sync Server
   couchdb-obsidian:
     image: docker.io/oleduc/docker-obsidian-livesync-couchdb:master
     container_name: couchdb-obsidian-sync
@@ -20,18 +18,15 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy_net"
-      
       # HTTP Router Configuration
       - "traefik.http.routers.obsidian-sync.rule=Host(`${SUBDOMAIN_SYNC}.${DOMAIN}`)"
       - "traefik.http.routers.obsidian-sync.entrypoints=websecure"
       - "traefik.http.routers.obsidian-sync.tls=true"
       - "traefik.http.routers.obsidian-sync.tls.certresolver=cloudflare"
       - "traefik.http.routers.obsidian-sync.service=obsidian-sync"
-      
       # HTTP Service Definition
       - "traefik.http.services.obsidian-sync.loadbalancer.server.port=5984"
-      
-      # Attach CORS Middleware (Essential for Mobile/Cloudflare bypass rules)
+      # Attach CORS Middleware
       - "traefik.http.routers.obsidian-sync.middlewares=obsidian-cors-headers"
       - "traefik.http.middlewares.obsidian-cors-headers.headers.accesscontrolallowmethods=GET,PUT,POST,HEAD,DELETE,OPTIONS"
       - "traefik.http.middlewares.obsidian-cors-headers.headers.accesscontrolallowheaders=accept,authorization,content-type,origin,referer,x-requested-with"
@@ -39,11 +34,8 @@ services:
       - "traefik.http.middlewares.obsidian-cors-headers.headers.accesscontrolmaxage=3600"
       - "traefik.http.middlewares.obsidian-cors-headers.headers.addvaryheader=true"
 
-  # ---------------------------------------------------------------------
-  # 2. Obsidian Web UI (Front-end streaming desktop interface)
-  # ---------------------------------------------------------------------
-obsidian-web:
-    # Swapped from :latest (WebRTC/Selkies) to :kasmvnc (Standard HTTPS web socket streaming)
+  # 2. Obsidian Web UI (Properly nested inside services)
+  obsidian-web:
     image: lscr.io/linuxserver/obsidian:kasmvnc
     container_name: obsidian-web-ui
     restart: unless-stopped
@@ -61,10 +53,12 @@ obsidian-web:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy_net"
+      # HTTP Router Configuration
       - "traefik.http.routers.obsidian-web.rule=Host(`${SUBDOMAIN_WEB}.${DOMAIN}`)"
       - "traefik.http.routers.obsidian-web.entrypoints=websecure"
       - "traefik.http.routers.obsidian-web.tls=true"
       - "traefik.http.routers.obsidian-web.tls.certresolver=cloudflare"
+      # HTTP Service Definition
       - "traefik.http.services.obsidian-web.loadbalancer.server.port=3000"
 
 networks:
