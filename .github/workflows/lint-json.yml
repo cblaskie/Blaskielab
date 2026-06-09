@@ -5,6 +5,9 @@ on:
     paths:
       - '**/*.json'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   json-lint:
     runs-on: ubuntu-latest
@@ -14,7 +17,27 @@ jobs:
 
       - name: Validate JSON Formatting
         run: |
-          find . -name "*.json" ! -path "*/node_modules/*" | while read -r file; do
+          # Track failures manually since pipes (|) can hide exit codes in loops
+          FAILED=0
+
+          # 🌟 Added entry to ignore code-server configuration files that contain comments
+          find . -name "*.json" ! -path "*/node_modules/*" ! -path "*/code-server/config/*" | while read -r file; do
             echo "Validating JSON structure: $file"
-            jq . "$file" > /dev/null
+            
+            # Use jq with exit-status flag (-e) to ensure empty files or raw nulls fail gracefully
+            if ! jq -e . "$file" > /dev/null 2>&1; then
+              echo "❌ Invalid JSON syntax detected in: $file"
+              FAILED=1
+              # Create a temporary file to signal the outer runner step, as subshells lose variable state
+              touch .json_failed
+            fi
           done
+
+          # Check if any file failed validation in the loop subshell
+          if [ -f .json_failed ]; then
+            rm .json_failed
+            echo "Pipeline failed due to malformed JSON structures."
+            exit 1
+          fi
+          
+          echo "✅ All targeted JSON files validated successfully!"
