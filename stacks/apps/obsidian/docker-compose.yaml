@@ -1,0 +1,43 @@
+services:
+  couchdb-obsidian:
+    image: docker.io/oleduc/docker-obsidian-livesync-couchdb:master
+    container_name: couchdb-obsidian-sync
+    restart: unless-stopped
+    environment:
+      SERVER_URL: "https://obsidian-sync.theblaskies.com"
+      COUCHDB_USER: "admin"
+      COUCHDB_PASSWORD: "YourExtremelySecurePasswordHere" # ⚠️ Change this to a strong password
+      COUCHDB_DATABASE: "obsidian_vault"
+    volumes:
+      - /mnt/user/appdata/obsidian-couchdb:/opt/couchdb/data # Aligned with your Unraid paths
+    networks:
+      - proxy_net
+    expose:
+      - "5984"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy_net"
+      
+      # HTTP Router Configuration
+      - "traefik.http.routers.obsidian-sync.rule=Host(`obsidian-sync.theblaskies.com`)"
+      - "traefik.http.routers.obsidian-sync.entrypoints=websecure"
+      - "traefik.http.routers.obsidian-sync.tls=true"
+      - "traefik.http.routers.obsidian-sync.tls.certresolver=cloudflare"
+      - "traefik.http.routers.obsidian-sync.service=obsidian-sync"
+      
+      # HTTP Service Definition
+      - "traefik.http.services.obsidian-sync.loadbalancer.server.port=5984"
+      
+      # Attach CORS Middleware
+      - "traefik.http.routers.obsidian-sync.middlewares=obsidian-cors-headers"
+      
+      # CORS Middleware Settings (Crucial for mobile platforms talking via Cloudflare proxy)
+      - "traefik.http.middlewares.obsidian-cors-headers.headers.accesscontrolallowmethods=GET,PUT,POST,HEAD,DELETE,OPTIONS"
+      - "traefik.http.middlewares.obsidian-cors-headers.headers.accesscontrolallowheaders=accept,authorization,content-type,origin,referer,x-requested-with"
+      - "traefik.http.middlewares.obsidian-cors-headers.headers.accesscontrolalloworiginlist=app://obsidian.md,capacitor://localhost,http://localhost"
+      - "traefik.http.middlewares.obsidian-cors-headers.headers.accesscontrolmaxage=3600"
+      - "traefik.http.middlewares.obsidian-cors-headers.headers.addvaryheader=true"
+
+networks:
+  proxy_net:
+    external: true
