@@ -7,13 +7,13 @@ services:
     networks:
       - proxy_net
     volumes:
-      - /mnt/user/appdata/influxdb/data:/var/lib/influxdb2
-      - /mnt/user/appdata/influxdb/config:/etc/influxdb2
+      - ${APPDATA_DIR}/influxdb/data:/var/lib/influxdb2
+      - ${APPDATA_DIR}/influxdb/config:/etc/influxdb2
     environment:
       - INFLUXD_REPORTING_DISABLED=true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.influxdb.rule=Host(`influx.theblaskies.com`)"
+      - "traefik.http.routers.influxdb.rule=Host(`influx.${ROOT_DOMAIN}`)"
       - "traefik.http.routers.influxdb.entrypoints=websecure"
       - "traefik.http.routers.influxdb.tls.certresolver=cloudflare"
       - "traefik.http.services.influxdb.loadbalancer.server.port=8086"
@@ -22,20 +22,21 @@ services:
   grafana:
     image: grafana/grafana-oss:latest
     container_name: grafana
-    user: "99:100"
+    user: "99:100"  # Enforces Unraid host permissions to bypass container permission errors
     restart: unless-stopped
     networks:
       - proxy_net
     depends_on:
       - influxdb
     volumes:
-      - /mnt/user/appdata/grafana:/var/lib/grafana
+      - ${APPDATA_DIR}/grafana:/var/lib/grafana
     environment:
-      - GF_SECURITY_ALLOW_EMBEDDING=true # Allows embedding into Home Assistant
-      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SECURITY_ALLOW_EMBEDDING=${GRAFANA_EMBEDDING:-true}
+      - GF_USERS_ALLOW_SIGN_UP=${GRAFANA_SIGNUP_DISABLED:-false}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`grafana.theblaskies.com`)"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.${ROOT_DOMAIN}`)"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls.certresolver=cloudflare"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
@@ -48,14 +49,14 @@ services:
     networks:
       - proxy_net
     volumes:
-      - /mnt/user/appdata/tautulli:/config
+      - ${APPDATA_DIR}/tautulli:/config
     environment:
-      - PUID=99          
-      - PGID=100         
-      - TZ=America/New_York
+      - PUID=${PUID:-99}
+      - PGID=${PGID:-100}
+      - TZ=${TIMEZONE:-America/New_York}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.tautulli.rule=Host(`tautulli.theblaskies.com`)"
+      - "traefik.http.routers.tautulli.rule=Host(`tautulli.${ROOT_DOMAIN}`)"
       - "traefik.http.routers.tautulli.entrypoints=websecure"
       - "traefik.http.routers.tautulli.tls.certresolver=cloudflare"
       - "traefik.http.services.tautulli.loadbalancer.server.port=8181"
