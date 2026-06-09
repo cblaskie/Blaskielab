@@ -17,27 +17,26 @@ jobs:
 
       - name: Validate JSON Formatting
         run: |
-          # Track failures manually since pipes (|) can hide exit codes in loops
+          # Create a clean boolean tracker for tracking inner-loop errors
           FAILED=0
-
-          # 🌟 Added entry to ignore code-server configuration files that contain comments
+          
+          # 🌟 FIX: Explicitly exclude the code-server config directory using find path negation
           find . -name "*.json" ! -path "*/node_modules/*" ! -path "*/code-server/config/*" | while read -r file; do
             echo "Validating JSON structure: $file"
             
-            # Use jq with exit-status flag (-e) to ensure empty files or raw nulls fail gracefully
+            # Use jq with strict exit status flags
             if ! jq -e . "$file" > /dev/null 2>&1; then
               echo "❌ Invalid JSON syntax detected in: $file"
-              FAILED=1
-              # Create a temporary file to signal the outer runner step, as subshells lose variable state
+              # Drop a temporary structural signal flag file since loops execute inside subshells
               touch .json_failed
             fi
           done
 
-          # Check if any file failed validation in the loop subshell
+          # Evaluate if any true repository configurations failed linting
           if [ -f .json_failed ]; then
             rm .json_failed
-            echo "Pipeline failed due to malformed JSON structures."
+            echo "Pipeline halted due to malformed structural JSON files."
             exit 1
           fi
           
-          echo "✅ All targeted JSON files validated successfully!"
+          echo "✅ Targeted JSON structures validated successfully!"
