@@ -1,6 +1,6 @@
 services:
   gluetun:
-    image: qmcgaw/gluetun:latest@sha256:4f1ecfedd717bca7b2d94b405380a717bcf40ba723d82a69428d816744664542
+    image: qmcgaw/gluetun:latest@sha256:5665416a97ad2823dda6986a581b8913cc3af1b196ac768f5130abad4b0d4f62
     container_name: gluetun
     cap_add:
       - NET_ADMIN
