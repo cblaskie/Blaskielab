@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # Time-Series Database Engine
   influxdb:
@@ -24,6 +22,7 @@ services:
   grafana:
     image: grafana/grafana-oss:latest
     container_name: grafana
+    user: "99:100"
     restart: unless-stopped
     networks:
       - proxy_net
