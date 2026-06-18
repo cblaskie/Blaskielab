@@ -7,6 +7,8 @@ services:
     restart: unless-stopped
     volumes:
       - /mnt/user/appdata/karakeep/data:/data
+      # You do not need to map meili_data to the web container, 
+      # only the meilisearch container needs access to its own data.
     environment:
       - NEXTAUTH_SECRET=${KARAKEEP_SECRET}
       - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
@@ -15,8 +17,6 @@ services:
       - BROWSER_WEB_URL=ws://karakeep-chrome:3000
       - DATA_DIR=/data
       - MEILI_NO_ANALYTICS=true
-    volumes:
-      - /mnt/user/appdata/karakeep/meili_data:/meili_data
     networks:
       - proxy_net
     labels:
@@ -33,9 +33,7 @@ services:
     container_name: karakeep-chrome
     user: root
     restart: unless-stopped
-    # 1. Override the entrypoint to prevent the default startup script
     entrypoint: /usr/bin/chromium-browser
-    # 2. Put all your flags here as arguments
     command:
       - --no-sandbox
       - --headless
