@@ -26,11 +26,13 @@ services:
       - "traefik.http.services.karakeep.loadbalancer.server.port=3000"
 
   chrome:
-    image: ghcr.io/hoarder-app/chrome:latest
+    image: zenika/alpine-chrome:with-puppeteer
     container_name: karakeep-chrome
     restart: unless-stopped
-    environment:
-      - CHROME_FLAGS=--no-sandbox,--disable-gpu,--disable-dev-shm-usage
+    command:
+      - --no-sandbox
+      - --disable-gpu
+      - --disable-dev-shm-usage
     networks:
       - proxy_net
 
