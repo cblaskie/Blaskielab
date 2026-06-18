@@ -11,8 +11,8 @@ services:
       - NEXTAUTH_SECRET=${KARAKEEP_SECRET}
       - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
       - NEXTAUTH_URL=https://karakeep.theblaskies.com
-      - MEILI_ADDR=http://meilisearch:7700
-      - BROWSER_GRPC_URL=http://chrome:3000
+      - MEILI_ADDR=http://karakeep-search:7700
+      - BROWSER_GRPC_URL=http://karakeep-chrome:3000
       - DATA_DIR=/data
     networks:
       - proxy_net
@@ -22,7 +22,7 @@ services:
       - "traefik.http.routers.karakeep.rule=Host(`karakeep.theblaskies.com`)"
       - "traefik.http.routers.karakeep.entrypoints=websecure"
       - "traefik.http.routers.karakeep.tls=true"
-      - "traefik.http.routers.karakeep.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.karakeep.tls.certresolver=cloudflare"
       - "traefik.http.services.karakeep.loadbalancer.server.port=3000"
 
   chrome:
