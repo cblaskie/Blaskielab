@@ -29,10 +29,15 @@ services:
     image: zenika/alpine-chrome:with-puppeteer
     container_name: karakeep-chrome
     restart: unless-stopped
+    # 1. Override the entrypoint to prevent the default startup script
+    entrypoint: /usr/bin/chromium-browser
+    # 2. Put all your flags here as arguments
     command:
       - --no-sandbox
       - --disable-gpu
       - --disable-dev-shm-usage
+      - --remote-debugging-address=0.0.0.0
+      - --remote-debugging-port=3000
     networks:
       - proxy_net
 
