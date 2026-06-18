@@ -10,7 +10,7 @@ services:
     environment:
       - NEXTAUTH_SECRET=${KARAKEEP_SECRET}
       - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
-      - NEXTAUTH_URL=https://karakeep.${DOMAIN}
+      - NEXTAUTH_URL=https://karakeep.theblaskies.com
       - MEILI_ADDR=http://meilisearch:7700
       - BROWSER_GRPC_URL=http://chrome:3000
       - DATA_DIR=/data
@@ -19,7 +19,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy_net"
-      - "traefik.http.routers.karakeep.rule=Host(`karakeep.${DOMAIN}`)"
+      - "traefik.http.routers.karakeep.rule=Host(`karakeep.theblaskies.com`)"
       - "traefik.http.routers.karakeep.entrypoints=websecure"
       - "traefik.http.routers.karakeep.tls=true"
       - "traefik.http.routers.karakeep.tls.certresolver=letsencrypt"
