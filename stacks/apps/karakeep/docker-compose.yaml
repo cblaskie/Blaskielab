@@ -28,6 +28,7 @@ services:
   chrome:
     image: zenika/alpine-chrome:with-puppeteer
     container_name: karakeep-chrome
+    user: root
     restart: unless-stopped
     # 1. Override the entrypoint to prevent the default startup script
     entrypoint: /usr/bin/chromium-browser
