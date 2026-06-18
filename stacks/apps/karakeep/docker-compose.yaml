@@ -46,7 +46,7 @@ services:
       - proxy_net
 
   meilisearch:
-    image: getmeili/meilisearch:v1.11.0
+    image: getmeili/meilisearch:v1.13.0
     container_name: karakeep-search
     restart: unless-stopped
     environment:
