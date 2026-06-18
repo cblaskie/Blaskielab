@@ -12,8 +12,11 @@ services:
       - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
       - NEXTAUTH_URL=https://karakeep.theblaskies.com
       - MEILI_ADDR=http://karakeep-search:7700
-      - BROWSER_GRPC_URL=http://karakeep-chrome:3000
+      - BROWSER_WEB_URL=ws://karakeep-chrome:3000
       - DATA_DIR=/data
+      - MEILI_NO_ANALYTICS=true
+    volumes:
+      - /mnt/user/appdata/karakeep/meili_data:/meili_data
     networks:
       - proxy_net
     labels:
