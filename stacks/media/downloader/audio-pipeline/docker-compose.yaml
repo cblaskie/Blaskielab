@@ -21,6 +21,9 @@ services:
       - "traefik.http.routers.spotdl.entrypoints=websecure"
       - "traefik.http.routers.spotdl.tls.certresolver=cloudflare"
       - "traefik.http.services.spotdl.loadbalancer.server.port=8800"
+      # 🛠️ PREVENTS SSE DISCONNECTS: Flushes data chunks immediately to keep Datastar SSE alive
+      - "traefik.http.middlewares.spotdl-buffering.buffering.maxResponseBodyBytes=0"
+      - "traefik.http.routers.spotdl.middlewares=spotdl-buffering@docker"
 
   # 2. YouTube-to-Audio (Metube)
   youtube-dl:
