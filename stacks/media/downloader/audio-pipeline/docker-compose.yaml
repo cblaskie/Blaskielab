@@ -9,13 +9,18 @@ services:
     user: "0:0"
     # 🛠️ FIXED: Sets execution context to /app so Jinja2 can load home.html.j2 natively
     working_dir: /app
-    # 🛠️ FIXED: Instructs the web interface to push all downloads to the mounted /music volume path
-    command: ["web", "--host", "0.0.0.0", "--port", "8800", "--web-use-output-dir", "--output", "/music"]
+    # 🛠️ UPDATED: Updates yt-dlp & spotdl, fetches Deno engine, then starts web server [cite: 18, 19]
+    entrypoint: >
+      sh -c "pip install -U yt-dlp spotdl && spotdl --download-deno && spotdl web --host 0.0.0.0 --port 8800 --web-use-output-dir --output /music"
     volumes:
       # Maps your music folder directly to spotDL's output engine
       - /mnt/user/world/personal/shared/yoto:/music
+      # 🛠️ OPTIONAL: Mount cookies.txt if YouTube blocks your server IP [cite: 1, 23]
+      # - ./cookies.txt:/app/cookies.txt
     environment:
       - TZ=${TZ}
+      # If using cookies, tell spotDL where to find them[cite: 1, 24]:
+      # - SPOTDL_COOKIE_FILE=/app/cookies.txt
     networks:
       - proxy_net
     labels:
