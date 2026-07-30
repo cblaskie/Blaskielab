@@ -5,7 +5,6 @@ services:
     container_name: spotdl
     restart: unless-stopped
     user: "0:0"
-    working_dir: /app
     command: ["web", "--host", "0.0.0.0", "--port", "8800", "--web-use-output-dir", "--output", "/music"]
     volumes:
       - /mnt/user/world/personal/shared/yoto:/music
@@ -15,13 +14,11 @@ services:
       - proxy_net
     labels:
       - "traefik.enable=true"
-      # Tells Traefik which network to use to reach spotDL
       - "traefik.docker.network=proxy_net"
       - "traefik.http.routers.spotdl.rule=Host(`spotdl.theblaskies.com`)"
       - "traefik.http.routers.spotdl.entrypoints=websecure"
       - "traefik.http.routers.spotdl.tls.certresolver=cloudflare"
       - "traefik.http.services.spotdl.loadbalancer.server.port=8800"
-
   # 2. YouTube-to-Audio (MeTube)
   youtube-dl:
     image: alexta69/metube:latest
