@@ -15,14 +15,16 @@ services:
       - proxy_net
     labels:
       - "traefik.enable=true"
-      # Explicitly specify the proxy network for Traefik routing
+      # Tells Traefik which network to use to reach spotDL
       - "traefik.docker.network=proxy_net"
       - "traefik.http.routers.spotdl.rule=Host(`spotdl.theblaskies.com`)"
-      - "traefik.http.routers.spotdl.entrypoints=
+      - "traefik.http.routers.spotdl.entrypoints=websecure"
+      - "traefik.http.routers.spotdl.tls.certresolver=cloudflare"
+      - "traefik.http.services.spotdl.loadbalancer.server.port=8800"
 
-  # 2. YouTube-to-Audio (Metube)
+  # 2. YouTube-to-Audio (MeTube)
   youtube-dl:
-    image: alexta69/metube:latest@sha256:c5ed53d2e9f3aff3982a599aac74388d36879722b1a553a9ae0200346a321ec9
+    image: alexta69/metube:latest
     container_name: youtube_audio_dl
     user: "99:100"
     restart: unless-stopped
@@ -36,6 +38,7 @@ services:
       - proxy_net
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=proxy_net"
       - "traefik.http.routers.ytdl.rule=Host(`ytdl.theblaskies.com`)"
       - "traefik.http.routers.ytdl.entrypoints=websecure"
       - "traefik.http.routers.ytdl.tls.certresolver=cloudflare"
