@@ -1,26 +1,16 @@
-services:
-  # 1. Spotify Downloader (Official Dev Branch + Web Path Fix)
-  spotdl:
+spotdl:
     build:
       context: https://github.com/spotDL/spotify-downloader.git#dev
     container_name: spotdl
     restart: unless-stopped
-    # Executes with full write clearance to handle local dependencies on boot
     user: "0:0"
-    # 🛠️ FIXED: Sets execution context to /app so Jinja2 can load home.html.j2 natively
     working_dir: /app
-    # 🛠️ UPDATED: Updates yt-dlp & spotdl, fetches Deno engine, then starts web server [cite: 18, 19]
     entrypoint: >
-      sh -c "pip install -U yt-dlp spotdl && spotdl --download-deno && spotdl web --host 0.0.0.0 --port 8800 --web-use-output-dir --output /music"
+      sh -c "pip install -U --root-user-action=ignore yt-dlp spotdl && (echo n | spotdl --download-deno) && spotdl web --host 0.0.0.0 --port 8800 --web-use-output-dir --output /music"
     volumes:
-      # Maps your music folder directly to spotDL's output engine
       - /mnt/user/world/personal/shared/yoto:/music
-      # 🛠️ OPTIONAL: Mount cookies.txt if YouTube blocks your server IP [cite: 1, 23]
-      # - ./cookies.txt:/app/cookies.txt
     environment:
       - TZ=${TZ}
-      # If using cookies, tell spotDL where to find them[cite: 1, 24]:
-      # - SPOTDL_COOKIE_FILE=/app/cookies.txt
     networks:
       - proxy_net
     labels:
@@ -29,28 +19,3 @@ services:
       - "traefik.http.routers.spotdl.entrypoints=websecure"
       - "traefik.http.routers.spotdl.tls.certresolver=cloudflare"
       - "traefik.http.services.spotdl.loadbalancer.server.port=8800"
-
-  # 2. YouTube-to-Audio (Metube)
-  youtube-dl:
-    image: alexta69/metube:latest@sha256:c5ed53d2e9f3aff3982a599aac74388d36879722b1a553a9ae0200346a321ec9
-    container_name: youtube_audio_dl
-    user: "99:100"
-    restart: unless-stopped
-    volumes:
-      - /mnt/user/world/personal/shared/yoto:/downloads
-    environment:
-      - OUTPUT_TEMPLATE=%(title)s.%(ext)s
-      - OUTPUT_TEMPLATE_PLAYLIST=%(playlist_title)s/%(title)s.%(ext)s
-      - YTDL_OPTIONS={"extract_audio":true,"audio_format":"mp3","quality":"0"}
-    networks:
-      - proxy_net
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.ytdl.rule=Host(`ytdl.theblaskies.com`)"
-      - "traefik.http.routers.ytdl.entrypoints=websecure"
-      - "traefik.http.routers.ytdl.tls.certresolver=cloudflare"
-      - "traefik.http.services.ytdl.loadbalancer.server.port=8081"
-
-networks:
-  proxy_net:
-    external: true
