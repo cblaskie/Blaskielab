@@ -1,14 +1,11 @@
 services:
   # 1. Spotify Downloader (Official Dev Branch + Web Path Fix)
   spotdl:
-    build:
-      context: https://github.com/spotDL/spotify-downloader.git#dev
+    image: spotdl/spotify-downloader:latest
     container_name: spotdl
     restart: unless-stopped
     user: "0:0"
-    working_dir: /app
-    entrypoint: >
-      sh -c "pip install -U --root-user-action=ignore yt-dlp spotdl && (echo n | spotdl --download-deno) && spotdl web --host 0.0.0.0 --port 8800 --web-use-output-dir --output /music"
+    command: ["web", "--host", "0.0.0.0", "--port", "8800", "--web-use-output-dir", "--output", "/music"]
     volumes:
       - /mnt/user/world/personal/shared/yoto:/music
     environment:
@@ -21,10 +18,9 @@ services:
       - "traefik.http.routers.spotdl.entrypoints=websecure"
       - "traefik.http.routers.spotdl.tls.certresolver=cloudflare"
       - "traefik.http.services.spotdl.loadbalancer.server.port=8800"
-# 🛠️ PREVENT SSE DISCONNECTS & SESSION DRIFT:
-      - "traefik.http.middlewares.spotdl-buffering.buffering.maxResponseBodyBytes=0"
-      - "traefik.http.middlewares.spotdl-buffering.buffering.memResponseBodyBytes=0"
-      - "traefik.http.routers.spotdl.middlewares=spotdl-buffering@docker"
+      # Prevent Traefik from buffering SSE stream updates
+      - "traefik.http.middlewares.spotdl-compress.compress=false"
+      - "traefik.http.routers.spotdl.middlewares=spotdl-compress@docker"
 
   # 2. YouTube-to-Audio (Metube)
   youtube-dl:
