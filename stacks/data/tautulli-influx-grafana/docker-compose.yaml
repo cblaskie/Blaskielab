@@ -20,7 +20,7 @@ services:
 
   # Visualization Dashboard Panel
   grafana:
-    image: grafana/grafana-oss:latest
+    image: grafana/grafana-oss:latest@sha256:5dad0df181cb644a14e13617b913b261a54f7d4fd4510721dba420929f35bea2
     container_name: grafana
     user: "99:100"  # Enforces Unraid host permissions to bypass container permission errors
     restart: unless-stopped
@@ -43,7 +43,7 @@ services:
 
   # Plex Media Analytics Engine
   tautulli:
-    image: ghcr.io/tautulli/tautulli:latest
+    image: ghcr.io/tautulli/tautulli:latest@sha256:e88f431fa59b3e7eb24dee323357ec6e0851fbffc4425b92143cbc284de01278
     container_name: tautulli
     restart: unless-stopped
     networks:
