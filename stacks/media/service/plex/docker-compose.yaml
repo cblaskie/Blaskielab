@@ -1,6 +1,6 @@
 services:
   plex:
-    image: ghcr.io/linuxserver/plex:latest@sha256:626eb0d52b4522db3be91110a89161be6ccffc0741e9abf0e93aaf4fea98ccb9
+    image: ghcr.io/linuxserver/plex:latest@sha256:f6c58cb2f5e41cd1397bf2ed4e61ef63bd86e0736841b3ef426fabfe04606293
     container_name: plex
     restart: unless-stopped
     runtime: nvidia
