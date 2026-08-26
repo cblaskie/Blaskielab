@@ -1,7 +1,7 @@
 services:
   # 1. CouchDB Sync Server
   couchdb-obsidian:
-    image: docker.io/oleduc/docker-obsidian-livesync-couchdb:master
+    image: docker.io/oleduc/docker-obsidian-livesync-couchdb:master@sha256:4839ce30ebf1040b406ce1ab495d7b0bc7b62fe31fc6766cedabc513b5cc847b
     container_name: couchdb-obsidian-sync
     restart: unless-stopped
     environment:
