@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   web:
-    image: ghcr.io/hoarder-app/hoarder:latest
+    image: ghcr.io/hoarder-app/hoarder:latest@sha256:ae79300d55781be2afbc2cb5fd96a26a534516f6d88e3267c220cf78b18aa5c3
     container_name: karakeep-web
     restart: unless-stopped
     volumes:
@@ -29,7 +29,7 @@ services:
       - "traefik.http.services.karakeep.loadbalancer.server.port=3000"
 
   chrome:
-    image: zenika/alpine-chrome:with-puppeteer
+    image: zenika/alpine-chrome:with-puppeteer@sha256:ee10e24217aa27443e6b58da628f3b09ea9b814459915b8b62fe15a555f9692a
     container_name: karakeep-chrome
     user: root
     restart: unless-stopped
