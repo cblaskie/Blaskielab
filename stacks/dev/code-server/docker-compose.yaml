@@ -1,6 +1,6 @@
 services:
   code-server:
-    image: ghcr.io/coder/code-server:latest@sha256:49d5e176224523b0c924ee35b05c51e9a87f9c170f650ee0f7da05a4581a79ff
+    image: ghcr.io/coder/code-server:latest@sha256:ccd326184d71efc5ebb94155eda7bb30153902342a35dbc8525450d81aa55012
     container_name: code-server
     restart: unless-stopped
 
