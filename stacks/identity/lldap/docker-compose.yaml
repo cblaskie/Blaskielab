@@ -1,6 +1,6 @@
 services:
   lldap:
-    image: lldap/lldap:latest@sha256:898f91b2042ab23659954588999eb38bb4d556c340318c76012000fa4f4b56ef
+    image: lldap/lldap:latest@sha256:81d8db15f3b6561ec24df022cf0bfd8cf762be7760122cef4ea882788b51bd7e
     container_name: lldap
     restart: unless-stopped
 
