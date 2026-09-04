@@ -35,7 +35,7 @@ services:
       - infra_net
 
   paperless:
-    image: ghcr.io/paperless-ngx/paperless-ngx:latest@sha256:e231ec11a1907bfdf172b4f120b4ef1994feb71e6cc624e8b88c53e2da3dfb62
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest@sha256:aa810a36942c63d4ee70d00eda7236cd3d6acfb7eb3f7987fb568ed14df8817a
     container_name: paperless
     restart: unless-stopped
     env_file:
