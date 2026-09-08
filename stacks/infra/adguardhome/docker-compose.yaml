@@ -1,6 +1,6 @@
 services:
   adguardhome:
-    image: adguard/adguardhome@sha256:4956b35b590286e5872fb4336d84a7862a2030c6efb4ca16442580c37d7ba32d
+    image: adguard/adguardhome@sha256:aba9e3bf0613be3ba3755e1fc311b126e2c24bec25e18b6483894a88283074f0
     container_name: adguardhome
     hostname: adguardhome
     restart: unless-stopped
