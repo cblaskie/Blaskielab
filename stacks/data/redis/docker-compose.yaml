@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   redis:
-    image: redis:8@sha256:73dad4271642c5966db88db7a7585fae7cf10b685d1e48006f31e0294c29fdd7
+    image: redis:8@sha256:298e5b3bc566bade82f46ad5511777a4a07a294097ce16ada2f6a42be5239df5
     container_name: redis
     restart: unless-stopped
 
