@@ -1,7 +1,7 @@
 services:
   # Time-Series Database Engine
   influxdb:
-    image: influxdb:2.9@sha256:9f29465df7a15d427e046681cfc7b3da9753e75825c6864f8d3cf5b3aa3cca3d
+    image: influxdb:2.9@sha256:f75e48af0598e8aec7986e991a848d19a119101a7d563a2e5db1dfaac9c45daa
     container_name: influxdb
     restart: unless-stopped
     networks:
