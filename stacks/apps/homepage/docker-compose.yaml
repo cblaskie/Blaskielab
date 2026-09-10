@@ -1,6 +1,6 @@
 services:
   homepage:
-    image: ghcr.io/gethomepage/homepage:latest@sha256:7fa7b07a26bd8d90a44bb975c6455b10d8dee467ce674b040750ffb4a0f486d6
+    image: ghcr.io/gethomepage/homepage:latest@sha256:f820276654539cdc2cf0169f28188d135919a7984fad76d83d8d5ff1383f3705
     container_name: homepage
     restart: unless-stopped
 
