@@ -21,7 +21,7 @@ services:
       - "traefik.http.services.spotdl.loadbalancer.server.port=8800"
   # 2. YouTube-to-Audio (MeTube)
   youtube-dl:
-    image: alexta69/metube:latest@sha256:c2920f86f888b5398e5a964e135417fe11418823988399e6ec230293dcc0bb31
+    image: alexta69/metube:latest@sha256:397778fccf13d83adf9325fe813b260617a082d1772aff6d678c5b9256dd01fb
     container_name: youtube_audio_dl
     user: "99:100"
     restart: unless-stopped
