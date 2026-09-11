@@ -1,6 +1,6 @@
 services:
   posterizarr:
-    image: ghcr.io/fscorrupt/posterizarr:latest@sha256:eda382596f12de40ef459c262d069da677a0eec9b40e9124d868683c153ffef7
+    image: ghcr.io/fscorrupt/posterizarr:latest@sha256:8fb1b09b330e10a8cdbda5e03cb63dcb3565ced7ba08832edf7930f2ccc0f337
     container_name: posterizarr
     restart: unless-stopped
     user: "99:100"
