@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   traefik-forward-auth:
-    image: ghcr.io/italypaleale/traefik-forward-auth:4@sha256:7008a2017836aa6dc4baeed9df852fc0aa0d0e670976b0c8a0e5b10d9a837292
+    image: ghcr.io/italypaleale/traefik-forward-auth:4@sha256:fc39385b74aba58ed84cd03659bcde371f860378b6d90369d8c7d3e10c7f5295
     container_name: traefik-forward-auth
     restart: unless-stopped
     volumes:
