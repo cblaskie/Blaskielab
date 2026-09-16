@@ -1,6 +1,6 @@
 services:
   ollama:
-    image: ollama/ollama:latest@sha256:917c942fbd5b3d659f830d08b48da466ce9bb1e56e2fc3d920d8e835a0922318
+    image: ollama/ollama:latest@sha256:0c0a83210471fb50226bcdc2d6611d20ab13ae87e024cc304c94a6a5765c5e65
     container_name: ollama
     restart: unless-stopped
     runtime: nvidia
