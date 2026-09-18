@@ -20,7 +20,7 @@ services:
 
 
   traefik:
-    image: traefik@sha256:03650d05c2ce54959c1016c879371d20ad303ecbaecc1621f6ed231cd2e0b516
+    image: traefik@sha256:1c32e7c368204fd72812152ebdd2ac0425993df6fd982317deb02e48f2d5423c
     container_name: traefik
     restart: unless-stopped
 
