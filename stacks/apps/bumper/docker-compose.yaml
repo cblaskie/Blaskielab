@@ -1,6 +1,6 @@
 services:
   bumper-proxy:
-    image: nginx:stable-alpine@sha256:0272e4604ed93c1792f03695a033a6e8546840f86e0de20a884bb17d2c924883
+    image: nginx:stable-alpine@sha256:ef8676b33d681f272ba429b27658bdd7e640963279714c96bddf1dc76307f7b6
     container_name: bumper-proxy
     restart: unless-stopped
     networks:
