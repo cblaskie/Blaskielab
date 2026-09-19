@@ -18,7 +18,7 @@ services:
       - proxy_net
 
   nextcloud:
-    image: nextcloud:latest@sha256:8e5f49801db0cf4659b3089ce1917728023bb8cba7f93731f2abbdfe3a18df0a
+    image: nextcloud:latest@sha256:8a44aacc458ece58c2fdd9e543c41ef90088b184742e0b120f26462138f0e6e7
     container_name: nextcloud
     restart: unless-stopped
     depends_on:
