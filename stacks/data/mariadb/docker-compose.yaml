@@ -1,6 +1,6 @@
 services:
   mariadb:
-    image: lscr.io/linuxserver/mariadb:11.8.8@sha256:5381fd649df2d8424f744ed703c33c40cfb077187a123a37238d30f2bd80ce8a
+    image: lscr.io/linuxserver/mariadb:11.8.8@sha256:71eb1840431c36d5ff4985afc7b59072c5de3d8a91fe5353b5791f7a6e9fb7f5
     container_name: grimmory-db
     restart: unless-stopped
     networks:
