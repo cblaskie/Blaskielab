@@ -1,6 +1,6 @@
 services:
   grimmory:
-    image: grimmory/grimmory:latest@sha256:c83dcb59975c9a680ecdf84d60e7e5c9b05200818bab8794f4d84a7e008a549a
+    image: grimmory/grimmory:latest@sha256:bf6fe21c6e247597f7869664a440b5a34242e2d2940575cae39c17bfaa66dc0b
     container_name: grimmory
     restart: unless-stopped
     networks:
