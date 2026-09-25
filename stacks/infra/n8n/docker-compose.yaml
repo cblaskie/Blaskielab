@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   n8n:
-    image: n8nio/n8n:latest@sha256:8a184acb2efa74a3e3d9d023cd39fa2f423cbc4ff51e999cfcd33566365a0f92
+    image: n8nio/n8n:latest@sha256:ffeb52485f78b1b06c9a832205853cf75da72a07a514c9a27724df85979d6c34
     container_name: n8n_automation
     restart: unless-stopped
     # Forces the container process to run using the correct internal node permissions
