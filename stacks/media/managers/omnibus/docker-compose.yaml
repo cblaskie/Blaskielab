@@ -5,14 +5,16 @@ services:
     restart: unless-stopped
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
-      - /mnt/user/data/media/comics:/comics
-      - /mnt/user/data/media/manga:/manga
-      - /mnt/user/data/:/data
+      - /mnt/user/data:/data
     environment:
       - TZ=${TZ:-America/New_York}
+      - PUID=99
+      - PGID=100
       - OMNIBUS_ENGINE_URL=http://omnibus-engine:8000
       - DATABASE_URL=file:/config/omnibus.db
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      # Point Omnibus to the internal Redis container instead of 127.0.0.1
+      - REDIS_URL=redis://redis:6379
     networks:
       - proxy_net
     labels:
@@ -21,10 +23,6 @@ services:
       - "traefik.http.routers.omnibus.rule=Host(`omnibus.theblaskies.com`)"
       - "traefik.http.routers.omnibus.entrypoints=websecure"
       - "traefik.http.routers.omnibus.tls.certresolver=cloudflare"
-      # PocketID ForwardAuth disabled for now (uncomment once PocketID / forward-auth is configured):
-      # - "traefik.http.routers.omnibus.middlewares=pocketid-auth@file,pretty-errors@file"
-      # Optional: keep only custom error pages active without authentication gate
-      # - "traefik.http.routers.omnibus.middlewares=pretty-errors@file"
       - "traefik.http.services.omnibus.loadbalancer.server.port=3000"
 
   omnibus-engine:
@@ -33,12 +31,22 @@ services:
     restart: unless-stopped
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
-      - /mnt/user/data/media/comics:/comics
-      - /mnt/user/data/media/manga:/manga
-      - /mnt/user/data/:/data
+      - /mnt/user/data:/data
     environment:
+      - PUID=99
+      - PGID=100
       - DATABASE_URL=file:/config/omnibus.db
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - REDIS_URL=redis://redis:6379
+    networks:
+      - proxy_net
+
+  redis:
+    image: redis:alpine
+    container_name: omnibus-redis
+    restart: unless-stopped
+    volumes:
+      - /mnt/user/appdata/omnibus/redis:/data
     networks:
       - proxy_net
 
