@@ -5,7 +5,11 @@ services:
     restart: unless-stopped
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
+      - /mnt/user/appdata/omnibus/config/cache:/config/cache
       - /mnt/user/data:/data
+      - /mnt/user/data/watched:/watched
+      - /mnt/user/data/unmatched:/unmatched
+
     environment:
       - TZ=${TZ:-America/New_York}
       - PUID=99
@@ -31,7 +35,11 @@ services:
     restart: unless-stopped
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
+      - /mnt/user/appdata/omnibus/config/cache:/config/cache
       - /mnt/user/data:/data
+      - /mnt/user/data/watched:/watched
+      - /mnt/user/data/unmatched:/unmatched
+
     environment:
       - PUID=99
       - PGID=100
