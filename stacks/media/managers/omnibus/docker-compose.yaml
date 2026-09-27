@@ -10,7 +10,7 @@ services:
       - TZ=${TZ:-America/New_York}
       - OMNIBUS_ENGINE_URL=http://omnibus-engine:8000
       # Tells the web app where the SQLite database lives
-      - DATABASE_URL=sqlite:///config/omnibus.db 
+      - DATABASE_URL=file:///config/omnibus.db 
     networks:
       - proxy_net
     labels:
@@ -30,7 +30,7 @@ services:
       - /mnt/user/data/media/comics:/comics
     environment:
       # The engine needs the exact same database string to process background tasks
-      - DATABASE_URL=sqlite:///config/omnibus.db 
+      - DATABASE_URL=file:///config/omnibus.db 
     networks:
       - proxy_net
 
