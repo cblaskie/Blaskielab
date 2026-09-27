@@ -91,7 +91,7 @@ services:
       - traefik.http.routers.paperless-ai.middlewares=paperless-ai-headers
 
   paperless-gpt:
-    image: ghcr.io/icereed/paperless-gpt:latest@sha256:c0ce6186028911101a2cfe68353f14a9dbb2653596f3f1cff94de4b6db3114ff
+    image: ghcr.io/icereed/paperless-gpt:latest@sha256:413af73ff5415e1f61327ccb1c63cb14e84e86b761969be6eaaee61b4f39bef4
     container_name: paperless-gpt
     restart: unless-stopped
     env_file:
