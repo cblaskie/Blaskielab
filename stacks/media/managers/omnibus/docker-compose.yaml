@@ -9,7 +9,6 @@ services:
       - /mnt/user/data:/data
       - /mnt/user/data/watched:/watched
       - /mnt/user/data/unmatched:/unmatched
-
     environment:
       - TZ=${TZ:-America/New_York}
       - PUID=99
@@ -17,8 +16,10 @@ services:
       - OMNIBUS_ENGINE_URL=http://omnibus-engine:8000
       - DATABASE_URL=file:/config/omnibus.db
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      # Point Omnibus to the internal Redis container instead of 127.0.0.1
+      # Provide multiple variations to ensure the app picks up the Redis container
       - REDIS_URL=redis://redis:6379
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     networks:
       - proxy_net
     labels:
@@ -39,13 +40,14 @@ services:
       - /mnt/user/data:/data
       - /mnt/user/data/watched:/watched
       - /mnt/user/data/unmatched:/unmatched
-
     environment:
       - PUID=99
       - PGID=100
       - DATABASE_URL=file:/config/omnibus.db
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
       - REDIS_URL=redis://redis:6379
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     networks:
       - proxy_net
 
