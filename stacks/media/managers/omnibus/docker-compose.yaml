@@ -11,6 +11,7 @@ services:
       - OMNIBUS_ENGINE_URL=http://omnibus-engine:8000
       # Tells the web app where the SQLite database lives
       - DATABASE_URL=file:/config/omnibus.db 
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
     networks:
       - proxy_net
     labels:
@@ -31,6 +32,7 @@ services:
     environment:
       # The engine needs the exact same database string to process background tasks
       - DATABASE_URL=file:/config/omnibus.db 
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
     networks:
       - proxy_net
 
