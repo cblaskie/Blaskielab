@@ -9,6 +9,8 @@ services:
     environment:
       - TZ=${TZ:-America/New_York}
       - OMNIBUS_ENGINE_URL=http://omnibus-engine:8000
+      # Tells the web app where the SQLite database lives
+      - DATABASE_URL=sqlite:///config/omnibus.db 
     networks:
       - proxy_net
     labels:
@@ -17,10 +19,6 @@ services:
       - "traefik.http.routers.omnibus.rule=Host(`omnibus.theblaskies.com`)"
       - "traefik.http.routers.omnibus.entrypoints=websecure"
       - "traefik.http.routers.omnibus.tls.certresolver=cloudflare"
-      # PocketID ForwardAuth disabled for now (uncomment once PocketID / forward-auth is configured):
-      # - "traefik.http.routers.omnibus.middlewares=pocketid-auth@file,pretty-errors@file"
-      # Optional: keep only custom error pages active without authentication gate
-      # - "traefik.http.routers.omnibus.middlewares=pretty-errors@file"
       - "traefik.http.services.omnibus.loadbalancer.server.port=3000"
 
   omnibus-engine:
@@ -30,6 +28,9 @@ services:
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
       - /mnt/user/data/media/comics:/comics
+    environment:
+      # The engine needs the exact same database string to process background tasks
+      - DATABASE_URL=sqlite:///config/omnibus.db 
     networks:
       - proxy_net
 
