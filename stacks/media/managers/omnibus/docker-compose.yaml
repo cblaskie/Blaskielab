@@ -16,9 +16,8 @@ services:
       - OMNIBUS_ENGINE_URL=http://omnibus-engine:8000
       - DATABASE_URL=file:/config/omnibus.db
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      # Provide multiple variations to ensure the app picks up the Redis container
-      - REDIS_URL=redis://redis:6379
-      - REDIS_HOST=redis
+      - REDIS_URL=redis://omnibus-redis:6379
+      - REDIS_HOST=omnibus-redis
       - REDIS_PORT=6379
     networks:
       - proxy_net
@@ -45,8 +44,8 @@ services:
       - PGID=100
       - DATABASE_URL=file:/config/omnibus.db
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      - REDIS_URL=redis://redis:6379
-      - REDIS_HOST=redis
+      - REDIS_URL=redis://omnibus-redis:6379
+      - REDIS_HOST=omnibus-redis
       - REDIS_PORT=6379
     networks:
       - proxy_net
