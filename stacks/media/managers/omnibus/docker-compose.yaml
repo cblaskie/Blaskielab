@@ -5,7 +5,6 @@ services:
     restart: unless-stopped
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
-      - /mnt/user/appdata/omnibus/config/cache:/config/cache
       - /mnt/user/data:/data
       - /mnt/user/data/watched:/watched
       - /mnt/user/data/unmatched:/unmatched
@@ -28,7 +27,6 @@ services:
       - "traefik.http.routers.omnibus.rule=Host(`omnibus.theblaskies.com`)"
       - "traefik.http.routers.omnibus.entrypoints=websecure"
       - "traefik.http.routers.omnibus.tls.certresolver=cloudflare"
-      # - "traefik.http.routers.omnibus.middlewares=pocketid-auth@file,pretty-errors@file"
       - "traefik.http.services.omnibus.loadbalancer.server.port=3000"
 
   omnibus-engine:
@@ -37,7 +35,6 @@ services:
     restart: unless-stopped
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
-      - /mnt/user/appdata/omnibus/config/cache:/config/cache
       - /mnt/user/data:/data
       - /mnt/user/data/watched:/watched
       - /mnt/user/data/unmatched:/unmatched
