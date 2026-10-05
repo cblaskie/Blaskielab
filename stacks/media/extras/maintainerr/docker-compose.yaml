@@ -1,20 +1,23 @@
 services:
   maintainerr:
-    image: ghcr.io/jorenn92/maintainerr:latest
+    image: ghcr.io/maintainerr/maintainerr:latest
     container_name: maintainerr
     user: "99:100"
     restart: unless-stopped
+
     networks:
       - proxy_net
       - media_net
+
     security_opt:
       - no-new-privileges:true
+
     environment:
       - TZ=America/New_York
-      - PUID=99
-      - PGID=100
+
     volumes:
       - /mnt/user/appdata/maintainerr:/opt/data
+
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.maintainerr.rule=Host(`maintainerr.theblaskies.com`)"
