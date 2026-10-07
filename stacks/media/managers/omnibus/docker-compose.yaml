@@ -4,7 +4,7 @@ services:
     container_name: omnibus
     restart: unless-stopped
     depends_on:
-      - omnibus-redis
+      - redis
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
       - /mnt/user/data:/data
@@ -15,9 +15,8 @@ services:
       - OMNIBUS_ENGINE_URL=http://omnibus-engine:8000
       - DATABASE_URL=file:/config/omnibus.db
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      - REDIS_URL=redis://omnibus-redis:6379
-      - REDIS_HOST=omnibus-redis
-      - REDIS_HOSTNAME=omnibus-redis
+      - REDIS_URL=redis://redis:6379
+      - REDIS_HOST=redis
       - REDIS_PORT=6379
       - OMNIBUS_CACHE_DIR=/config/cache
       - OMNIBUS_WATCHED_DIR=/data/watched
@@ -37,7 +36,7 @@ services:
     container_name: omnibus-engine
     restart: unless-stopped
     depends_on:
-      - omnibus-redis
+      - redis
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
       - /mnt/user/data:/data
@@ -46,9 +45,8 @@ services:
       - PGID=100
       - DATABASE_URL=file:/config/omnibus.db
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      - REDIS_URL=redis://omnibus-redis:6379
-      - REDIS_HOST=omnibus-redis
-      - REDIS_HOSTNAME=omnibus-redis
+      - REDIS_URL=redis://redis:6379
+      - REDIS_HOST=redis
       - REDIS_PORT=6379
       - OMNIBUS_CACHE_DIR=/config/cache
       - OMNIBUS_WATCHED_DIR=/data/watched
@@ -56,14 +54,17 @@ services:
     networks:
       - proxy_net
 
-  omnibus-redis:
+  redis:
     image: redis:alpine
     container_name: omnibus-redis
     restart: unless-stopped
     volumes:
       - /mnt/user/appdata/omnibus/redis:/data
     networks:
-      - proxy_net
+      proxy_net:
+        aliases:
+          - redis
+          - omnibus-redis
 
 networks:
   proxy_net:
