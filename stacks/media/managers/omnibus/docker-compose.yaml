@@ -6,8 +6,6 @@ services:
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
       - /mnt/user/data:/data
-      - /mnt/user/data/watched:/watched
-      - /mnt/user/data/unmatched:/unmatched
     environment:
       - TZ=${TZ:-America/New_York}
       - PUID=99
@@ -19,6 +17,8 @@ services:
       - REDIS_HOST=omnibus-redis
       - REDIS_PORT=6379
       - OMNIBUS_CACHE_DIR=/config/cache
+      - OMNIBUS_WATCHED_DIR=/data/watched
+      - OMNIBUS_AWAITING_MATCH_DIR=/data/unmatched
     networks:
       - proxy_net
     labels:
@@ -36,8 +36,6 @@ services:
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
       - /mnt/user/data:/data
-      - /mnt/user/data/watched:/watched
-      - /mnt/user/data/unmatched:/unmatched
     environment:
       - PUID=99
       - PGID=100
@@ -47,6 +45,8 @@ services:
       - REDIS_HOST=omnibus-redis
       - REDIS_PORT=6379
       - OMNIBUS_CACHE_DIR=/config/cache
+      - OMNIBUS_WATCHED_DIR=/data/watched
+      - OMNIBUS_AWAITING_MATCH_DIR=/data/unmatched
     networks:
       - proxy_net
 
