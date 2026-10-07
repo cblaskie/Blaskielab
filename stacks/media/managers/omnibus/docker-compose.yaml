@@ -3,6 +3,8 @@ services:
     image: ghcr.io/hankscafe/omnibus:latest
     container_name: omnibus
     restart: unless-stopped
+    depends_on:
+      - omnibus-redis
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
       - /mnt/user/data:/data
@@ -15,6 +17,7 @@ services:
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
       - REDIS_URL=redis://omnibus-redis:6379
       - REDIS_HOST=omnibus-redis
+      - REDIS_HOSTNAME=omnibus-redis
       - REDIS_PORT=6379
       - OMNIBUS_CACHE_DIR=/config/cache
       - OMNIBUS_WATCHED_DIR=/data/watched
@@ -33,6 +36,8 @@ services:
     image: ghcr.io/hankscafe/omnibus-engine:latest
     container_name: omnibus-engine
     restart: unless-stopped
+    depends_on:
+      - omnibus-redis
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
       - /mnt/user/data:/data
@@ -43,6 +48,7 @@ services:
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
       - REDIS_URL=redis://omnibus-redis:6379
       - REDIS_HOST=omnibus-redis
+      - REDIS_HOSTNAME=omnibus-redis
       - REDIS_PORT=6379
       - OMNIBUS_CACHE_DIR=/config/cache
       - OMNIBUS_WATCHED_DIR=/data/watched
@@ -50,7 +56,7 @@ services:
     networks:
       - proxy_net
 
-  redis:
+  omnibus-redis:
     image: redis:alpine
     container_name: omnibus-redis
     restart: unless-stopped
