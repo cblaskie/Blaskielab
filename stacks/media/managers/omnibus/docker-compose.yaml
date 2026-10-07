@@ -4,23 +4,26 @@ services:
     container_name: omnibus
     restart: unless-stopped
     depends_on:
-      - redis
+      - omnibus-redis
+      - omnibus-engine
+    environment:
+      - TZ=America/New_York
+      - NEXTAUTH_URL=https://omnibus.theblaskies.com
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - OMNIBUS_REDIS_URL=redis://omnibus-redis:6379/0
+      - REDIS_HOST=omnibus-redis
+      - REDIS_PORT=6379
+      - OMNIBUS_ENGINE_URL=http://omnibus-engine:8000
+      - DATABASE_URL=file:/config/omnibus.db
+      - OMNIBUS_CACHE_DIR=/config/cache
+      - OMNIBUS_LOGS_DIR=/config/logs
+      - OMNIBUS_BACKUPS_DIR=/config/backups
+      - OMNIBUS_WATCHED_DIR=/data/watched
+      - OMNIBUS_AWAITING_MATCH_DIR=/data/unmatched
+      - UMASK=000
     volumes:
       - /mnt/user/appdata/omnibus/config:/config
       - /mnt/user/data:/data
-    environment:
-      - TZ=${TZ:-America/New_York}
-      - PUID=99
-      - PGID=100
-      - OMNIBUS_ENGINE_URL=http://omnibus-engine:8000
-      - DATABASE_URL=file:/config/omnibus.db
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      - REDIS_URL=redis://redis:6379
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - OMNIBUS_CACHE_DIR=/config/cache
-      - OMNIBUS_WATCHED_DIR=/data/watched
-      - OMNIBUS_AWAITING_MATCH_DIR=/data/unmatched
     networks:
       - proxy_net
     labels:
@@ -36,25 +39,25 @@ services:
     container_name: omnibus-engine
     restart: unless-stopped
     depends_on:
-      - redis
-    volumes:
-      - /mnt/user/appdata/omnibus/config:/config
-      - /mnt/user/data:/data
+      - omnibus-redis
     environment:
-      - PUID=99
-      - PGID=100
+      - TZ=America/New_York
       - DATABASE_URL=file:/config/omnibus.db
+      - OMNIBUS_ENGINE_BIND=0.0.0.0:8000
+      - OMNIBUS_NODE_URL=http://omnibus:3000
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      - REDIS_URL=redis://redis:6379
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - OMNIBUS_BACKUPS_DIR=/config/backups
       - OMNIBUS_CACHE_DIR=/config/cache
       - OMNIBUS_WATCHED_DIR=/data/watched
       - OMNIBUS_AWAITING_MATCH_DIR=/data/unmatched
+      - UMASK=000
+    volumes:
+      - /mnt/user/appdata/omnibus/config:/config
+      - /mnt/user/data:/data
     networks:
       - proxy_net
 
-  redis:
+  omnibus-redis:
     image: redis:alpine
     container_name: omnibus-redis
     restart: unless-stopped
@@ -63,8 +66,8 @@ services:
     networks:
       proxy_net:
         aliases:
-          - redis
           - omnibus-redis
+          - redis
 
 networks:
   proxy_net:
