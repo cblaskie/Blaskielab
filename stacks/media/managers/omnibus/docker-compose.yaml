@@ -67,7 +67,6 @@ services:
       proxy_net:
         aliases:
           - omnibus-redis
-          - redis
 
 networks:
   proxy_net:
