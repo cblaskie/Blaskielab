@@ -1,6 +1,6 @@
 services:
   paperless-postgres:
-    image: postgres:16@sha256:c1b3783309b6499c795eed7c20135a1a4d25cae1b575c3d52c6f536129a1b109
+    image: postgres:16@sha256:9e2cf6287f25c3151f4c9421ccce2b17f3e60061c111a29165e0d2cdd9ff0a97
     container_name: paperless-postgres
     restart: unless-stopped
 
