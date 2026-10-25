@@ -1,6 +1,6 @@
 services:
   readmeabook:
-    image: ghcr.io/kikootwo/readmeabook:latest@sha256:261db0b7394778ac46b5489254b7e55e6a924801a817f12815a882064821e09c
+    image: ghcr.io/kikootwo/readmeabook:latest@sha256:80985d505a7d527f3ae2fd207cfa04a5590e6fd42c6feb95461889944f2d3267
     container_name: readmeabook
     restart: unless-stopped
     networks:
