@@ -1,33 +1,64 @@
-
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    ":configMigration"
   ],
   "timezone": "America/New_York",
   "dependencyDashboard": true,
   "fetchChangeLogs": "always",
-
   "prConcurrentLimit": 5,
   "prHourlyLimit": 2,
-
   "automergeType": "pr",
   "automergeStrategy": "squash",
   "platformAutomerge": true,
   "rebaseWhen": "behind-base-branch",
   "prCreation": "immediate",
-
   "schedule": [
     "* 22-23 * * 0",
     "* 0-4 * * 1"
   ],
-
   "packageRules": [
     {
-      "matchDatasources": ["docker"],
+      "description": "Pin Docker image digests for reproducible deployments",
+      "matchDatasources": [
+        "docker"
+      ],
       "pinDigests": true
     },
     {
+      "description": "Automerge grouped non-major version updates after CI",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "Homelab Routine Updates",
+      "groupSlug": "all-homelab-minor-patch",
+      "dependencyDashboardCategory": "Routine Updates",
+      "automerge": true
+    },
+    {
+      "description": "Consolidate Docker digest and initial pin PRs without auto-merging floating tags",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "digest",
+        "pin",
+        "pinDigest"
+      ],
+      "groupName": "Homelab Docker Digests and Pins",
+      "groupSlug": "homelab-digests-and-pins",
+      "dependencyDashboardCategory": "Docker Digests and Pins",
+      "automerge": false
+    },
+    {
+      "description": "Require dashboard approval for updates to infrastructure, identity, and persistent data stacks",
+      "matchFileNames": [
+        "stacks/infra/**",
+        "stacks/identity/**",
+        "stacks/data/**"
+      ],
       "matchUpdateTypes": [
         "minor",
         "patch",
@@ -35,12 +66,18 @@
         "pin",
         "pinDigest"
       ],
-      "groupName": "Homelab Routine Updates",
-      "groupSlug": "all-homelab-minor-patch",
-      "automerge": true
+      "groupName": "Homelab Critical Infrastructure",
+      "groupSlug": "homelab-critical-infrastructure",
+      "dependencyDashboardCategory": "Critical Infrastructure",
+      "dependencyDashboardApproval": true,
+      "automerge": false
     },
     {
-      "matchUpdateTypes": ["major"],
+      "description": "Never automerge major version updates",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "dependencyDashboardCategory": "Major Upgrades",
       "dependencyDashboardApproval": true,
       "automerge": false
     }
