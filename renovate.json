@@ -41,6 +41,7 @@
     },
     {
       "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true,
       "automerge": false
     }
   ]
