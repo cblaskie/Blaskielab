@@ -1,6 +1,6 @@
 services:
   maintainerr:
-    image: ghcr.io/maintainerr/maintainerr:latest
+    image: ghcr.io/maintainerr/maintainerr:latest@sha256:33d86e5f03ed25204788b1e9cd9a2b3f0299cf49fae968220484b57008962399
     container_name: maintainerr
     user: "99:100"
     restart: unless-stopped

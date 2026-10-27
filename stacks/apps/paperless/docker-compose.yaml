@@ -2,7 +2,7 @@ name: paperless
 
 services:
   paperless-redis:
-    image: redis:7@sha256:71da9275c5f3fcb97d0fa0c8c5b36cc995327265420f17a04bfd544f458059f7
+    image: redis:7@sha256:bd28fff4b665fdf1b73e8b5b73ec05d2f858f4fa3c8ea0d7c9bc09f7f6bf7039
     container_name: paperless-redis
     restart: unless-stopped
     command: redis-server --save "" --appendonly no
@@ -10,7 +10,7 @@ services:
       - infra_net
 
   paperless-gotenberg:
-    image: gotenberg/gotenberg:8@sha256:d71ab8c13b6bd47c7bc81195082005dfb17eaa75e8b1fadd347a64ee66ed98d5
+    image: gotenberg/gotenberg:8@sha256:aa552cc115db488e0f0bcb07446aac13071ad51505b642c84bb894500907b42b
     container_name: paperless-gotenberg
     restart: unless-stopped
     networks:
@@ -35,7 +35,7 @@ services:
       - infra_net
 
   paperless:
-    image: ghcr.io/paperless-ngx/paperless-ngx:latest@sha256:e231ec11a1907bfdf172b4f120b4ef1994feb71e6cc624e8b88c53e2da3dfb62
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest@sha256:9bc6e8248891bcfa6f52fffe8b81e4ea8cae75790c3ec1b9906961a7ba55c969
     container_name: paperless
     restart: unless-stopped
     env_file:
@@ -91,7 +91,7 @@ services:
       - traefik.http.routers.paperless-ai.middlewares=paperless-ai-headers
 
   paperless-gpt:
-    image: ghcr.io/icereed/paperless-gpt:latest@sha256:c0ce6186028911101a2cfe68353f14a9dbb2653596f3f1cff94de4b6db3114ff
+    image: ghcr.io/icereed/paperless-gpt:latest@sha256:d668941a829552cc0eddbc7c22506b3480dfbf61bd0d6eae881ad9fcfe2de70c
     container_name: paperless-gpt
     restart: unless-stopped
     env_file:
