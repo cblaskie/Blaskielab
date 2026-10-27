@@ -7,13 +7,17 @@ on:
         description: "Catch up on existing PR backlog (override schedule and PR limits once)"
         required: true
         type: boolean
-        default: true
+        default: false
+
+  schedule:
+    - cron: "0 3 * * 1"
+      timezone: "America/New_York"
 
 permissions:
   contents: read
 
 concurrency:
-  group: blaskielab-renovate-manual
+  group: blaskielab-renovate
   cancel-in-progress: false
 
 jobs:
@@ -40,5 +44,5 @@ jobs:
           RENOVATE_PLATFORM: github
           RENOVATE_REPOSITORIES: cblaskie/Blaskielab
           RENOVATE_AUTODISCOVER: "false"
-          RENOVATE_FORCE: ${{ inputs.catch_up && '{"schedule":null,"prConcurrentLimit":40,"prHourlyLimit":4}' || '{"schedule":null}' }}
+          RENOVATE_FORCE: ${{ github.event_name == 'workflow_dispatch' && (inputs.catch_up && '{"schedule":null,"prConcurrentLimit":40,"prHourlyLimit":4}' || '{"schedule":null}') || '{}' }}
           LOG_LEVEL: info
