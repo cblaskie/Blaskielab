@@ -1,7 +1,7 @@
 services:
   # 1. Spotify Downloader
   spotdl:
-    image: spotdl/spotify-downloader:latest@sha256:b2ac304bdbf50d2ba23ffd490f922cdda99f5eeb8da170ff2d169e563dba43ed
+    image: spotdl/spotify-downloader:latest@sha256:e96d433581cb649c39165b812728336bf45cd6ca726aaf35501beb3a027b447d
     container_name: spotdl
     restart: unless-stopped
     user: "0:0"
@@ -21,7 +21,7 @@ services:
       - "traefik.http.services.spotdl.loadbalancer.server.port=8800"
   # 2. YouTube-to-Audio (MeTube)
   youtube-dl:
-    image: alexta69/metube:latest@sha256:c2920f86f888b5398e5a964e135417fe11418823988399e6ec230293dcc0bb31
+    image: alexta69/metube:latest@sha256:78560456793445f4449d8b9d92374350c652725aa76dc75f8682d43fc5ff9a5b
     container_name: youtube_audio_dl
     user: "99:100"
     restart: unless-stopped
