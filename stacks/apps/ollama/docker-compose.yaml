@@ -1,6 +1,6 @@
 services:
   ollama:
-    image: ollama/ollama:latest@sha256:917c942fbd5b3d659f830d08b48da466ce9bb1e56e2fc3d920d8e835a0922318
+    image: ollama/ollama:latest@sha256:dea72d1e22270fe095b68fdf756d2b489d615643c5a2eaebbc5f569181e322d8
     container_name: ollama
     restart: unless-stopped
     runtime: nvidia
@@ -33,7 +33,7 @@ services:
 
 
   open-webui:
-    image: ghcr.io/open-webui/open-webui:latest@sha256:ea750f19fc2a7ca0cb221bc512b8c2c470a01616b89ed98cb77d9ab0d5f24109
+    image: ghcr.io/open-webui/open-webui:latest@sha256:096c8f3d3132016210ca87b0b4dff01d2d66d9fe4fee088fae13fc30f9ac54f3
     container_name: open-webui
     restart: unless-stopped
 

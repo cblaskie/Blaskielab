@@ -1,7 +1,7 @@
 services:
   dozzle:
     user: "1002:281"
-    image: amir20/dozzle:latest@sha256:d834b38356027bedcc28ee77542b451a84849b73d2cd90c77be911f4a387c94d
+    image: amir20/dozzle:latest@sha256:dd09e6aaa9d5ad686b6017427a502c40dc862ba28445609813e5ea1f66f6dbdf
     container_name: dozzle
     restart: unless-stopped
 
