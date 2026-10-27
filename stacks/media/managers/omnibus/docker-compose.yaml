@@ -1,6 +1,6 @@
 services:
   omnibus:
-    image: ghcr.io/hankscafe/omnibus:latest
+    image: ghcr.io/hankscafe/omnibus:latest@sha256:b887a005f07fbba7c0969bc20250f6bc5541e11efdcf06dff2ab1cd57eb0851a
     container_name: omnibus
     restart: unless-stopped
     depends_on:
@@ -35,7 +35,7 @@ services:
       - "traefik.http.services.omnibus.loadbalancer.server.port=3000"
 
   omnibus-engine:
-    image: ghcr.io/hankscafe/omnibus-engine:latest
+    image: ghcr.io/hankscafe/omnibus-engine:latest@sha256:6bbaeb0e6ea579243d1797dd102455d529fa5c105bb2cfb5a0166444a52a0f29
     container_name: omnibus-engine
     restart: unless-stopped
     depends_on:
@@ -58,7 +58,7 @@ services:
       - proxy_net
 
   omnibus-redis:
-    image: redis:alpine
+    image: redis:alpine@sha256:47b08295737773de3b711fb86f13ae802f5074e96a9a2d29f5f80164ac08c046
     container_name: omnibus-redis
     restart: unless-stopped
     volumes:

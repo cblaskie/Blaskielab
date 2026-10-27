@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   web:
-    image: ghcr.io/hoarder-app/hoarder:latest@sha256:ae79300d55781be2afbc2cb5fd96a26a534516f6d88e3267c220cf78b18aa5c3
+    image: ghcr.io/hoarder-app/hoarder:latest@sha256:170bac0af0edba232b491f214eae50cf084e1bb465463922b0f8053dd4615226
     container_name: karakeep-web
     restart: unless-stopped
     volumes:
@@ -47,7 +47,7 @@ services:
       - proxy_net
 
   meilisearch:
-    image: getmeili/meilisearch:v1.54.3@sha256:e68913ab7d6f5b159529e472cfd362ce3c741fafd3c127961b2142abbe41b3c9
+    image: getmeili/meilisearch:v1.56.0@sha256:1f578fa865f8251894b3bf38d6668d6209a3f451f8f65ab953e129d4c1db5ef4
     container_name: karakeep-search
     restart: unless-stopped
     environment:
