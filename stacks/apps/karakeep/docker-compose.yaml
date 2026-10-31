@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   web:
-    image: ghcr.io/hoarder-app/hoarder:latest@sha256:170bac0af0edba232b491f214eae50cf084e1bb465463922b0f8053dd4615226
+    image: ghcr.io/hoarder-app/hoarder:latest@sha256:988b183aab649d2dfbd52194a7fabe21f7352c6a00032205d2dd60468dc972c6
     container_name: karakeep-web
     restart: unless-stopped
     volumes:
