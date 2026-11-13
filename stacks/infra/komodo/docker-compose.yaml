@@ -1,6 +1,7 @@
 services:
   komodo-core:
-    image: ghcr.io/moghtech/komodo-core@sha256:a1cceb4f971443b1e9f2a767788f663d0afb6244ee2135f7fe3fd1036af37ade
+    image: ghcr.io/moghtech/komodo-core:2
+    init: true
     container_name: komodo-core
     restart: unless-stopped
 
@@ -14,6 +15,8 @@ services:
       # Optional: database backups
       - /mnt/user/appdata/komodo:/etc/komodo
       - /mnt/user/appdata/komodo/backups:/backups
+      # Persist Core's auto-generated v2 private key outside the container
+      - /mnt/user/appdata/komodo-core-keys:/config/keys
 
     networks:
       - infra_net
@@ -37,7 +40,8 @@ services:
   # Apply middleware
       - "traefik.http.routers.komodo.middlewares=komodo-headers"
   komodo-periphery:
-    image: ghcr.io/moghtech/komodo-periphery@sha256:bd79cf960ed054fe8e02384322303e462448679b1149dde48bbef151417255b1
+    image: ghcr.io/moghtech/komodo-periphery:2
+    init: true
     container_name: komodo-periphery
     restart: unless-stopped
 
@@ -50,6 +54,8 @@ services:
       # FIX: Mount your appdata to the expected root and the repo-cache specifically
       - /mnt/user/appdata/komodo:/etc/komodo
       - /mnt/user/appdata/komodo/repo-cache:/repo-cache
+      # Keep Periphery's private key separate from Core's private key
+      - /mnt/user/appdata/komodo-periphery-keys:/config/keys
       - /mnt/user/appdata/traefik:/mnt/user/appdata/traefik
     networks:
       - infra_net
