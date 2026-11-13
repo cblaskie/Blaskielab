@@ -6,8 +6,8 @@ services:
     container_name: agentgateway
     restart: unless-stopped
 
-    # Use the standard Unraid nobody:users account for writable appdata.
-    user: "${PUID:-99}:${PGID:-100}"
+    # Pin the Unraid nobody:users IDs. Do not allow stack environment overrides.
+    user: "99:100"
 
     # Use the persistent configuration (seeded from the Git-managed config.yaml).
     command: ["-f", "/config/config.yaml"]

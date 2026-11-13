@@ -71,7 +71,9 @@ chown -R 99:100 /mnt/user/appdata/agentgateway
 ls -lan /mnt/user/appdata/agentgateway
 ```
 
-Update any deployed `.env` or Komodo variables to `PUID=99` and `PGID=100`, then redeploy/recreate the stack through Komodo. Keep the existing appdata `config.yaml` and SQLite files; do not copy the Git seed over them. Do not use `chmod -R 777`.
+The Compose file **pins** `user: "99:100"`, rather than interpolating `PUID` and `PGID`. Old `PUID`/`PGID` values in Komodo are now ignored and may be deleted. Keep the existing appdata `config.yaml` and SQLite files; do not copy the Git seed over them. Do not use `chmod -R 777`.
+
+**Komodo Git pull is not a container recreation.** After syncing this Git change in Komodo, redeploy/recreate the stack and verify with `docker inspect agentgateway --format '{{.Config.User}}'` (expected `99:100`). If the existing container still reports `1002:281`, the deployment was not recreated. The active Komodo Compose working directory may differ from the Git repository checkout.
 
 ## Security and configuration
 
