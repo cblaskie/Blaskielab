@@ -5,7 +5,9 @@
     ":configMigration"
   ],
   "timezone": "America/New_York",
-  "dependencyDashboard": true,
+  "dependencyDashboard": {
+    "enabled": true
+  },
   "fetchChangeLogs": "pr",
   "prConcurrentLimit": 5,
   "prHourlyLimit": 2,
