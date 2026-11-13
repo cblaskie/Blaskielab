@@ -26,6 +26,37 @@ chown -R 99:100 "$DATA"
 
 This one-time copy is intentional: the Git file is a seed; the writable copy under appdata persists UI changes and SQLite data. Do not overwrite an existing appdata config when redeploying.
 
+
+## Home Assistant MCP target and Komodo configuration sync
+
+The Git-managed `config.yaml` now defines a Home Assistant MCP target at
+`https://ha.theblaskies.com/api/mcp`. It binds MCP traffic to `mcp-gateway`
+on port **4000** (the UI stays on **4001**), sends the private
+`HA_MCP_TOKEN` as backend bearer authentication, and permits the dashboard's
+origin for CORS.
+
+**Important: pulling Git in Komodo does NOT update the live config.**
+The agentgateway container runs from `/mnt/user/appdata/agentgateway/config.yaml`,
+mounted at `/config/config.yaml`. This is intentionally separate from the
+Git-tracked seed so dashboard changes and local session configuration are not
+overwritten on redeploy.
+
+After pulling, back up the live file and **merge only the updated `mcp:`
+section from the Git-managed seed** into the live config. Preserve the live
+`config:`, `gateways:`, `ui:`, and session settings. Do not paste actual
+secrets into GitHub. Restart or reload agentgateway and check logs.
+
+The Compose file already passes `HA_MCP_TOKEN` from Komodo to the container.
+Ensure that value is populated in the Komodo stack environment.
+
+The current Traefik router sends `agentgateway.theblaskies.com` to port
+**4001**, and does **not** expose MCP port **4000**. Using the browser
+MCP Tool Playground through Traefik may require a separate HTTPS router and
+correct external MCP URL. **Do not add an unauthenticated public router:**
+backend authentication protects Home Assistant, not the MCP listener.
+Configure inbound OAuth/JWT validation and tool authorization before
+publishing `mcp.theblaskies.com/mcp` for ChatGPT or other remote clients.
+
 ## Native Pocket ID OIDC (dashboard)
 
 The Compose file passes these five OIDC settings into the container:
@@ -79,7 +110,7 @@ The Compose file **pins** `user: "99:100"`, rather than interpolating `PUID` and
 
 - During the OIDC migration, retain the existing Pocket ID ForwardAuth middleware defined in `stacks/infra/traefik/dynamic/middlewares-auth.yml`. Remove it from the dashboard router only after native OIDC works and the authorized-user policy is in place.
 - Only the dashboard is routed publicly. No `ports:` are published on the Unraid host.
-- The `mcp-gateway` listener exists on the Docker network but has no MCP upstream configured initially.
+- The `mcp-gateway` listener uses port 4000 and has a Home Assistant MCP upstream in the Git-managed seed. It is not publicly routed until inbound MCP authentication is configured.
 - Before exposing MCP to remote clients, configure protected-resource metadata, authorization-server discovery, Pocket ID JWT validation (signature, issuer, audience, expiry, and scopes), and the actual upstream MCP servers.
 - The UI changes are persisted in `/mnt/user/appdata/agentgateway/config.yaml`, not automatically committed to Git. Back up the appdata directory.
 - The image is version-pinned. Renovate may propose a digest pin or subsequent updates.
