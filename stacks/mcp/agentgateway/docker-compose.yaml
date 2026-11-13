@@ -37,7 +37,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy_net"
 
-      # Dashboard routes to 4001; /mcp routes to 4000 behind Pocket ID ForwardAuth.
+      # Dashboard and browser MCP Playground share port 4001 behind Pocket ID ForwardAuth.
       - "traefik.http.routers.agentgateway.rule=Host(`${AGENTGATEWAY_DOMAIN:-agentgateway.theblaskies.com}`)"
       - "traefik.http.routers.agentgateway.entrypoints=websecure"
       - "traefik.http.routers.agentgateway.tls=true"
@@ -50,7 +50,7 @@ services:
       
       # Temporary browser-facing MCP route. ForwardAuth guards requests until
       # inbound MCP OAuth/JWT auth is configured. Not yet ChatGPT-compatible.
-      # More-specific /mcp rule overrides the UI catch-all router.
+      # More-specific /mcp rule overrides UI catch-all; both use the same listener.
       - "traefik.http.routers.agentgateway-mcp.rule=Host(`${AGENTGATEWAY_DOMAIN:-agentgateway.theblaskies.com}`) && PathPrefix(`/mcp`)"
       - "traefik.http.routers.agentgateway-mcp.entrypoints=websecure"
       - "traefik.http.routers.agentgateway-mcp.tls=true"
@@ -58,7 +58,7 @@ services:
       - "traefik.http.routers.agentgateway-mcp.priority=100"
       - "traefik.http.routers.agentgateway-mcp.middlewares=pocketid-auth@file"
       - "traefik.http.routers.agentgateway-mcp.service=agentgateway-mcp"
-      - "traefik.http.services.agentgateway-mcp.loadbalancer.server.port=4000"
+      - "traefik.http.services.agentgateway-mcp.loadbalancer.server.port=4001"
 
 networks:
   proxy_net:
