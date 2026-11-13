@@ -7,7 +7,8 @@
 # the private .env / Komodo environment and ensure Pocket ID has the callback URI.
 # Keep Traefik ForwardAuth enabled until native login is verified.
 #
-# MCP port 4000 is NOT publicly routed until separate MCP OAuth is configured.
+# Browser Playground uses the same public UI gateway to preserve HTTPS origin.
+# Port 4000 remains defined but unused by MCP until separate MCP OAuth is configured.
 config:
   database:
     url: sqlite:///config/data.db
@@ -31,12 +32,12 @@ ui:
         - profile
         - email
 
-# MCP traffic uses port 4000. Do not add a public Traefik router before
-# inbound MCP authentication and per-tool authorization are configured.
+# For browser Playground compatibility, MCP and UI share port 4001.
+# Traefik ForwardAuth currently protects /mcp. This is NOT OAuth for ChatGPT.
 # HA_MCP_TOKEN is supplied privately by Komodo; never commit its value.
 mcp:
   gateways:
-    - mcp-gateway
+    - ui-gateway
 
   targets:
     - name: homeassistant
