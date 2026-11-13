@@ -1,6 +1,6 @@
 services:
   mongo:
-    image: mongo:9@sha256:dc28ed5a9d0fc616903c3f463bb1e53b92b49f441721b91926e87d90bf957ce8
+    image: mongo:9@sha256:1444adda2e4b8d6a0d7f242a625d834a78d6e3aa6e4ed1b0b4c2dab2318c5e3d
     container_name: mongoDB
     restart: unless-stopped
 
