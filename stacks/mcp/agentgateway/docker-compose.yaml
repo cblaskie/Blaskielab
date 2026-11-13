@@ -37,7 +37,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy_net"
 
-      # Dashboard only. MCP port 4000 has NO public router until OAuth is configured.
+      # Dashboard routes to 4001; /mcp routes to 4000 behind Pocket ID ForwardAuth.
       - "traefik.http.routers.agentgateway.rule=Host(`${AGENTGATEWAY_DOMAIN:-agentgateway.theblaskies.com}`)"
       - "traefik.http.routers.agentgateway.entrypoints=websecure"
       - "traefik.http.routers.agentgateway.tls=true"
@@ -47,6 +47,18 @@ services:
       - "traefik.http.routers.agentgateway.middlewares=pocketid-auth@file"
       - "traefik.http.routers.agentgateway.service=agentgateway-ui"
       - "traefik.http.services.agentgateway-ui.loadbalancer.server.port=4001"
+      
+      # Temporary browser-facing MCP route. ForwardAuth guards requests until
+      # inbound MCP OAuth/JWT auth is configured. Not yet ChatGPT-compatible.
+      # More-specific /mcp rule overrides the UI catch-all router.
+      - "traefik.http.routers.agentgateway-mcp.rule=Host(`${AGENTGATEWAY_DOMAIN:-agentgateway.theblaskies.com}`) && PathPrefix(`/mcp`)"
+      - "traefik.http.routers.agentgateway-mcp.entrypoints=websecure"
+      - "traefik.http.routers.agentgateway-mcp.tls=true"
+      - "traefik.http.routers.agentgateway-mcp.tls.certresolver=cloudflare"
+      - "traefik.http.routers.agentgateway-mcp.priority=100"
+      - "traefik.http.routers.agentgateway-mcp.middlewares=pocketid-auth@file"
+      - "traefik.http.routers.agentgateway-mcp.service=agentgateway-mcp"
+      - "traefik.http.services.agentgateway-mcp.loadbalancer.server.port=4000"
 
 networks:
   proxy_net:
