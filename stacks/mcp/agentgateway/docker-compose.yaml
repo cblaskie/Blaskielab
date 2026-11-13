@@ -15,6 +15,14 @@ services:
     environment:
       TZ: ${TZ:-America/New_York}
 
+      # Pocket ID OIDC for agentgateway's native dashboard login.
+      # Values are supplied by a private .env file or Komodo environment variables.
+      ISSUER_URL: ${ISSUER_URL:-https://id.theblaskies.com}
+      UI_CLIENT_ID: ${UI_CLIENT_ID:-}
+      UI_CLIENT_SECRET: ${UI_CLIENT_SECRET:-}
+      REDIRECT_URI: ${REDIRECT_URI:-https://agentgateway.theblaskies.com/oauth/callback}
+      OIDC_COOKIE_SECRET: ${OIDC_COOKIE_SECRET:-}
+
     volumes:
       - ${AGENTGATEWAY_DATA_DIR:-/mnt/user/appdata/agentgateway}:/config
 
@@ -33,6 +41,8 @@ services:
       - "traefik.http.routers.agentgateway.entrypoints=websecure"
       - "traefik.http.routers.agentgateway.tls=true"
       - "traefik.http.routers.agentgateway.tls.certresolver=cloudflare"
+      # Retain ForwardAuth during native OIDC migration. Remove after verifying
+      # Pocket ID login and restricting which OIDC users can access the UI.
       - "traefik.http.routers.agentgateway.middlewares=pocketid-auth@file"
       - "traefik.http.routers.agentgateway.service=agentgateway-ui"
       - "traefik.http.services.agentgateway-ui.loadbalancer.server.port=4001"

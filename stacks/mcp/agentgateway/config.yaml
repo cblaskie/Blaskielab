@@ -1,9 +1,13 @@
 # yaml-language-server: $schema=https://agentgateway.dev/schema/config
 #
-# Initial agentgateway configuration. Copy to /mnt/user/appdata/agentgateway/config.yaml
-# before first deployment. This copy can then be managed using the agentgateway UI.
+# Git-managed seed only. Existing Unraid deployment uses the writable copy at
+# /mnt/user/appdata/agentgateway/config.yaml.
 #
-# The MCP gateway has no public Traefik route until OAuth token validation is configured.
+# Before enabling this OIDC policy in the live config, fill the real values in
+# the private .env / Komodo environment and ensure Pocket ID has the callback URI.
+# Keep Traefik ForwardAuth enabled until native login is verified.
+#
+# MCP port 4000 is NOT publicly routed until separate MCP OAuth is configured.
 config:
   database:
     url: sqlite:///config/data.db
@@ -16,3 +20,13 @@ gateways:
 
 ui:
   gateways: [ui-gateway]
+  policies:
+    oidc:
+      issuer: ${ISSUER_URL}
+      clientId: ${UI_CLIENT_ID}
+      clientSecret: ${UI_CLIENT_SECRET}
+      redirectURI: ${REDIRECT_URI}
+      credentials: session
+      scopes:
+        - profile
+        - email
