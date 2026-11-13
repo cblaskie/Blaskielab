@@ -22,6 +22,7 @@ services:
       UI_CLIENT_SECRET: ${UI_CLIENT_SECRET:-}
       REDIRECT_URI: ${REDIRECT_URI:-https://agentgateway.theblaskies.com/oauth/callback}
       OIDC_COOKIE_SECRET: ${OIDC_COOKIE_SECRET:-}
+      HA_MCP_TOKEN: ${HA_MCP_TOKEN:?Set HA_MCP_TOKEN in Komodo}
 
     volumes:
       - ${AGENTGATEWAY_DATA_DIR:-/mnt/user/appdata/agentgateway}:/config
