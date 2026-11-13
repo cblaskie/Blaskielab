@@ -1,6 +1,6 @@
 services:
   kometa:
-    image: kometateam/kometa:latest@sha256:0309e3975174d93a02f7a33f918a49875bcf623f87ac539390b3450532781bbf
+    image: kometateam/kometa:latest@sha256:4e45d12ca8cb21b5a47a25917542dbb305fc0c76a366bc692ae9490da35d168d
     container_name: kometa
     restart: unless-stopped
 
