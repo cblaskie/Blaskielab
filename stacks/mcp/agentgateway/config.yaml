@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://agentgateway.dev/schema/config
+#
+# Initial agentgateway configuration. Copy to /mnt/user/appdata/agentgateway/config.yaml
+# before first deployment. This copy can then be managed using the agentgateway UI.
+#
+# The MCP gateway has no public Traefik route until OAuth token validation is configured.
+config:
+  database:
+    url: sqlite:///config/data.db
+
+gateways:
+  mcp-gateway:
+    port: 4000
+  ui-gateway:
+    port: 4001
+
+ui:
+  gateways: [ui-gateway]
