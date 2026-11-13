@@ -5,7 +5,7 @@ Standalone [agentgateway](https://agentgateway.dev/) MCP gateway for the Blaskie
 ## Endpoints
 
 - Dashboard: `https://agentgateway.theblaskies.com/ui/` -> Traefik -> container port **4001**. During migration, existing `pocketid-auth@file` ForwardAuth remains enabled; the native Pocket ID OIDC policy can then be enabled and tested.
-- MCP traffic: container port **4000**, **not publicly routed**. Do not add `mcp.theblaskies.com` until you have configured and tested OAuth/JWT validation for Pocket ID tokens.
+- MCP traffic: `https://agentgateway.theblaskies.com/mcp` -> Traefik -> port **4000**, currently protected by `pocketid-auth@file` ForwardAuth for browser-based testing. **This is not an OAuth-ready remote MCP endpoint**; do not connect ChatGPT until inbound OAuth/JWT validation and per-tool authorization are in place.
 
 The dashboard's ForwardAuth session cookie is **not** a substitute for OAuth bearer-token validation on an MCP endpoint. Pocket ID OIDC/JWT integration for MCP clients is a separate configuration task.
 
@@ -49,13 +49,20 @@ secrets into GitHub. Restart or reload agentgateway and check logs.
 The Compose file already passes `HA_MCP_TOKEN` from Komodo to the container.
 Ensure that value is populated in the Komodo stack environment.
 
-The current Traefik router sends `agentgateway.theblaskies.com` to port
-**4001**, and does **not** expose MCP port **4000**. Using the browser
-MCP Tool Playground through Traefik may require a separate HTTPS router and
-correct external MCP URL. **Do not add an unauthenticated public router:**
-backend authentication protects Home Assistant, not the MCP listener.
-Configure inbound OAuth/JWT validation and tool authorization before
-publishing `mcp.theblaskies.com/mcp` for ChatGPT or other remote clients.
+Traefik routes `https://agentgateway.theblaskies.com/ui/` to port **4001**
+and `https://agentgateway.theblaskies.com/mcp` to port **4000**. The MCP route
+has a higher router priority and currently uses `pocketid-auth@file` so
+unauthenticated visitors cannot directly call Home Assistant tools.
+This is a **temporary browser-testing setup**, not a substitute for MCP
+OAuth bearer-token validation. Native OIDC login on the UI is separate.
+For ChatGPT or another remote MCP client, implement inbound OAuth/JWT
+validation and per-tool authorization before replacing ForwardAuth and
+publishing a client-compatible endpoint. Note that some versions of the
+MCP Tool Playground derive the internal listener port from config, even
+when Traefik exposes the service on the same hostname; if the browser
+tries port `4000` directly, fix the gateway/origin configuration rather
+than publishing Unraid's port 4000.
+
 
 ## Native Pocket ID OIDC (dashboard)
 
@@ -109,8 +116,8 @@ The Compose file **pins** `user: "99:100"`, rather than interpolating `PUID` and
 ## Security and configuration
 
 - During the OIDC migration, retain the existing Pocket ID ForwardAuth middleware defined in `stacks/infra/traefik/dynamic/middlewares-auth.yml`. Remove it from the dashboard router only after native OIDC works and the authorized-user policy is in place.
-- Only the dashboard is routed publicly. No `ports:` are published on the Unraid host.
-- The `mcp-gateway` listener uses port 4000 and has a Home Assistant MCP upstream in the Git-managed seed. It is not publicly routed until inbound MCP authentication is configured.
+- Both the dashboard and `/mcp` are routed through Traefik, each behind Pocket ID ForwardAuth. No `ports:` are published on the Unraid host.
+- The `mcp-gateway` listener uses port 4000 and has a Home Assistant MCP upstream in the Git-managed seed. Its temporary Traefik `/mcp` route is protected by Pocket ID ForwardAuth and is not suitable for ChatGPT OAuth clients.
 - Before exposing MCP to remote clients, configure protected-resource metadata, authorization-server discovery, Pocket ID JWT validation (signature, issuer, audience, expiry, and scopes), and the actual upstream MCP servers.
 - The UI changes are persisted in `/mnt/user/appdata/agentgateway/config.yaml`, not automatically committed to Git. Back up the appdata directory.
 - The image is version-pinned. Renovate may propose a digest pin or subsequent updates.
