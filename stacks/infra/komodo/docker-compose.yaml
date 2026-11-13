@@ -48,6 +48,13 @@ services:
     env_file:
       - /mnt/user/appdata/komodo/.env
 
+    # Trust only the GitOps checkout mounted from Unraid.
+    # Git environment config persists across container recreations.
+    environment:
+      GIT_CONFIG_COUNT: "1"
+      GIT_CONFIG_KEY_0: safe.directory
+      GIT_CONFIG_VALUE_0: /etc/komodo/repos/Blaskielab
+
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /proc:/proc
