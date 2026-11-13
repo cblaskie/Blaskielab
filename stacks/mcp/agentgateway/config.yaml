@@ -30,3 +30,35 @@ ui:
       scopes:
         - profile
         - email
+
+# MCP traffic uses port 4000. Do not add a public Traefik router before
+# inbound MCP authentication and per-tool authorization are configured.
+# HA_MCP_TOKEN is supplied privately by Komodo; never commit its value.
+mcp:
+  gateways:
+    - mcp-gateway
+
+  targets:
+    - name: homeassistant
+      mcp:
+        host: https://ha.theblaskies.com/api/mcp
+      policies:
+        backendAuth:
+          key:
+            value: "$HA_MCP_TOKEN"
+
+  statefulMode: stateless
+  failureMode: failClosed
+
+  policies:
+    cors:
+      allowOrigins:
+        - https://agentgateway.theblaskies.com
+      allowHeaders:
+        - "*"
+      allowMethods:
+        - GET
+        - POST
+        - OPTIONS
+      exposeHeaders:
+        - Mcp-Session-Id
