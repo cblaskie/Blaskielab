@@ -21,7 +21,7 @@ mkdir -p "$DATA"
 if [ ! -f "$DATA/config.yaml" ]; then
   cp "$REPO/stacks/mcp/agentgateway/config.yaml" "$DATA/config.yaml"
 fi
-chown -R 1002:281 "$DATA"
+chown -R 99:100 "$DATA"
 ```
 
 This one-time copy is intentional: the Git file is a seed; the writable copy under appdata persists UI changes and SQLite data. Do not overwrite an existing appdata config when redeploying.
@@ -36,6 +36,18 @@ docker compose up -d
 ```
 
 For **Komodo**, select this directory as the stack's working directory and `docker-compose.yaml` as the Compose file. Its variables have defaults, or you can set them in Komodo without committing an actual `.env` file. Ensure the external Docker network `proxy_net` exists.
+
+## Switching from dockeradmin:docker to nobody:users
+
+If you already started the stack as UID 1002 / GID 281, **stop** it before changing SQLite ownership (avoid modifying a live WAL database):
+
+```bash
+docker stop agentgateway
+chown -R 99:100 /mnt/user/appdata/agentgateway
+ls -lan /mnt/user/appdata/agentgateway
+```
+
+Update any deployed `.env` or Komodo variables to `PUID=99` and `PGID=100`, then redeploy/recreate the stack through Komodo. Keep the existing appdata `config.yaml` and SQLite files; do not copy the Git seed over them. Do not use `chmod -R 777`.
 
 ## Security and configuration
 
