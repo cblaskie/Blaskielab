@@ -15,8 +15,8 @@ services:
       # Optional: database backups
       - /mnt/user/appdata/komodo:/etc/komodo
       - /mnt/user/appdata/komodo/backups:/backups
-      # Persist Core's auto-generated v2 private key outside the container
-      - /mnt/user/appdata/komodo-core-keys:/config/keys
+      # Shared persistent PKI keys (as in the official v2 Compose example)
+      - /mnt/user/appdata/komodo/keys:/config/keys
 
     networks:
       - infra_net
@@ -54,8 +54,8 @@ services:
       # FIX: Mount your appdata to the expected root and the repo-cache specifically
       - /mnt/user/appdata/komodo:/etc/komodo
       - /mnt/user/appdata/komodo/repo-cache:/repo-cache
-      # Keep Periphery's private key separate from Core's private key
-      - /mnt/user/appdata/komodo-periphery-keys:/config/keys
+      # Mount the same persistent PKI keys directory as Core
+      - /mnt/user/appdata/komodo/keys:/config/keys
       - /mnt/user/appdata/traefik:/mnt/user/appdata/traefik
     networks:
       - infra_net
