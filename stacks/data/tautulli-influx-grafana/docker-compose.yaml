@@ -1,7 +1,7 @@
 services:
   # Time-Series Database Engine
   influxdb:
-    image: influxdb:2.9@sha256:9f29465df7a15d427e046681cfc7b3da9753e75825c6864f8d3cf5b3aa3cca3d
+    image: influxdb:2.9@sha256:e4572d094ac3272f06528ea904ce6b4cb3bb19be2db3b3b1acbd27ba5c3a73e2
     container_name: influxdb
     restart: unless-stopped
     networks:
@@ -43,7 +43,7 @@ services:
 
   # Plex Media Analytics Engine
   tautulli:
-    image: ghcr.io/tautulli/tautulli:latest@sha256:e88f431fa59b3e7eb24dee323357ec6e0851fbffc4425b92143cbc284de01278
+    image: ghcr.io/tautulli/tautulli:latest@sha256:e2f9410116ffd6667c32875ba2f3038aa0a6acb6c4f64403f535ae435eeaab2a
     container_name: tautulli
     restart: unless-stopped
     networks:

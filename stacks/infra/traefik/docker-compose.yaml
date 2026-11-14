@@ -1,6 +1,6 @@
 services:
   docker-socket-proxy:
-    image: ghcr.io/tecnativa/docker-socket-proxy@sha256:1f3a6f303320723d199d2316a3e82b2e2685d86c275d5e3deeaf182573b47476
+    image: ghcr.io/tecnativa/docker-socket-proxy@sha256:1f5038b54f06c3e18422902cf00ba21803d1c97805aae032e5e6673d532d3459
     container_name: docker-socket-proxy
     restart: unless-stopped
 
@@ -20,7 +20,7 @@ services:
 
 
   traefik:
-    image: traefik@sha256:c8a121e4bb1347e8fd52657fab12f2cb70b68f8a018895e2068f92c9e519b9c2
+    image: traefik@sha256:c1ea95f3b3eab04ba8868d201b8494e12284e424f7cec2127e3194bca1c6641c
     container_name: traefik
     restart: unless-stopped
 
@@ -48,7 +48,7 @@ services:
       - proxy_net
 
   error-pages:
-    image: ghcr.io/tarampampam/error-pages:latest@sha256:6d42b5d6e1a014fa2373e3587f9e85c25589a089fd5f6fc4f2a496858f5e365d
+    image: ghcr.io/tarampampam/error-pages:latest@sha256:f59453fef7ca963c2239cbb021896c71e6f375d85e5ef3f9c6495c1367a7de4e
     container_name: error-pages
     restart: unless-stopped
     environment:
