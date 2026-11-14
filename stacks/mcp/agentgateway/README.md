@@ -9,6 +9,32 @@ Standalone [agentgateway](https://agentgateway.dev/) MCP gateway for the Blaskie
 
 The dashboard's ForwardAuth session cookie is **not** a substitute for OAuth bearer-token validation on an MCP endpoint. Pocket ID OIDC/JWT integration for MCP clients is a separate configuration task.
 
+
+## OAuth resource discovery (public metadata only)
+
+Traefik exposes the **exact** metadata path
+`https://agentgateway.theblaskies.com/.well-known/oauth-protected-resource/mcp`
+without Pocket ID ForwardAuth, so MCP clients can discover the configured
+authorization server. This endpoint is metadata, not a tool invocation.
+The `/mcp` router continues using `pocketid-auth@file`; do **not** remove
+that middleware until real Pocket ID bearer tokens and restrictive MCP
+authorization rules have been tested end to end. The UI router remains
+protected as well.
+
+After Komodo redeploys the updated Compose file, verify with:
+
+```bash
+curl -sS -i https://agentgateway.theblaskies.com/.well-known/oauth-protected-resource/mcp
+```
+
+Expected: HTTP 200 with JSON resource metadata; no login redirect.
+
+**Pocket ID version:** OAuth authorization server metadata at
+`https://id.theblaskies.com/.well-known/oauth-authorization-server` requires
+Pocket ID v2.14.0 or newer. If Pocket ID still runs v2.2.0, upgrade it before
+attempting full OAuth authorization-server discovery; use `curl -i` to inspect
+a non-JSON HTTP response rather than piping an error page directly to `jq`.
+
 ## First deployment
 
 Run on Unraid after the repo is available at `/mnt/user/appdata/komodo/repos/Blaskielab`:
