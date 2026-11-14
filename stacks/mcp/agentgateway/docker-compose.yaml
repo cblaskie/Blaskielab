@@ -60,6 +60,15 @@ services:
       - "traefik.http.routers.agentgateway-mcp.service=agentgateway-mcp"
       - "traefik.http.services.agentgateway-mcp.loadbalancer.server.port=4001"
 
+      # OAuth protected-resource metadata must be readable without a browser session.
+      # Match this exact path only; the MCP tool endpoint stays protected by ForwardAuth.
+      - "traefik.http.routers.agentgateway-mcp-metadata.rule=Host(`${AGENTGATEWAY_DOMAIN:-agentgateway.theblaskies.com}`) && Path(`/.well-known/oauth-protected-resource/mcp`)"
+      - "traefik.http.routers.agentgateway-mcp-metadata.entrypoints=websecure"
+      - "traefik.http.routers.agentgateway-mcp-metadata.tls=true"
+      - "traefik.http.routers.agentgateway-mcp-metadata.tls.certresolver=cloudflare"
+      - "traefik.http.routers.agentgateway-mcp-metadata.priority=200"
+      - "traefik.http.routers.agentgateway-mcp-metadata.service=agentgateway-ui"
+
 networks:
   proxy_net:
     external: true
