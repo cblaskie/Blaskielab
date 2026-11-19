@@ -37,14 +37,12 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy_net"
 
-      # Dashboard and browser MCP Playground share port 4001; only UI uses ForwardAuth.
+      # Dashboard and browser MCP Playground share port 4001.
+      # Native Pocket ID OIDC secures the dashboard; strict JWT secures /mcp.
       - "traefik.http.routers.agentgateway.rule=Host(`${AGENTGATEWAY_DOMAIN:-agentgateway.theblaskies.com}`)"
       - "traefik.http.routers.agentgateway.entrypoints=websecure"
       - "traefik.http.routers.agentgateway.tls=true"
       - "traefik.http.routers.agentgateway.tls.certresolver=cloudflare"
-      # Retain ForwardAuth during native OIDC migration. Remove after verifying
-      # Pocket ID login and restricting which OIDC users can access the UI.
-      - "traefik.http.routers.agentgateway.middlewares=pocketid-auth@file"
       - "traefik.http.routers.agentgateway.service=agentgateway-ui"
       - "traefik.http.services.agentgateway-ui.loadbalancer.server.port=4001"
       
@@ -60,7 +58,7 @@ services:
       - "traefik.http.services.agentgateway-mcp.loadbalancer.server.port=4001"
 
       # OAuth protected-resource metadata must be readable without a browser session.
-      # Match this exact path only; the MCP tool endpoint stays protected by ForwardAuth.
+      # Match this exact path only; the MCP tool endpoint stays protected by strict JWT.
       - "traefik.http.routers.agentgateway-mcp-metadata.rule=Host(`${AGENTGATEWAY_DOMAIN:-agentgateway.theblaskies.com}`) && Path(`/.well-known/oauth-protected-resource/mcp`)"
       - "traefik.http.routers.agentgateway-mcp-metadata.entrypoints=websecure"
       - "traefik.http.routers.agentgateway-mcp-metadata.tls=true"
